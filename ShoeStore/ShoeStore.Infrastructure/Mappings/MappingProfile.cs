@@ -1,0 +1,101 @@
+using System.Collections.Generic;
+using AutoMapper;
+using ShoeStore.Application.Dtos.Brand;
+using ShoeStore.Application.Dtos.Cart;
+using ShoeStore.Application.Dtos.Comment;
+using ShoeStore.Application.Dtos.Notification;
+using ShoeStore.Application.Dtos.Order;
+using ShoeStore.Application.Dtos.Product;
+using ShoeStore.Application.Dtos.Promotion;
+using ShoeStore.Application.Dtos.Receipt;
+using ShoeStore.Application.Dtos.Store;
+using ShoeStore.Application.Dtos.Supplier;
+using ShoeStore.Application.DTOs.Users;
+using ShoeStore.Domain.Entities;
+
+namespace ShoeStore.Infrastructure.Mappings
+{
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
+            // Brand mappings
+            CreateMap<CreateBrandDto, Brand>();
+            CreateMap<UpdateBrandDto, Brand>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Brand, BrandDto>();
+
+            // Store mappings
+            CreateMap<CreateStoreDto, Store>();
+            CreateMap<UpdateStoreDto, Store>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Store, StoreDto>();
+
+            // Supplier mappings
+            CreateMap<CreateSupplierDto, Supplier>();
+            CreateMap<UpdateSupplierDto, Supplier>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Supplier, SupplierDto>();
+
+            // Product mappings
+            CreateMap<CreateProductDto, Product>();
+            CreateMap<UpdateProductDto, Product>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.Stores, opt => opt.MapFrom(src => src.StoreProducts));
+
+            // StoreProduct -> StoreQuantityDto
+            CreateMap<StoreProduct, StoreQuantityDto>()
+                .ForMember(dest => dest.StoreName, opt => opt.MapFrom(src => src.Store != null ? src.Store.Name : string.Empty));
+
+            // Receipt mappings
+            CreateMap<ReceiptDetail, ReceiptDetailDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))
+                .ForMember(dest => dest.SKU, opt => opt.MapFrom(src => src.Product != null ? src.Product.SKU : null));
+
+            CreateMap<Receipt, ReceiptDto>()
+                .ForMember(dest => dest.SupplierName, opt => opt.MapFrom(src => src.Supplier != null ? src.Supplier.Name : string.Empty))
+                .ForMember(dest => dest.StoreName, opt => opt.MapFrom(src => src.Store != null ? src.Store.Name : string.Empty))
+                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.Creator != null ? src.Creator.FullName : "System"))
+                .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.ReceiptDetails));
+
+            // Promotion mappings
+            CreateMap<CreatePromotionDto, Promotion>();
+            CreateMap<UpdatePromotionDto, Promotion>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Notification mappings
+            CreateMap<CreateNotificationDto, Notification>();
+            CreateMap<Notification, NotificationDto>();
+
+            // User mappings
+            CreateMap<UserCreateDto, User>();
+            var userUpdateMap = CreateMap<UserUpdateDto, User>();
+            userUpdateMap.ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            userUpdateMap.ForMember(dest => dest.PasswordHash, opt => opt.Ignore()); // Never update password from DTO
+            CreateMap<User, ShoeStore.Application.DTOs.Users.UserDto>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : string.Empty))
+                .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.Status != null ? src.Status.Name : string.Empty));
+
+            // Cart mappings
+            CreateMap<CartItem, CartItemDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty));
+
+            CreateMap<Cart, CartDto>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.CartItems ?? new List<CartItem>()));
+
+            // Comment mappings
+            CreateMap<Comment, CommentDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.FullName : string.Empty))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty));
+
+            // Order mappings
+            CreateMap<OrderDetail, OrderDetailResponseDto>();
+
+            CreateMap<Order, OrderResponseDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer != null ? src.Customer.FullName : string.Empty))
+                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.Creator != null ? src.Creator.FullName : string.Empty))
+                .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.OrderDetails ?? new List<OrderDetail>()));
+        }
+    }
+}

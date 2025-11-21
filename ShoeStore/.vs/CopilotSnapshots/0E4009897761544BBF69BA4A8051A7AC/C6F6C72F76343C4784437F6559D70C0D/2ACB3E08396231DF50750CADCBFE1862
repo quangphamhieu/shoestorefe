@@ -1,0 +1,14 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ShoeStore.Application.Dtos.Comment
+{
+    public class UpdateCommentDto
+    {
+        [Required]
+        [MaxLength(2000)]
+        public string Content { get; set; } = null!;
+
+        [Range(0, 5)]
+        public byte? Rating { get; set; }
+    }
+}

@@ -1,0 +1,44 @@
+﻿using AutoMapper;
+using ShoeStore.Application.Dtos.Brand;
+using ShoeStore.Application.Dtos.Store;
+using ShoeStore.Application.Dtos.Supplier;
+using ShoeStore.Application.Dtos.Product;
+using ShoeStore.Domain.Entities;
+
+namespace ShoeStore.Infrastructure.Mappings
+{
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
+            // Brand mappings
+            CreateMap<CreateBrandDto, Brand>();
+            CreateMap<UpdateBrandDto, Brand>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Brand, BrandDto>();
+
+            // Store mappings
+            CreateMap<CreateStoreDto, Store>();
+            CreateMap<UpdateStoreDto, Store>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Store, StoreDto>();
+
+            // Supplier mappings
+            CreateMap<CreateSupplierDto, Supplier>();
+            CreateMap<UpdateSupplierDto, Supplier>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Supplier, SupplierDto>();
+
+            // Product mappings
+            CreateMap<CreateProductDto, Product>();
+            CreateMap<UpdateProductDto, Product>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.Stores, opt => opt.MapFrom(src => src.StoreProducts));
+
+            // StoreProduct -> StoreQuantityDto
+            CreateMap<StoreProduct, StoreQuantityDto>()
+                .ForMember(dest => dest.StoreName, opt => opt.MapFrom(src => src.Store != null ? src.Store.Name : string.Empty));
+        }
+    }
+}
