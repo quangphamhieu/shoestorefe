@@ -104,11 +104,13 @@ namespace ShoeStore.Application.Services
 
             if (user == null)
                 return null;
-
+            var permissions = await _context.RolePermissions
+                .Where(rp => rp.RoleId == user.RoleId)
+                .Select(rp => rp.Permission.Code)
+                .ToListAsync();
             if (!_passwordHelper.VerifyPassword(dto.Password, user.PasswordHash))
                 return null;
-
-            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.FullName, user.Role.Name);
+            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.FullName, user.Role.Name,permissions);
 
             return new UserLoginResponseDto
             {

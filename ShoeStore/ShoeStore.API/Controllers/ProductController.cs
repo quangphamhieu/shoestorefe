@@ -17,6 +17,8 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "PRODUCT_VIEW")]
+
         public async Task<ActionResult<List<ProductDto>>> GetAll()
         {
             var products = await _productService.GetAllAsync();
@@ -24,6 +26,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "PRODUCT_VIEW")]
         public async Task<ActionResult<ProductDto>> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -32,7 +35,7 @@ namespace ShoeStore.Api.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy ="PRODUCT_CREATE")]
         public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
         {
             if (!ModelState.IsValid)
@@ -44,7 +47,7 @@ namespace ShoeStore.Api.Controllers
 
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PRODUCT_UPDATE")]
         public async Task<ActionResult<ProductDto>> Update(int id, UpdateProductDto dto)
         {
             if (!ModelState.IsValid)
@@ -55,7 +58,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PRODUCT_DELETE")]
         public async Task<ActionResult> Delete(int id)
         {
             var deleted = await _productService.DeleteAsync(id);

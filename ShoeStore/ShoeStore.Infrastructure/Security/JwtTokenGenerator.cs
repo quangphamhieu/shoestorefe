@@ -19,12 +19,12 @@ namespace ShoeStore.Infrastructure.Security
             _config = config;
         }
 
-        public string GenerateToken(long userId, string fullName, string roleName)
+        public string GenerateToken(long userId, string fullName, string roleName,List<string> permissions)
         {
             var jwtSettings = _config.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                     new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                     new Claim("userId", userId.ToString()), // Fixed: Added parentheses to call the ToString() method
@@ -32,7 +32,10 @@ namespace ShoeStore.Infrastructure.Security
                     new Claim(ClaimTypes.Role, roleName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
-
+            foreach(var p in permissions)
+            {
+                claims.Add(new Claim("permission", p));
+            }
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"]));
 

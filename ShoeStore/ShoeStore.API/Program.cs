@@ -84,7 +84,13 @@ namespace ShoeStore.API
             });
             builder.Services.AddSingleton<JwtTokenGenerator>();
             builder.Services.AddSingleton<PasswordHelper>();
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("PRODUCT_VIEW", p => p.RequireClaim("permission", "PRODUCT_VIEW"));
+                options.AddPolicy("PRODUCT_CREATE", p => p.RequireClaim("permission", "PRODUCT_CREATE"));
+                options.AddPolicy("PRODUCT_UPDATE", p => p.RequireClaim("permission", "PRODUCT_UPDATE"));
+                options.AddPolicy("PRODUCT_DELETE", p => p.RequireClaim("permission", "PRODUCT_DELETE"));
+            });
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<AuditInterceptor>();
 
