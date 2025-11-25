@@ -24,6 +24,12 @@ namespace ShoeStore.Api.Controllers
             var products = await _productService.GetAllAsync();
             return Ok(products);
         }
+        [HttpGet("/getByName")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var users = await _productService.GetListProductByName(name);
+            return Ok(users);
+        }
 
         [HttpGet("{id}")]
         [Authorize(Policy = "PRODUCT_VIEW")]

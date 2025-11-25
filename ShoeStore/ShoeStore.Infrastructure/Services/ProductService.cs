@@ -54,7 +54,16 @@ namespace ShoeStore.Infrastructure.Services
 
             return products.Select(p => _mapper.Map<ProductDto>(p)).ToList();
         }
-
+        public async Task<IEnumerable<ProductDto>> GetListProductByName(string productName)
+        {
+            var products = await _context.Products
+                .Include(p => p.StoreProducts!)
+                    .ThenInclude(sp => sp.Store)
+                .AsNoTracking()
+                .Where(p => p.Name == productName)
+                .ToListAsync();
+            return products.Select(p => _mapper.Map<ProductDto>(p)).ToList();
+        }
         // 🔹 Lấy chi tiết 1 sản phẩm
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
