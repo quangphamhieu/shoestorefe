@@ -41,7 +41,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer,Super Admin,Admin,Staff")]
+        [Authorize(Policy = "COMMENT_CREATE")]
         public async Task<ActionResult<CommentDto>> Create([FromBody] CreateCommentDto dto)
         {
             if (!ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPut("{id:long}")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "COMMENT_UPDATE")]
         public async Task<ActionResult<CommentDto>> Update(long id, [FromBody] UpdateCommentDto dto)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpDelete("{id:long}")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "COMMENT_DELETE")]
         public async Task<ActionResult> Delete(long id)
         {
             var deleted = await _commentService.DeleteAsync(id);

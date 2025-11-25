@@ -31,7 +31,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "NOTIFICATION_CREATE")]
         public async Task<ActionResult<NotificationDto>> Create(CreateNotificationDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpDelete("{id:long}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "NOTIFICATION_DELETE")]
         public async Task<ActionResult> Delete(long id)
         {
             var deleted = await _notificationService.DeleteAsync(id);

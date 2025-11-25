@@ -31,7 +31,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "SUPPLIER_CREATE")]
         public async Task<ActionResult<SupplierDto>> CreateSupplier(CreateSupplierDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "SUPPLIER_UPDATE")]
         public async Task<ActionResult<SupplierDto>> UpdateSupplier(int id, UpdateSupplierDto dto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "SUPPLIER_DELETE")]
         public async Task<IActionResult> DeleteSupplier(int id)
         {
             var deleted = await _supplierService.DeleteAsync(id);

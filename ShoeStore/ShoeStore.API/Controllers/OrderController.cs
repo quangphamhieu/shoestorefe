@@ -19,7 +19,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer,Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_CREATE")]
         public async Task<IActionResult> Create([FromBody] OrderCreateDto dto)
         {
             if (!ModelState.IsValid)
@@ -30,7 +30,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_VIEW")]
         public async Task<IActionResult> Get(long id)
         {
             var result = await _service.GetOrderByIdAsync(id);
@@ -38,7 +38,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_VIEW")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _service.GetAllOrdersAsync();
@@ -46,7 +46,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpGet("myOrder")]
-        [Authorize(Roles = "Customer,Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_VIEW")]
         public async Task<IActionResult> GetOrderByUser()
         {
             var result = await _service.GetOrderByUserAsync(GetCurrentUserId());
@@ -54,7 +54,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPut("detail/{orderDetailId:long}")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_UPDATE")]
         public async Task<IActionResult> UpdateDetail(long orderDetailId, [FromBody] OrderDetailUpdateDto dto)
         {
             if (!ModelState.IsValid)
@@ -66,7 +66,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpDelete("detail/{orderDetailId:long}")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_DELETE")]
         public async Task<IActionResult> DeleteDetail(long orderDetailId)
         {
             var success = await _service.DeleteOrderDetailAsync(orderDetailId);
@@ -74,7 +74,7 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPut("status")]
-        [Authorize(Roles = "Super Admin,Admin,Staff")]
+        [Authorize(Policy = "ORDER_DELETE")]
         public async Task<IActionResult> UpdateStatus([FromBody] OrderStatusUpdateDto dto)
         {
             if (!ModelState.IsValid)

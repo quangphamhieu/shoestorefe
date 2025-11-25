@@ -31,7 +31,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PROMOTION_CREATE")]
         public async Task<ActionResult<PromotionDto>> Create([FromBody] CreatePromotionDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PROMOTION_UPDATE")]
         public async Task<ActionResult<PromotionDto>> Update(int id, [FromBody] UpdatePromotionDto dto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PROMOTION_DELETE")]
         public async Task<ActionResult> Delete(int id)
         {
             var deleted = await _promotionService.DeleteAsync(id);

@@ -36,7 +36,7 @@ namespace ShoeStore.WebApi.Controllers
 
         // -------------------- CREATE --------------------
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "USER_CREATE")]
         public async Task<IActionResult> Create([FromBody] UserCreateDto dto)
         {
             if (!ModelState.IsValid)
@@ -48,7 +48,7 @@ namespace ShoeStore.WebApi.Controllers
 
         // -------------------- UPDATE --------------------
         [HttpPut("{id:long}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "USER_UPDATE")]
         public async Task<IActionResult> Update(long id, [FromBody] UserUpdateDto dto)
         {
             if (id != dto.Id)
@@ -63,7 +63,7 @@ namespace ShoeStore.WebApi.Controllers
 
         // -------------------- DELETE --------------------
         [HttpDelete("{id:long}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "USER_DELETE")]
         public async Task<IActionResult> Delete(long id)
         {
             var result = await _userService.DeleteAsync(id);

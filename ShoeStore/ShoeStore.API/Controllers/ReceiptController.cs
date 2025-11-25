@@ -31,7 +31,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "RECEIPT_CREATE")]
         public async Task<ActionResult<ReceiptDto>> Create(CreateReceiptDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{id}/info")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "RECEIPT_UPDATE")]
         public async Task<ActionResult<ReceiptDto>> UpdateInfo(long id, UpdateReceiptDto dto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{id}/receive")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "RECEIPT_UPDATE")]
         public async Task<ActionResult<ReceiptDto>> UpdateReceived(long id, UpdateReceiptReceivedDto dto)
         {
             if (!ModelState.IsValid)
@@ -65,7 +65,7 @@ namespace ShoeStore.Api.Controllers
 
         // ✅ Thêm endpoint xóa
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "RECEIPT_DELETE")]
         public async Task<IActionResult> Delete(long id)
         {
             var deleted = await _receiptService.DeleteAsync(id);

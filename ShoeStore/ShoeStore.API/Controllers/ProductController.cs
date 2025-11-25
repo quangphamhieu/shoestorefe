@@ -83,7 +83,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost("{productId}/store-quantity")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PRODUCT_STORE_QUANTITY_MANAGE")]
         public async Task<ActionResult> CreateStoreQuantity(int productId, [FromBody] StoreQuantityDto dto)
         {
             if (dto == null || dto.StoreId <= 0)
@@ -96,7 +96,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{productId}/store-quantity")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "PRODUCT_STORE_QUANTITY_MANAGE")]
         public async Task<ActionResult> UpdateStoreQuantity(int productId, [FromBody] StoreQuantityDto dto)
         {
             if (dto == null || dto.StoreId <= 0)

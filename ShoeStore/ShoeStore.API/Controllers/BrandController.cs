@@ -31,7 +31,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "BRAND_CREATE")]
         public async Task<ActionResult<BrandDto>> Create(CreateBrandDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,7 +42,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "BRAND_UPDATE")]
         public async Task<ActionResult<BrandDto>> Update(int id, UpdateBrandDto dto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Super Admin, Admin")]
+        [Authorize(Policy = "BRAND_DELETE")]
         public async Task<ActionResult> Delete(int id)
         {
             var deleted = await _brandService.DeleteAsync(id);

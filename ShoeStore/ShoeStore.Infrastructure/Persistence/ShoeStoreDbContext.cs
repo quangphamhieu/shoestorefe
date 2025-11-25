@@ -539,62 +539,80 @@ namespace ShoeStore.Infrastructure.Persistence
                 CreatedAt = DateTime.Now,
             });
             modelBuilder.Entity<Permission>().HasData(
+                // Product
                 new Permission { Id = 10, Code = "PRODUCT_VIEW", Description = "View products" },
                 new Permission { Id = 11, Code = "PRODUCT_CREATE", Description = "Create product" },
                 new Permission { Id = 12, Code = "PRODUCT_UPDATE", Description = "Update product" },
                 new Permission { Id = 13, Code = "PRODUCT_DELETE", Description = "Delete product" },
+                new Permission { Id = 57, Code = "PRODUCT_SEARCH", Description = "Search products" },
+                new Permission { Id = 58, Code = "PRODUCT_SUGGEST", Description = "Suggest product keywords" },
+                new Permission { Id = 59, Code = "PRODUCT_STORE_QUANTITY_MANAGE", Description = "Manage product-store quantity" },
 
+                // Promotion
                 new Permission { Id = 14, Code = "PROMOTION_VIEW", Description = "View promotions" },
                 new Permission { Id = 15, Code = "PROMOTION_CREATE", Description = "Create promotion" },
                 new Permission { Id = 16, Code = "PROMOTION_UPDATE", Description = "Update promotion" },
                 new Permission { Id = 17, Code = "PROMOTION_DELETE", Description = "Delete promotion" },
 
+                // Brand
                 new Permission { Id = 18, Code = "BRAND_VIEW", Description = "View brands" },
                 new Permission { Id = 19, Code = "BRAND_CREATE", Description = "Create brand" },
                 new Permission { Id = 20, Code = "BRAND_UPDATE", Description = "Update brand" },
                 new Permission { Id = 21, Code = "BRAND_DELETE", Description = "Delete brand" },
 
+                // Store
                 new Permission { Id = 22, Code = "STORE_VIEW", Description = "View stores" },
                 new Permission { Id = 23, Code = "STORE_CREATE", Description = "Create store" },
                 new Permission { Id = 24, Code = "STORE_UPDATE", Description = "Update store" },
                 new Permission { Id = 25, Code = "STORE_DELETE", Description = "Delete store" },
 
+                // Supplier
                 new Permission { Id = 26, Code = "SUPPLIER_VIEW", Description = "View suppliers" },
                 new Permission { Id = 27, Code = "SUPPLIER_CREATE", Description = "Create supplier" },
                 new Permission { Id = 28, Code = "SUPPLIER_UPDATE", Description = "Update supplier" },
                 new Permission { Id = 29, Code = "SUPPLIER_DELETE", Description = "Delete supplier" },
 
+                // Receipt
                 new Permission { Id = 30, Code = "RECEIPT_VIEW", Description = "View receipts" },
                 new Permission { Id = 31, Code = "RECEIPT_CREATE", Description = "Create receipt" },
                 new Permission { Id = 32, Code = "RECEIPT_UPDATE", Description = "Update receipt" },
                 new Permission { Id = 33, Code = "RECEIPT_DELETE", Description = "Delete receipt" },
 
+                // Order
                 new Permission { Id = 34, Code = "ORDER_VIEW", Description = "View orders" },
                 new Permission { Id = 35, Code = "ORDER_CREATE", Description = "Create order" },
                 new Permission { Id = 36, Code = "ORDER_UPDATE", Description = "Update order" },
                 new Permission { Id = 37, Code = "ORDER_DELETE", Description = "Delete order" },
+                new Permission { Id = 60, Code = "ORDER_MANAGE_DETAILS", Description = "Manage order details/status" },
 
+                // Notification
                 new Permission { Id = 38, Code = "NOTIFICATION_VIEW", Description = "View notifications" },
                 new Permission { Id = 39, Code = "NOTIFICATION_CREATE", Description = "Create notification" },
                 new Permission { Id = 40, Code = "NOTIFICATION_DELETE", Description = "Delete notification" },
 
+                // Comment
                 new Permission { Id = 41, Code = "COMMENT_VIEW", Description = "View comments" },
                 new Permission { Id = 42, Code = "COMMENT_CREATE", Description = "Create comment" },
                 new Permission { Id = 43, Code = "COMMENT_UPDATE", Description = "Update comment" },
                 new Permission { Id = 44, Code = "COMMENT_DELETE", Description = "Delete comment" },
 
+                // Cart
                 new Permission { Id = 45, Code = "CART_VIEW", Description = "View cart" },
                 new Permission { Id = 46, Code = "CART_CREATE", Description = "Create/Add to cart" },
                 new Permission { Id = 47, Code = "CART_UPDATE", Description = "Update cart item" },
                 new Permission { Id = 48, Code = "CART_DELETE", Description = "Remove from cart / clear cart" },
 
+                // User management
                 new Permission { Id = 49, Code = "USER_VIEW", Description = "View users" },
                 new Permission { Id = 50, Code = "USER_CREATE", Description = "Create user" },
                 new Permission { Id = 51, Code = "USER_UPDATE", Description = "Update user" },
                 new Permission { Id = 52, Code = "USER_DELETE", Description = "Delete user" },
 
+                // Roles & permissions / admin features
                 new Permission { Id = 53, Code = "ROLE_MANAGE", Description = "Manage roles" },
                 new Permission { Id = 54, Code = "PERMISSION_MANAGE", Description = "Manage permissions" },
+
+                // Dashboard & Audit
                 new Permission { Id = 55, Code = "DASHBOARD_VIEW", Description = "View dashboard" },
                 new Permission { Id = 56, Code = "AUDIT_VIEW", Description = "View audit logs" }
             );
@@ -610,45 +628,60 @@ namespace ShoeStore.Infrastructure.Persistence
                 new RolePermission { RoleId = 1, PermissionId = 11 },
                 new RolePermission { RoleId = 1, PermissionId = 12 },
                 new RolePermission { RoleId = 1, PermissionId = 13 },
+                new RolePermission { RoleId = 1, PermissionId = 57 },
+                new RolePermission { RoleId = 1, PermissionId = 58 },
+                new RolePermission { RoleId = 1, PermissionId = 59 },
+
                 new RolePermission { RoleId = 1, PermissionId = 14 },
                 new RolePermission { RoleId = 1, PermissionId = 15 },
                 new RolePermission { RoleId = 1, PermissionId = 16 },
                 new RolePermission { RoleId = 1, PermissionId = 17 },
+
                 new RolePermission { RoleId = 1, PermissionId = 18 },
                 new RolePermission { RoleId = 1, PermissionId = 19 },
                 new RolePermission { RoleId = 1, PermissionId = 20 },
                 new RolePermission { RoleId = 1, PermissionId = 21 },
+
                 new RolePermission { RoleId = 1, PermissionId = 22 },
                 new RolePermission { RoleId = 1, PermissionId = 23 },
                 new RolePermission { RoleId = 1, PermissionId = 24 },
                 new RolePermission { RoleId = 1, PermissionId = 25 },
+
                 new RolePermission { RoleId = 1, PermissionId = 26 },
                 new RolePermission { RoleId = 1, PermissionId = 27 },
                 new RolePermission { RoleId = 1, PermissionId = 28 },
                 new RolePermission { RoleId = 1, PermissionId = 29 },
+
                 new RolePermission { RoleId = 1, PermissionId = 30 },
                 new RolePermission { RoleId = 1, PermissionId = 31 },
                 new RolePermission { RoleId = 1, PermissionId = 32 },
                 new RolePermission { RoleId = 1, PermissionId = 33 },
+
                 new RolePermission { RoleId = 1, PermissionId = 34 },
                 new RolePermission { RoleId = 1, PermissionId = 35 },
                 new RolePermission { RoleId = 1, PermissionId = 36 },
                 new RolePermission { RoleId = 1, PermissionId = 37 },
+                new RolePermission { RoleId = 1, PermissionId = 60 },
+
                 new RolePermission { RoleId = 1, PermissionId = 38 },
                 new RolePermission { RoleId = 1, PermissionId = 39 },
                 new RolePermission { RoleId = 1, PermissionId = 40 },
+
                 new RolePermission { RoleId = 1, PermissionId = 41 },
                 new RolePermission { RoleId = 1, PermissionId = 42 },
                 new RolePermission { RoleId = 1, PermissionId = 43 },
                 new RolePermission { RoleId = 1, PermissionId = 44 },
+
                 new RolePermission { RoleId = 1, PermissionId = 45 },
                 new RolePermission { RoleId = 1, PermissionId = 46 },
                 new RolePermission { RoleId = 1, PermissionId = 47 },
                 new RolePermission { RoleId = 1, PermissionId = 48 },
+
                 new RolePermission { RoleId = 1, PermissionId = 49 },
                 new RolePermission { RoleId = 1, PermissionId = 50 },
                 new RolePermission { RoleId = 1, PermissionId = 51 },
                 new RolePermission { RoleId = 1, PermissionId = 52 },
+
                 new RolePermission { RoleId = 1, PermissionId = 53 },
                 new RolePermission { RoleId = 1, PermissionId = 54 },
                 new RolePermission { RoleId = 1, PermissionId = 55 },
@@ -659,57 +692,74 @@ namespace ShoeStore.Infrastructure.Persistence
                 new RolePermission { RoleId = 2, PermissionId = 11 },
                 new RolePermission { RoleId = 2, PermissionId = 12 },
                 new RolePermission { RoleId = 2, PermissionId = 13 },
+                new RolePermission { RoleId = 2, PermissionId = 57 },
+                new RolePermission { RoleId = 2, PermissionId = 58 },
+                new RolePermission { RoleId = 2, PermissionId = 59 },
+
                 new RolePermission { RoleId = 2, PermissionId = 14 },
                 new RolePermission { RoleId = 2, PermissionId = 15 },
                 new RolePermission { RoleId = 2, PermissionId = 16 },
                 new RolePermission { RoleId = 2, PermissionId = 17 },
+
                 new RolePermission { RoleId = 2, PermissionId = 18 },
                 new RolePermission { RoleId = 2, PermissionId = 19 },
                 new RolePermission { RoleId = 2, PermissionId = 20 },
                 new RolePermission { RoleId = 2, PermissionId = 21 },
+
                 new RolePermission { RoleId = 2, PermissionId = 22 },
                 new RolePermission { RoleId = 2, PermissionId = 23 },
                 new RolePermission { RoleId = 2, PermissionId = 24 },
                 new RolePermission { RoleId = 2, PermissionId = 25 },
+
                 new RolePermission { RoleId = 2, PermissionId = 26 },
                 new RolePermission { RoleId = 2, PermissionId = 27 },
                 new RolePermission { RoleId = 2, PermissionId = 28 },
                 new RolePermission { RoleId = 2, PermissionId = 29 },
+
                 new RolePermission { RoleId = 2, PermissionId = 30 },
                 new RolePermission { RoleId = 2, PermissionId = 31 },
                 new RolePermission { RoleId = 2, PermissionId = 32 },
                 new RolePermission { RoleId = 2, PermissionId = 33 },
+
                 new RolePermission { RoleId = 2, PermissionId = 34 },
                 new RolePermission { RoleId = 2, PermissionId = 35 },
                 new RolePermission { RoleId = 2, PermissionId = 36 },
                 new RolePermission { RoleId = 2, PermissionId = 37 },
+                new RolePermission { RoleId = 2, PermissionId = 60 },
+
                 new RolePermission { RoleId = 2, PermissionId = 38 },
                 new RolePermission { RoleId = 2, PermissionId = 39 },
                 new RolePermission { RoleId = 2, PermissionId = 40 },
+
                 new RolePermission { RoleId = 2, PermissionId = 41 },
                 new RolePermission { RoleId = 2, PermissionId = 42 },
                 new RolePermission { RoleId = 2, PermissionId = 43 },
                 new RolePermission { RoleId = 2, PermissionId = 44 },
+
                 new RolePermission { RoleId = 2, PermissionId = 45 },
                 new RolePermission { RoleId = 2, PermissionId = 46 },
                 new RolePermission { RoleId = 2, PermissionId = 47 },
                 new RolePermission { RoleId = 2, PermissionId = 48 },
+
                 new RolePermission { RoleId = 2, PermissionId = 49 },
                 new RolePermission { RoleId = 2, PermissionId = 50 },
                 new RolePermission { RoleId = 2, PermissionId = 51 },
                 new RolePermission { RoleId = 2, PermissionId = 52 },
+
                 new RolePermission { RoleId = 2, PermissionId = 53 },
                 // Admin intentionally not granted PermissionId = 54 (PERMISSION_MANAGE) here
                 new RolePermission { RoleId = 2, PermissionId = 55 },
 
                 // Staff (3) - operational: view and basic create/update, limited deletes
                 new RolePermission { RoleId = 3, PermissionId = 10 },
-                new RolePermission { RoleId = 3, PermissionId = 14 },
+                new RolePermission { RoleId = 3, PermissionId = 57 },
+                new RolePermission { RoleId = 3, PermissionId = 58 },
                 new RolePermission { RoleId = 3, PermissionId = 18 },
                 new RolePermission { RoleId = 3, PermissionId = 22 },
                 new RolePermission { RoleId = 3, PermissionId = 26 },
                 new RolePermission { RoleId = 3, PermissionId = 34 },
                 new RolePermission { RoleId = 3, PermissionId = 36 }, // update order
+                new RolePermission { RoleId = 3, PermissionId = 60 }, // manage order details/status
                 new RolePermission { RoleId = 3, PermissionId = 41 },
                 new RolePermission { RoleId = 3, PermissionId = 42 }, // create comment
                 new RolePermission { RoleId = 3, PermissionId = 43 }, // update comment
