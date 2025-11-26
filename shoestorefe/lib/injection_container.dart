@@ -60,6 +60,7 @@ import 'domain/usecases/product/create_product_usecase.dart';
 import 'domain/usecases/product/update_product_usecase.dart';
 import 'domain/usecases/product/delete_product_usecase.dart';
 import 'domain/usecases/product/search_products_usecase.dart';
+import 'domain/usecases/product/get_list_product_by_name.dart';
 import 'domain/usecases/product/create_store_quantity_usecase.dart';
 import 'domain/usecases/product/update_store_quantity_usecase.dart';
 import 'domain/usecases/promotion/get_all_promotions_usecase.dart';
@@ -160,6 +161,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
   sl.registerLazySingleton(() => SearchProductsUseCase(sl()));
+  sl.registerLazySingleton(() => GetListProductByNameUseCase(sl()));
   sl.registerLazySingleton(() => CreateStoreQuantityUseCase(sl()));
   sl.registerLazySingleton(() => UpdateStoreQuantityUseCase(sl()));
   sl.registerLazySingleton(() => GetAllPromotionsUseCase(sl()));

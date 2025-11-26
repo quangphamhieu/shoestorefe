@@ -11,7 +11,10 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Product?> getById(int id) async {
     return await remote.getById(id);
   }
-
+  @override
+  Future<List<Product>> getProductsByName(String name) async {
+    return await remote.getProductsByName(name);
+  }
   @override
   Future<List<Product>> getAll() async {
     return await remote.getAll();
