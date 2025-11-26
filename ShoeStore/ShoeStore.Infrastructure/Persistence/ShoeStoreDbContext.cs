@@ -758,6 +758,7 @@ namespace ShoeStore.Infrastructure.Persistence
                 new RolePermission { RoleId = 3, PermissionId = 22 },
                 new RolePermission { RoleId = 3, PermissionId = 26 },
                 new RolePermission { RoleId = 3, PermissionId = 34 },
+                new RolePermission { RoleId = 3, PermissionId = 35 }, //create order
                 new RolePermission { RoleId = 3, PermissionId = 36 }, // update order
                 new RolePermission { RoleId = 3, PermissionId = 60 }, // manage order details/status
                 new RolePermission { RoleId = 3, PermissionId = 41 },
