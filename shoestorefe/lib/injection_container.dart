@@ -24,6 +24,7 @@ import 'data/datasources/receipt_remote_data_source.dart';
 import 'data/datasources/notification_remote_data_source.dart';
 import 'data/datasources/order_remote_data_source.dart';
 import 'data/datasources/dashboard_remote_data_source.dart';
+import 'data/datasources/comment_remote_data_source.dart';
 import 'data/repositories/brand_repository_impl.dart';
 import 'data/repositories/store_repository_impl.dart';
 import 'data/repositories/supplier_repository_impl.dart';
@@ -33,6 +34,7 @@ import 'data/repositories/receipt_repository_impl.dart';
 import 'data/repositories/notification_repository_impl.dart';
 import 'data/repositories/order_repository_impl.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
+import 'data/repositories/comment_repository_impl.dart';
 import 'domain/repositories/brand_repository.dart';
 import 'domain/repositories/store_repository.dart';
 import 'domain/repositories/supplier_repository.dart';
@@ -42,6 +44,7 @@ import 'domain/repositories/receipt_repository.dart';
 import 'domain/repositories/notification_repository.dart';
 import 'domain/repositories/order_repository.dart';
 import 'domain/repositories/dashboard_repository.dart';
+import 'domain/repositories/comment_repository.dart';
 import 'domain/usecases/brand/get_all_brands_usecase.dart';
 import 'domain/usecases/brand/get_brand_by_id_usecase.dart';
 import 'domain/usecases/brand/create_brand_usecase.dart';
@@ -86,6 +89,10 @@ import 'domain/usecases/order/update_order_status_usecase.dart';
 import 'domain/usecases/order/update_order_detail_usecase.dart';
 import 'domain/usecases/order/delete_order_detail_usecase.dart';
 import 'domain/usecases/dashboard/get_dashboard_overview_usecase.dart';
+import 'domain/usecases/comment/get_comments_by_product_id_usecase.dart';
+import 'domain/usecases/comment/create_comment_usecase.dart';
+import 'domain/usecases/comment/update_comment_usecase.dart';
+import 'domain/usecases/comment/delete_comment_usecase.dart';
 import 'presentation/admin/provider/brand_provider.dart';
 import 'presentation/admin/provider/store_provider.dart';
 import 'presentation/admin/provider/supplier_provider.dart';
@@ -115,6 +122,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => NotificationRemoteDataSource(sl()));
   sl.registerLazySingleton(() => OrderRemoteDataSource(sl()));
   sl.registerLazySingleton(() => DashboardRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => CommentRemoteDataSource(sl()));
 
   // Repository
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
@@ -138,6 +146,9 @@ Future<void> init() async {
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(sl()));
   sl.registerLazySingleton<DashboardRepository>(
     () => DashboardRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<CommentRepository>(
+    () => CommentRepositoryImpl(sl()),
   );
 
   // Usecases
@@ -193,6 +204,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateOrderDetailUseCase(sl()));
   sl.registerLazySingleton(() => DeleteOrderDetailUseCase(sl()));
   sl.registerLazySingleton(() => GetDashboardOverviewUseCase(sl()));
+  sl.registerLazySingleton(() => GetCommentsByProductIdUseCase(sl()));
+  sl.registerLazySingleton(() => CreateCommentUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateCommentUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
 
   // Provider: register factory so each provider instance created by provider package is new if needed
   sl.registerFactory(() => SignUpProvider(sl()));

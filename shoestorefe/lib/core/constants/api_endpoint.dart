@@ -5,6 +5,7 @@ class ApiEndpoint {
   static const suppliers = "$baseUrl/supplier";
   static const products =
       "$baseUrl/products"; // ASP.NET Core routes are case-insensitive
+  static const comments = "$baseUrl/comments";
   static const orders = "$baseUrl/order";
   static const promotions = "$baseUrl/promotion";
   static const receipts = "$baseUrl/receipts";

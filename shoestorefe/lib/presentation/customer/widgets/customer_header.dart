@@ -21,14 +21,18 @@ class CustomerHeader extends StatelessWidget {
         final isMobile = maxWidth < 760;
 
         final navItems = [
-          _buildNavItem('HOME'),
-          _buildNavItem('MOBILE'),
-          _buildNavItem('TENIS'),
-          _buildNavItem('PLANA'),
-          _buildNavItem('NEW BALANCE'),
-          _buildNavItem('CONVERSE', hasDropdown: true),
-          _buildNavItem('CHỦ ĐỀ', hasDropdown: true),
-          _buildNavItem('GIẢM GIÁ'),
+          _buildNavItem(
+            context,
+            'HOME',
+            onTap: () => GoRouter.of(context).go('/home'),
+          ),
+          _buildNavItem(context, 'MOBILE'),
+          _buildNavItem(context, 'TENIS'),
+          _buildNavItem(context, 'PLANA'),
+          _buildNavItem(context, 'NEW BALANCE'),
+          _buildNavItem(context, 'CONVERSE', hasDropdown: true),
+          _buildNavItem(context, 'CHỦ ĐỀ', hasDropdown: true),
+          _buildNavItem(context, 'GIẢM GIÁ'),
         ];
 
         final navMenu =
@@ -234,21 +238,35 @@ class CustomerHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(String label, {bool hasDropdown = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-          if (hasDropdown) ...[
-            const SizedBox(width: 3),
-            const Icon(Icons.keyboard_arrow_down, size: 14),
+  Widget _buildNavItem(
+    BuildContext context,
+    String label, {
+    bool hasDropdown = false,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style:
+                  TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: onTap != null ? Colors.black : Colors.black.withOpacity(0.7),
+                  ),
+            ),
+            if (hasDropdown) ...[
+              const SizedBox(width: 3),
+              const Icon(Icons.keyboard_arrow_down, size: 14),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

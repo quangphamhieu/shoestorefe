@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/network/token_handler.dart';
+import '../../../domain/entities/comment.dart';
 import '../../../domain/entities/product.dart';
 import '../../../domain/entities/store_quantity.dart';
+import '../../../domain/usecases/comment/create_comment_usecase.dart';
+import '../../../domain/usecases/comment/delete_comment_usecase.dart';
+import '../../../domain/usecases/comment/get_comments_by_product_id_usecase.dart';
+import '../../../domain/usecases/comment/update_comment_usecase.dart';
 import '../../../domain/usecases/product/get_list_product_by_name.dart';
 
 class ProductDetailProvider extends ChangeNotifier {
   final GetListProductByNameUseCase getListProductByNameUseCase;
+  final GetCommentsByProductIdUseCase getCommentsByProductIdUseCase;
+  final CreateCommentUseCase createCommentUseCase;
+  final UpdateCommentUseCase updateCommentUseCase;
+  final DeleteCommentUseCase deleteCommentUseCase;
+  final TokenHandler _tokenHandler;
+  static const int _onlineStoreId = 1;
 
   ProductDetailProvider({
     required this.getListProductByNameUseCase,
-  });
+    required this.getCommentsByProductIdUseCase,
+    required this.createCommentUseCase,
+    required this.updateCommentUseCase,
+    required this.deleteCommentUseCase,
+    TokenHandler? tokenHandler,
+  }) : _tokenHandler = tokenHandler ?? TokenHandler();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -19,6 +36,18 @@ class ProductDetailProvider extends ChangeNotifier {
 
   List<Product> _variants = [];
   List<Product> get variants => _variants;
+
+  bool _isCommentsLoading = false;
+  bool get isCommentsLoading => _isCommentsLoading;
+
+  bool _isMutatingComment = false;
+  bool get isMutatingComment => _isMutatingComment;
+
+  List<Comment> _comments = [];
+  List<Comment> get comments => _comments;
+
+  String? _commentError;
+  String? get commentError => _commentError;
 
   String? _selectedColor;
   String? get selectedColor => _selectedColor;
@@ -31,6 +60,9 @@ class ProductDetailProvider extends ChangeNotifier {
 
   Set<String> get availableSizes =>
       _variants.where((p) => p.size != null).map((p) => p.size!).toSet();
+
+  String? get effectiveSelectedColor =>
+      _selectedColor ?? displayVariant?.color;
 
   /// Tổng số lượng tồn kho theo filter màu/size hiện tại (cộng dồn tất cả store)
   int get filteredStockQuantity {
@@ -56,6 +88,42 @@ class ProductDetailProvider extends ChangeNotifier {
     return result;
   }
 
+  Product? get displayVariant {
+    if (_variants.isEmpty) return null;
+    final filtered = _filteredVariants;
+    if (filtered.isNotEmpty) {
+      return filtered.first;
+    }
+    if (_selectedColor != null) {
+      try {
+        return _variants.firstWhere((p) => p.color == _selectedColor);
+      } catch (_) {
+        // ignore and fall through
+      }
+    }
+    return _variants.first;
+  }
+
+  StoreQuantity? get onlineStoreQuantity {
+    final Product? variant = displayVariant;
+    if (variant == null) return null;
+    try {
+      return variant.stores.firstWhere((sq) => sq.storeId == _onlineStoreId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String? imageForColor(String color) {
+    try {
+      return _variants
+          .firstWhere((p) => p.color == color && p.imageUrl != null)
+          .imageUrl;
+    } catch (_) {
+      return null;
+    }
+  }
+
   List<Product> get _filteredVariants {
     return _variants.where((p) {
       final matchColor =
@@ -72,15 +140,47 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _variants = await getListProductByNameUseCase(name);
+      await _loadCommentsForVariants();
     } catch (_) {
       _variants = [];
+      _comments = [];
     }
     _isLoading = false;
     notifyListeners();
   }
 
+  Future<void> _loadCommentsForVariants() async {
+    final ids = _variants.map((p) => p.id).toSet();
+    if (ids.isEmpty) {
+      _comments = [];
+      return;
+    }
+    _isCommentsLoading = true;
+    _commentError = null;
+    notifyListeners();
+    try {
+      final futures = ids.map((id) => getCommentsByProductIdUseCase(id));
+      final results = await Future.wait(futures);
+      _comments = results.expand((list) => list).toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    } catch (e) {
+      _commentError = 'Không thể tải bình luận: $e';
+    } finally {
+      _isCommentsLoading = false;
+      notifyListeners();
+    }
+  }
+
   void selectColor(String? color) {
     _selectedColor = color;
+    if (color != null && _selectedSize != null) {
+      final hasCombination = _variants.any(
+        (p) => p.color == color && p.size == _selectedSize,
+      );
+      if (!hasCombination) {
+        _selectedSize = null;
+      }
+    }
     notifyListeners();
   }
 
@@ -93,6 +193,97 @@ class ProductDetailProvider extends ChangeNotifier {
     _selectedColor = null;
     _selectedSize = null;
     notifyListeners();
+  }
+
+  bool get isUserLoggedIn => _tokenHandler.hasToken();
+
+  bool ownsComment(Comment comment) {
+    final userId = _tokenHandler.getUserId();
+    if (userId == null) return false;
+    return comment.userId.toString() == userId;
+  }
+
+  Future<String?> addComment(String content) async {
+    final userIdStr = _tokenHandler.getUserId();
+    if (userIdStr == null) {
+      return 'Bạn cần đăng nhập để bình luận';
+    }
+    final product = displayVariant;
+    if (product == null) {
+      return 'Không xác định được sản phẩm để bình luận';
+    }
+    final trimmed = content.trim();
+    if (trimmed.length < 3) {
+      return 'Bình luận phải có ít nhất 3 ký tự';
+    }
+    final userId = int.tryParse(userIdStr);
+    if (userId == null) {
+      return 'Không xác định được người dùng';
+    }
+    _isMutatingComment = true;
+    notifyListeners();
+    try {
+      final comment = await createCommentUseCase(
+        userId: userId,
+        productId: product.id,
+        content: trimmed,
+      );
+      _comments = [comment, ..._comments]
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return null;
+    } catch (e) {
+      return 'Không thể thêm bình luận: $e';
+    } finally {
+      _isMutatingComment = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> updateComment(int commentId, String content) async {
+    final trimmed = content.trim();
+    if (trimmed.length < 3) {
+      return 'Bình luận phải có ít nhất 3 ký tự';
+    }
+    _isMutatingComment = true;
+    notifyListeners();
+    try {
+      final updated = await updateCommentUseCase(
+        commentId,
+        content: trimmed,
+      );
+      if (updated == null) {
+        return 'Không tìm thấy bình luận để cập nhật';
+      }
+      _comments = _comments
+          .map((c) => c.id == updated.id ? updated : c)
+          .toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return null;
+    } catch (e) {
+      return 'Không thể cập nhật bình luận: $e';
+    } finally {
+      _isMutatingComment = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> deleteComment(int commentId) async {
+    _isMutatingComment = true;
+    notifyListeners();
+    try {
+      final success = await deleteCommentUseCase(commentId);
+      if (success) {
+        _comments = _comments.where((c) => c.id != commentId).toList();
+        notifyListeners();
+        return null;
+      }
+      return 'Không thể xóa bình luận';
+    } catch (e) {
+      return 'Không thể xóa bình luận: $e';
+    } finally {
+      _isMutatingComment = false;
+      notifyListeners();
+    }
   }
 }
 
