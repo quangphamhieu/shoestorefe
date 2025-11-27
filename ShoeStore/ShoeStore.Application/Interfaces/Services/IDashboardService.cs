@@ -1,4 +1,10 @@
-﻿public interface IDashboardService
+﻿using System.Threading.Tasks;
+using ShoeStore.Application.Dtos.Dashboard;
+
+namespace ShoeStore.Application.Interfaces.Services
 {
-    Task<DashboardDto> GetDashboardAsync(DashboardFilterDto filter);
+    public interface IDashboardService
+    {
+        Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int monthCount = 6);
+    }
 }

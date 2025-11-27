@@ -23,6 +23,7 @@ import 'data/datasources/promotion_remote_data_source.dart';
 import 'data/datasources/receipt_remote_data_source.dart';
 import 'data/datasources/notification_remote_data_source.dart';
 import 'data/datasources/order_remote_data_source.dart';
+import 'data/datasources/dashboard_remote_data_source.dart';
 import 'data/repositories/brand_repository_impl.dart';
 import 'data/repositories/store_repository_impl.dart';
 import 'data/repositories/supplier_repository_impl.dart';
@@ -31,6 +32,7 @@ import 'data/repositories/promotion_repository_impl.dart';
 import 'data/repositories/receipt_repository_impl.dart';
 import 'data/repositories/notification_repository_impl.dart';
 import 'data/repositories/order_repository_impl.dart';
+import 'data/repositories/dashboard_repository_impl.dart';
 import 'domain/repositories/brand_repository.dart';
 import 'domain/repositories/store_repository.dart';
 import 'domain/repositories/supplier_repository.dart';
@@ -39,6 +41,7 @@ import 'domain/repositories/promotion_repository.dart';
 import 'domain/repositories/receipt_repository.dart';
 import 'domain/repositories/notification_repository.dart';
 import 'domain/repositories/order_repository.dart';
+import 'domain/repositories/dashboard_repository.dart';
 import 'domain/usecases/brand/get_all_brands_usecase.dart';
 import 'domain/usecases/brand/get_brand_by_id_usecase.dart';
 import 'domain/usecases/brand/create_brand_usecase.dart';
@@ -81,6 +84,7 @@ import 'domain/usecases/order/create_order_usecase.dart';
 import 'domain/usecases/order/update_order_status_usecase.dart';
 import 'domain/usecases/order/update_order_detail_usecase.dart';
 import 'domain/usecases/order/delete_order_detail_usecase.dart';
+import 'domain/usecases/dashboard/get_dashboard_overview_usecase.dart';
 import 'presentation/admin/provider/brand_provider.dart';
 import 'presentation/admin/provider/store_provider.dart';
 import 'presentation/admin/provider/supplier_provider.dart';
@@ -89,6 +93,7 @@ import 'presentation/admin/provider/promotion_provider.dart';
 import 'presentation/admin/provider/receipt_provider.dart';
 import 'presentation/admin/provider/notification_provider.dart';
 import 'presentation/admin/provider/order_provider.dart';
+import 'presentation/admin/provider/dashboard_provider.dart';
 import 'presentation/staff/provider/staff_order_provider.dart';
 import 'presentation/customer/provider/customer_provider.dart';
 
@@ -108,6 +113,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ReceiptRemoteDataSource(sl()));
   sl.registerLazySingleton(() => NotificationRemoteDataSource(sl()));
   sl.registerLazySingleton(() => OrderRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => DashboardRemoteDataSource(sl()));
 
   // Repository
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
@@ -129,6 +135,9 @@ Future<void> init() async {
     () => NotificationRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(sl()));
+  sl.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepositoryImpl(sl()),
+  );
 
   // Usecases
   sl.registerLazySingleton(() => GetAllUsers(sl()));
@@ -181,6 +190,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderDetailUseCase(sl()));
   sl.registerLazySingleton(() => DeleteOrderDetailUseCase(sl()));
+  sl.registerLazySingleton(() => GetDashboardOverviewUseCase(sl()));
 
   // Provider: register factory so each provider instance created by provider package is new if needed
   sl.registerFactory(() => SignUpProvider(sl()));
@@ -265,6 +275,11 @@ Future<void> init() async {
       updateStatusUseCase: sl(),
       updateDetailUseCase: sl(),
       deleteDetailUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => DashboardProvider(
+      sl(),
     ),
   );
   sl.registerFactory(

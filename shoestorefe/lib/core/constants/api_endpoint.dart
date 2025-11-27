@@ -10,4 +10,5 @@ class ApiEndpoint {
   static const receipts = "$baseUrl/receipts";
   static const notifications = "$baseUrl/notifications";
   static const user = "$baseUrl/user";
+  static const dashboard = "$baseUrl/dashboard";
 }

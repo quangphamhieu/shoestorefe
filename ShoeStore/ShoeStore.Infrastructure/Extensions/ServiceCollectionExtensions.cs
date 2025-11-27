@@ -36,6 +36,7 @@ namespace ShoeStore.Infrastructure.Extensions
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IDashboardService, DashboardService>();
             services.AddTransient<IEmailService, EmailService>();
 
         }

@@ -1,111 +1,167 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShoeStore.Domain.Entities;
+using ShoeStore.Application.Dtos.Dashboard;
+using ShoeStore.Application.Interfaces.Services;
 using ShoeStore.Infrastructure.Persistence;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class DashboardService : IDashboardService
+namespace ShoeStore.Infrastructure.Services
 {
-    private readonly ShoeStoreDbContext _context;
-
-    public DashboardService(ShoeStoreDbContext context)
+    public class DashboardService : IDashboardService
     {
-        _context = context;
-    }
+        private readonly ShoeStoreDbContext _context;
+        private static readonly int[] CompletedStatuses = { 3, 5 };
 
-    public async Task<DashboardDto> GetDashboardAsync(DashboardFilterDto filter)
-    {
-        // Filter Receipts & Orders trước khi Include
-        var receiptsQuery = _context.Receipts.AsQueryable();
-        var ordersQuery = _context.Orders.AsQueryable();
-
-        if (filter.StoreId.HasValue)
+        public DashboardService(ShoeStoreDbContext context)
         {
-            receiptsQuery = receiptsQuery.Where(r => r.StoreId == filter.StoreId.Value);
-            ordersQuery = ordersQuery.Where(o => o.StoreId == filter.StoreId.Value);
+            _context = context;
         }
 
-        if (filter.FromDate.HasValue)
+        public async Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int monthCount = 6)
         {
-            receiptsQuery = receiptsQuery.Where(r => r.CreatedAt >= filter.FromDate.Value);
-            ordersQuery = ordersQuery.Where(o => o.CreatedAt >= filter.FromDate.Value);
-        }
+            if (monthCount <= 0)
+                monthCount = 6;
 
-        if (filter.ToDate.HasValue)
-        {
-            receiptsQuery = receiptsQuery.Where(r => r.CreatedAt <= filter.ToDate.Value);
-            ordersQuery = ordersQuery.Where(o => o.CreatedAt <= filter.ToDate.Value);
-        }
+            var detailQuery = _context.OrderDetails
+                .AsNoTracking()
+                .Where(d => CompletedStatuses.Contains(d.Order.StatusId));
 
-        // Include ReceiptDetails -> Product
-        var receipts = await receiptsQuery
-            .Include(r => r.ReceiptDetails!)
-                .ThenInclude(rd => rd.Product!)
-            .ToListAsync();
-
-        // Include OrderDetails -> Product, loại bỏ Cancelled
-        var orders = await ordersQuery
-            .Where(o => o.StatusId != 6)
-            .Include(o => o.OrderDetails!)
-                .ThenInclude(od => od.Product!)
-            .ToListAsync();
-
-        // Tổng chi phí nhập hàng (dựa trên số lượng nhận thực tế)
-        var totalReceiptCost = receipts.Sum(r => (r.ReceiptDetails ?? Enumerable.Empty<ReceiptDetail>())
-            .Sum(rd => (rd.ReceivedQuantity ?? 0) * (rd.UnitPrice)));
-
-        // Tổng doanh thu
-        var totalRevenue = orders.Sum(o => (o.OrderDetails ?? Enumerable.Empty<OrderDetail>())
-            .Sum(od => od.Quantity * od.UnitPrice));
-
-        // Lợi nhuận = doanh thu - chi phí tương ứng số lượng bán
-        var totalCostOfSold = orders.Sum(o => (o.OrderDetails ?? Enumerable.Empty<OrderDetail>())
-            .Sum(od => od.Quantity * (od.Product?.CostPrice ?? 0)));
-        var totalProfit = totalRevenue - totalCostOfSold;
-
-        // Thống kê đơn
-        var totalOrders = orders.Count;
-        var onlineOrders = orders.Count(o => o.OrderType == OrderType.Online);
-        var offlineOrders = orders.Count(o => o.OrderType == OrderType.Offline);
-
-        // Số đơn bị hủy
-        var cancelledOrders = await _context.Orders.CountAsync(o =>
-            o.StatusId == 6 &&
-            (!filter.StoreId.HasValue || o.StoreId == filter.StoreId.Value) &&
-            (!filter.FromDate.HasValue || o.CreatedAt >= filter.FromDate.Value) &&
-            (!filter.ToDate.HasValue || o.CreatedAt <= filter.ToDate.Value)
-        );
-
-        var summary = new DashboardSummaryDto
-        {
-            TotalReceiptCost = totalReceiptCost,
-            TotalRevenue = totalRevenue,
-            TotalProfit = totalProfit,
-            TotalOrders = totalOrders,
-            OnlineOrders = onlineOrders,
-            OfflineOrders = offlineOrders,
-            CancelledOrders = cancelledOrders
-        };
-
-        // Thống kê sản phẩm
-        var productStats = orders
-            .SelectMany(o => o.OrderDetails ?? Enumerable.Empty<OrderDetail>())
-            .Where(od => od.Product != null)
-            .GroupBy(od => od.ProductId)
-            .Select(g => new ProductStatsDto
+            if (storeId.HasValue)
             {
-                ProductName = g.First().Product!.Name,
-                QuantitySold = g.Sum(x => x.Quantity),
-                Revenue = g.Sum(x => x.Quantity * x.UnitPrice)
-            })
-            .ToList();
+                detailQuery = detailQuery.Where(d => d.Order.StoreId == storeId.Value);
+            }
 
-        var topProducts = productStats.OrderByDescending(x => x.QuantitySold).Take(5).ToList();
-        var leastProducts = productStats.OrderBy(x => x.QuantitySold).Take(5).ToList();
+            var topProducts = await detailQuery
+                .GroupBy(d => new { d.ProductId, d.Product.Name, d.Product.SKU })
+                .Select(g => new TopProductDto
+                {
+                    ProductId = g.Key.ProductId,
+                    ProductName = g.Key.Name,
+                    SKU = g.Key.SKU,
+                    QuantitySold = g.Sum(x => x.Quantity),
+                    Revenue = g.Sum(x => x.UnitPrice * x.Quantity)
+                })
+                .OrderByDescending(x => x.QuantitySold)
+                .ThenByDescending(x => x.Revenue)
+                .Take(5)
+                .ToListAsync();
 
-        return new DashboardDto
+            var profitSummary = await detailQuery
+                .GroupBy(_ => 1)
+                .Select(g => new ProfitSummaryDto
+                {
+                    Revenue = g.Sum(x => x.UnitPrice * x.Quantity),
+                    Cost = g.Sum(x => x.Product.CostPrice * x.Quantity),
+                    Profit = g.Sum(x => (x.UnitPrice - x.Product.CostPrice) * x.Quantity)
+                })
+                .FirstOrDefaultAsync() ?? new ProfitSummaryDto();
+
+            var now = DateTime.UtcNow;
+            var startMonth = new DateTime(now.Year, now.Month, 1).AddMonths(-(monthCount - 1));
+
+            var monthlyProfits = await detailQuery
+                .Where(d => d.Order.CreatedAt >= startMonth)
+                .GroupBy(d => new { d.Order.CreatedAt.Year, d.Order.CreatedAt.Month })
+                .Select(g => new MonthlyProfitDto
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Revenue = g.Sum(x => x.UnitPrice * x.Quantity),
+                    Cost = g.Sum(x => x.Product.CostPrice * x.Quantity),
+                    Profit = g.Sum(x => (x.UnitPrice - x.Product.CostPrice) * x.Quantity)
+                })
+                .OrderBy(g => g.Year)
+                .ThenBy(g => g.Month)
+                .ToListAsync();
+
+            var brandStats = await detailQuery
+                .Where(d => d.Product.BrandId != null)
+                .GroupBy(d => new { d.Product.BrandId, d.Product.Brand!.Name })
+                .Select(g => new BrandSalesDto
+                {
+                    BrandId = g.Key.BrandId,
+                    BrandName = g.Key.Name,
+                    QuantitySold = g.Sum(x => x.Quantity),
+                    Revenue = g.Sum(x => x.UnitPrice * x.Quantity)
+                })
+                .OrderByDescending(x => x.QuantitySold)
+                .ThenByDescending(x => x.Revenue)
+                .ToListAsync();
+
+            var currentMonthStart = new DateTime(now.Year, now.Month, 1);
+            var previousMonthStart = currentMonthStart.AddMonths(-1);
+
+            var currentMonthProfit = await detailQuery
+                .Where(d => d.Order.CreatedAt >= currentMonthStart)
+                .SumAsync(x => (x.UnitPrice - x.Product.CostPrice) * x.Quantity);
+
+            var previousMonthProfit = await detailQuery
+                .Where(d => d.Order.CreatedAt >= previousMonthStart && d.Order.CreatedAt < currentMonthStart)
+                .SumAsync(x => (x.UnitPrice - x.Product.CostPrice) * x.Quantity);
+
+            var growthPercentage = CalculateGrowthPercentage(previousMonthProfit, currentMonthProfit);
+
+            return new DashboardResponseDto
+            {
+                TopProducts = topProducts,
+                ProfitSummary = profitSummary,
+                MonthlyProfits = FillMissingMonths(monthlyProfits, startMonth, monthCount),
+                TopBrands = brandStats,
+                ProfitGrowth = new GrowthOverviewDto
+                {
+                    CurrentMonthProfit = currentMonthProfit,
+                    PreviousMonthProfit = previousMonthProfit,
+                    GrowthPercentage = growthPercentage
+                }
+            };
+        }
+
+        private static decimal CalculateGrowthPercentage(decimal previous, decimal current)
         {
-            Summary = summary,
-            TopSellingProducts = topProducts,
-            LeastSellingProducts = leastProducts
-        };
+            if (previous == 0)
+            {
+                return current == 0 ? 0 : 100;
+            }
+
+            return Math.Round(((current - previous) / Math.Abs(previous)) * 100, 2);
+        }
+
+        private static List<MonthlyProfitDto> FillMissingMonths(
+            List<MonthlyProfitDto> existing,
+            DateTime startMonth,
+            int monthCount)
+        {
+            var result = new List<MonthlyProfitDto>();
+            var lookup = existing.ToDictionary(
+                x => (x.Year, x.Month),
+                x => x);
+
+            for (var i = 0; i < monthCount; i++)
+            {
+                var target = startMonth.AddMonths(i);
+                if (lookup.TryGetValue((target.Year, target.Month), out var value))
+                {
+                    result.Add(value);
+                }
+                else
+                {
+                    result.Add(new MonthlyProfitDto
+                    {
+                        Year = target.Year,
+                        Month = target.Month,
+                        Revenue = 0,
+                        Cost = 0,
+                        Profit = 0
+                    });
+                }
+            }
+
+            return result
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToList();
+        }
     }
 }
