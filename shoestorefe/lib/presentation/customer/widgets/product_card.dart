@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../domain/entities/store_quantity.dart';
 import '../provider/customer_provider.dart';
 
@@ -32,19 +33,25 @@ class _ProductCardState extends State<ProductCard> {
     final salePrice = warehouseEntry?.salePrice ?? product.originalPrice;
 
     final hasDiscount = salePrice < product.originalPrice;
-    final discountPercent =
-        hasDiscount
-            ? (((product.originalPrice - salePrice) / product.originalPrice) *
-                    100)
-                .round()
-            : 0;
+    final discountPercent = hasDiscount
+        ? (((product.originalPrice - salePrice) / product.originalPrice) * 100)
+            .round()
+        : 0;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
+    return GestureDetector(
+      onTap: () {
+        // Điều hướng đến màn hình chi tiết sản phẩm với tên sản phẩm đại diện
+        context.go(
+          '/product-detail',
+          extra: product.name,
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product Image
@@ -228,6 +235,6 @@ class _ProductCardState extends State<ProductCard> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

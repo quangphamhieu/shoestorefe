@@ -13,6 +13,7 @@ import '../admin/screens/store/store_screen.dart';
 import '../admin/screens/promotion/promotion_screen.dart';
 import '../admin/screens/user/login_screen.dart';
 import '../customer/screens/home_screen.dart';
+import '../customer/screens/product_detail_screen.dart';
 import '../staff/screens/order/staff_order_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -81,6 +82,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
     GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+    GoRoute(
+      path: '/product-detail',
+      builder: (_, state) {
+        final name = state.extra as String? ?? '';
+        return ProductDetailScreen(productName: name);
+      },
+    ),
     GoRoute(path: '/signup', builder: (_, __) => const SignUpScreen()),
     GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen()),
     GoRoute(path: '/brand', builder: (_, __) => const BrandScreen()),

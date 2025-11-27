@@ -57,4 +57,5 @@ abstract class ProductRepository {
     double? salePrice,
     String? storeName,
   });
+  Future<List<Product>> getProductsByName(String name);
 }

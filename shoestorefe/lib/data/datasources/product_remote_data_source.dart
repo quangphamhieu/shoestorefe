@@ -18,7 +18,16 @@ class ProductRemoteDataSource {
     }
     return [];
   }
-
+  Future<List<ProductModel>> getProductsByName(String name) async{
+    final responese = await client.get('${ApiEndpoint.products}/getByName?name=${Uri.encodeComponent(name)}');
+    print(responese.data);
+    final data = responese.data;
+    if(data is List){
+      return data
+      .map((e) => ProductModel.fromJson(JsonUtils.normalizeMap(e)),).toList();
+    }
+    return [];
+  }
   Future<ProductModel?> getById(int id) async {
     final response = await client.get('${ApiEndpoint.products}/$id');
     final data = response.data;
