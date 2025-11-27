@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoestorefe/presentation/customer/provider/product_detail_provider.dart';
 import 'injection_container.dart' as di;
 import 'presentation/routes/app_router.dart';
 import 'core/network/token_handler.dart';
@@ -48,6 +49,7 @@ class ShoeStoreApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.sl<SignUpProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<UserProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<CustomerProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ProductDetailProvider>())
       ],
       child: MaterialApp.router(
         title: 'ShoeStore',
