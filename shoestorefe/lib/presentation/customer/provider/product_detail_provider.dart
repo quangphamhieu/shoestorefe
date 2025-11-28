@@ -4,11 +4,14 @@ import '../../../core/network/token_handler.dart';
 import '../../../domain/entities/comment.dart';
 import '../../../domain/entities/product.dart';
 import '../../../domain/entities/store_quantity.dart';
+
 import '../../../domain/usecases/comment/create_comment_usecase.dart';
 import '../../../domain/usecases/comment/delete_comment_usecase.dart';
 import '../../../domain/usecases/comment/get_comments_by_product_id_usecase.dart';
 import '../../../domain/usecases/comment/update_comment_usecase.dart';
+
 import '../../../domain/usecases/product/get_list_product_by_name.dart';
+import '../../../domain/usecases/cart/add_item_to_cart.dart';
 
 class ProductDetailProvider extends ChangeNotifier {
   final GetListProductByNameUseCase getListProductByNameUseCase;
@@ -16,6 +19,8 @@ class ProductDetailProvider extends ChangeNotifier {
   final CreateCommentUseCase createCommentUseCase;
   final UpdateCommentUseCase updateCommentUseCase;
   final DeleteCommentUseCase deleteCommentUseCase;
+  final AddItemToCart addItemToCartUseCase;
+
   final TokenHandler _tokenHandler;
   static const int _onlineStoreId = 1;
 
@@ -25,6 +30,7 @@ class ProductDetailProvider extends ChangeNotifier {
     required this.createCommentUseCase,
     required this.updateCommentUseCase,
     required this.deleteCommentUseCase,
+    required this.addItemToCartUseCase,
     TokenHandler? tokenHandler,
   }) : _tokenHandler = tokenHandler ?? TokenHandler();
 
@@ -49,6 +55,8 @@ class ProductDetailProvider extends ChangeNotifier {
   String? _commentError;
   String? get commentError => _commentError;
 
+  // ─────────────────────────────────────────────
+  // Product Filters
   String? _selectedColor;
   String? get selectedColor => _selectedColor;
 
@@ -97,9 +105,7 @@ class ProductDetailProvider extends ChangeNotifier {
     if (_selectedColor != null) {
       try {
         return _variants.firstWhere((p) => p.color == _selectedColor);
-      } catch (_) {
-        // ignore and fall through
-      }
+      } catch (_) {}
     }
     return _variants.first;
   }
@@ -126,18 +132,24 @@ class ProductDetailProvider extends ChangeNotifier {
 
   List<Product> get _filteredVariants {
     return _variants.where((p) {
-      final matchColor =
-          _selectedColor == null || p.color == null || p.color == _selectedColor;
+      final matchColor = _selectedColor == null ||
+          p.color == null ||
+          p.color == _selectedColor;
+
       final matchSize =
           _selectedSize == null || p.size == null || p.size == _selectedSize;
+
       return matchColor && matchSize;
     }).toList();
   }
 
+  // ─────────────────────────────────────────────
+  // Load Product + Comments
   Future<void> loadByName(String name) async {
     _productName = name;
     _isLoading = true;
     notifyListeners();
+
     try {
       _variants = await getListProductByNameUseCase(name);
       await _loadCommentsForVariants();
@@ -145,42 +157,49 @@ class ProductDetailProvider extends ChangeNotifier {
       _variants = [];
       _comments = [];
     }
+
     _isLoading = false;
     notifyListeners();
   }
 
   Future<void> _loadCommentsForVariants() async {
     final ids = _variants.map((p) => p.id).toSet();
+
     if (ids.isEmpty) {
       _comments = [];
       return;
     }
+
     _isCommentsLoading = true;
     _commentError = null;
     notifyListeners();
+
     try {
       final futures = ids.map((id) => getCommentsByProductIdUseCase(id));
       final results = await Future.wait(futures);
+
       _comments = results.expand((list) => list).toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (e) {
-      _commentError = 'Không thể tải bình luận: $e';
-    } finally {
-      _isCommentsLoading = false;
-      notifyListeners();
+      _commentError = "Không thể tải bình luận: $e";
     }
+
+    _isCommentsLoading = false;
+    notifyListeners();
   }
 
+  // ─────────────────────────────────────────────
+  // Select Color / Size
   void selectColor(String? color) {
     _selectedColor = color;
+
     if (color != null && _selectedSize != null) {
-      final hasCombination = _variants.any(
-        (p) => p.color == color && p.size == _selectedSize,
+      final hasCombo = _variants.any(
+            (p) => p.color == color && p.size == _selectedSize,
       );
-      if (!hasCombination) {
-        _selectedSize = null;
-      }
+      if (!hasCombo) _selectedSize = null;
     }
+
     notifyListeners();
   }
 
@@ -195,6 +214,8 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ─────────────────────────────────────────────
+  // User, Comment CRUD
   bool get isUserLoggedIn => _tokenHandler.hasToken();
 
   bool ownsComment(Comment comment) {
@@ -205,34 +226,33 @@ class ProductDetailProvider extends ChangeNotifier {
 
   Future<String?> addComment(String content) async {
     final userIdStr = _tokenHandler.getUserId();
-    if (userIdStr == null) {
-      return 'Bạn cần đăng nhập để bình luận';
-    }
+    if (userIdStr == null) return "Bạn cần đăng nhập để bình luận";
+
     final product = displayVariant;
-    if (product == null) {
-      return 'Không xác định được sản phẩm để bình luận';
-    }
+    if (product == null) return "Không xác định ở sản phẩm để comment";
+
     final trimmed = content.trim();
-    if (trimmed.length < 3) {
-      return 'Bình luận phải có ít nhất 3 ký tự';
-    }
+    if (trimmed.length < 3) return "Bình luận phải có ít nhất 3 ký tự";
+
     final userId = int.tryParse(userIdStr);
-    if (userId == null) {
-      return 'Không xác định được người dùng';
-    }
+    if (userId == null) return "Không đọc được userId";
+
     _isMutatingComment = true;
     notifyListeners();
+
     try {
       final comment = await createCommentUseCase(
         userId: userId,
         productId: product.id,
         content: trimmed,
       );
+
       _comments = [comment, ..._comments]
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
       return null;
     } catch (e) {
-      return 'Không thể thêm bình luận: $e';
+      return "Không thể thêm bình luận: $e";
     } finally {
       _isMutatingComment = false;
       notifyListeners();
@@ -241,26 +261,27 @@ class ProductDetailProvider extends ChangeNotifier {
 
   Future<String?> updateComment(int commentId, String content) async {
     final trimmed = content.trim();
-    if (trimmed.length < 3) {
-      return 'Bình luận phải có ít nhất 3 ký tự';
-    }
+    if (trimmed.length < 3) return "Bình luận phải có ít nhất 3 ký tự";
+
     _isMutatingComment = true;
     notifyListeners();
+
     try {
       final updated = await updateCommentUseCase(
         commentId,
         content: trimmed,
       );
-      if (updated == null) {
-        return 'Không tìm thấy bình luận để cập nhật';
-      }
+
+      if (updated == null) return "Không tìm thấy bình luận";
+
       _comments = _comments
           .map((c) => c.id == updated.id ? updated : c)
           .toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
       return null;
     } catch (e) {
-      return 'Không thể cập nhật bình luận: $e';
+      return "Không thể cập nhật bình luận: $e";
     } finally {
       _isMutatingComment = false;
       notifyListeners();
@@ -270,21 +291,46 @@ class ProductDetailProvider extends ChangeNotifier {
   Future<String?> deleteComment(int commentId) async {
     _isMutatingComment = true;
     notifyListeners();
+
     try {
       final success = await deleteCommentUseCase(commentId);
+
       if (success) {
         _comments = _comments.where((c) => c.id != commentId).toList();
         notifyListeners();
         return null;
       }
-      return 'Không thể xóa bình luận';
+
+      return "Không thể xóa bình luận";
     } catch (e) {
-      return 'Không thể xóa bình luận: $e';
+      return "Không thể xóa bình luận: $e";
     } finally {
       _isMutatingComment = false;
       notifyListeners();
     }
   }
+
+  // ─────────────────────────────────────────────
+  // ADD TO CART + QUANTITY (merge từ file dưới)
+  int _quantity = 1;
+  int get quantity => _quantity;
+
+  void increaseQty() {
+    _quantity++;
+    notifyListeners();
+  }
+
+  void decreaseQty() {
+    if (_quantity > 1) {
+      _quantity--;
+      notifyListeners();
+    }
+  }
+
+  Future<void> addToCart() async {
+    final variant = displayVariant;
+    if (variant == null) return;
+
+    await addItemToCartUseCase.call(variant.id, _quantity);
+  }
 }
-
-

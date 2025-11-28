@@ -137,6 +137,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         createCommentUseCase: sl(),
         updateCommentUseCase: sl(),
         deleteCommentUseCase: sl(),
+        addItemToCartUseCase: sl(),
       )..loadByName(widget.productName),
       child: Consumer<ProductDetailProvider>(
         builder: (context, provider, _) {
@@ -417,6 +418,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         const SizedBox(height: 32),
         _buildSizeSelector(provider),
+        const Text('Số lượng',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+
+        Row(
+          children: [
+            IconButton(
+              onPressed: provider.decreaseQty,
+              icon: const Icon(Icons.remove),
+            ),
+            Text(provider.quantity.toString(),
+                style: const TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
+            IconButton(
+              onPressed: provider.increaseQty,
+              icon: const Icon(Icons.add),
+            ),
+          ],
+        ),
         const SizedBox(height: 32),
         _buildStoreInfo(onlineStore),
         const SizedBox(height: 32),
@@ -445,7 +466,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const SizedBox(width: 16),
             Expanded(
               child: OutlinedButton(
-                onPressed: hasStock ? () {} : null,
+                onPressed: hasStock ? () async {
+                  await provider.addToCart();
+                  if(!mounted) return;
+                  _showMessage("Đã thêm vào giỏ hàng",isError: false);
+                } : null,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(

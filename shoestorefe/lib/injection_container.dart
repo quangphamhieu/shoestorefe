@@ -1,8 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:shoestorefe/data/datasources/cart_remote_data_source.dart';
 import 'package:shoestorefe/data/datasources/user_remote_data_source.dart';
+import 'package:shoestorefe/data/repositories/cart_repository_impl.dart';
 import 'package:shoestorefe/data/repositories/user_repository_impl.dart';
+import 'package:shoestorefe/domain/repositories/cart_repository.dart';
 import 'package:shoestorefe/domain/repositories/user_repository.dart';
+import 'package:shoestorefe/domain/usecases/cart/add_item_to_cart.dart';
 import 'package:shoestorefe/domain/usecases/user/create_user.dart';
 import 'package:shoestorefe/domain/usecases/user/delete_user.dart';
 import 'package:shoestorefe/domain/usecases/user/get_all_user.dart';
@@ -14,6 +18,7 @@ import 'package:shoestorefe/domain/usecases/user/update_user.dart';
 import 'package:shoestorefe/presentation/admin/provider/login_provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/sign_up_provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/user_provider.dart';
+import 'package:shoestorefe/presentation/customer/provider/product_detail_provider.dart';
 import 'core/network/api_client.dart';
 import 'data/datasources/brand_remote_data_source.dart';
 import 'data/datasources/store_remote_data_source.dart';
@@ -123,6 +128,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => OrderRemoteDataSource(sl()));
   sl.registerLazySingleton(() => DashboardRemoteDataSource(sl()));
   sl.registerLazySingleton(() => CommentRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => CartRemoteDataSource(sl()));
 
   // Repository
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
@@ -150,6 +156,7 @@ Future<void> init() async {
   sl.registerLazySingleton<CommentRepository>(
     () => CommentRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
 
   // Usecases
   sl.registerLazySingleton(() => GetAllUsers(sl()));
@@ -208,6 +215,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CreateCommentUseCase(sl()));
   sl.registerLazySingleton(() => UpdateCommentUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
+  sl.registerLazySingleton(() => AddItemToCart(sl()));
 
   // Provider: register factory so each provider instance created by provider package is new if needed
   sl.registerFactory(() => SignUpProvider(sl()));
@@ -313,5 +321,15 @@ Future<void> init() async {
       getAllProductsUseCase: sl(),
       searchProductsUseCase: sl(),
     ),
+  );
+  sl.registerFactory(
+      () => ProductDetailProvider(
+          getListProductByNameUseCase: sl(),
+          getCommentsByProductIdUseCase: sl(),
+          createCommentUseCase: sl(),
+          updateCommentUseCase: sl(),
+          deleteCommentUseCase: sl(),
+          addItemToCartUseCase: sl()
+      )
   );
 }
