@@ -1,0 +1,41 @@
+# Flutter build files
+shoestorefe/build/
+shoestorefe/.dart_tool/
+
+# Android build files
+shoestorefe/android/.gradle/
+shoestorefe/android/build/
+shoestorefe/android/app/build/
+shoestorefe/android/captures/
+shoestorefe/android/.externalNativeBuild/
+shoestorefe/android/app/debug/
+shoestorefe/android/app/profile/
+shoestorefe/android/app/release/
+
+# iOS build files
+shoestorefe/ios/build/
+shoestorefe/ios/.symlinks/
+shoestorefe/ios/.generated/
+shoestorefe/ios/Flutter/App.framework
+shoestorefe/ios/Flutter/Flutter.framework
+shoestorefe/ios/Flutter/Flutter.podspec
+shoestorefe/ios/ServiceDefinitions.json
+shoestorefe/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+shoestorefe/macos/Flutter/ephemeral/
+
+# Windows
+shoestorefe/windows/flutter/ephemeral/
+
+# Linux
+shoestorefe/linux/flutter/ephemeral/
+
+# .NET Core build files
+.vs/
+ShoeStore/.vs/
+ShoeStore/**/bin/
+ShoeStore/**/obj/
+ShoeStore/**/*.user
+**/bin/
+**/obj/
