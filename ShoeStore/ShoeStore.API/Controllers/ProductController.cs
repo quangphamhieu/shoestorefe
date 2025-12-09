@@ -17,7 +17,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "PRODUCT_VIEW")]
+        //[Authorize(Policy = "PRODUCT_VIEW")]
 
         public async Task<ActionResult<List<ProductDto>>> GetAll()
         {
@@ -32,7 +32,7 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "PRODUCT_VIEW")]
+        //[Authorize(Policy = "PRODUCT_VIEW")]
         public async Task<ActionResult<ProductDto>> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);

@@ -13,6 +13,8 @@ public class Order
     public PaymentMethod PaymentMethod { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public string? Address { get; set; }
+    public string? Note { get; set; }
 
     public User Customer { get; set; } = null!;
     public User? Creator { get; set; }

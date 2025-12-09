@@ -19,6 +19,8 @@ namespace ShoeStore.Application.Dtos.Order
         public decimal TotalAmount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? Address { get; set; }
+        public string? Note { get; set; }
         public List<OrderDetailResponseDto> Details { get; set; } = new();
     }
 
@@ -26,6 +28,10 @@ namespace ShoeStore.Application.Dtos.Order
     {
         public long Id { get; set; }
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
+        public string? ProductImageUrl { get; set; }
+        public string? Color { get; set; }
+        public string? Size { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
     }

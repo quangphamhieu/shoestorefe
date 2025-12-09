@@ -17,9 +17,10 @@ namespace ShoeStore.Infrastructure.Services
         private readonly ShoeStoreDbContext _context;
         private readonly IMapper _mapper;
         private const int WarehouseStoreId = 1;
-        private const int StatusPaymentSuccess = 3;
-        private const int StatusPendingConfirmation = 4;
-        private const int StatusCancelled = 6;
+        private const int StatusPaymentSuccess = 3;       // Đã thanh toán
+        private const int StatusPendingConfirmation = 4;  // Đang giao / chờ xác nhận
+        private const int StatusCompleted = 5;            // Hoàn tất
+        private const int StatusCancelled = 6;            // Hủy
 
         public OrderService(ShoeStoreDbContext context, IMapper mapper)
         {
@@ -44,6 +45,9 @@ namespace ShoeStore.Infrastructure.Services
 
             if (isOnline && dto.StoreId.HasValue && dto.StoreId.Value != WarehouseStoreId)
                 throw new ValidationException("Online orders must target the warehouse store.");
+
+            if (isOnline && string.IsNullOrWhiteSpace(dto.Address))
+                throw new ValidationException("Online orders require delivery address.");
 
             var customerExists = await _context.Users.AsNoTracking().AnyAsync(u => u.Id == dto.CustomerId);
             if (!customerExists)
@@ -85,10 +89,15 @@ namespace ShoeStore.Infrastructure.Services
 
                 EnsureDetailQuantity(item.Quantity);
 
+                // Inventory check
                 if (storeProduct.Quantity < item.Quantity)
-                    throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
+                   throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
 
-                storeProduct.Quantity -= item.Quantity;
+                // Only deduct inventory immediately for Offline orders (Status 3)
+                if (isOffline)
+                {
+                    storeProduct.Quantity -= item.Quantity;
+                }
 
                 var detail = new OrderDetail
                 {
@@ -112,6 +121,8 @@ namespace ShoeStore.Infrastructure.Services
                 StatusId = isOffline ? StatusPaymentSuccess : StatusPendingConfirmation,
                 TotalAmount = totalAmount,
                 CreatedAt = DateTime.UtcNow,
+                Address = dto.Address,
+                Note = dto.Note,
                 OrderDetails = orderDetails
             };
 
@@ -248,6 +259,7 @@ namespace ShoeStore.Infrastructure.Services
 
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
+                .Include(o => o.OrderDetails)!.ThenInclude(d => d.Product)
                 .FirstOrDefaultAsync(o => o.Id == dto.OrderId);
 
             if (order == null) return false;
@@ -255,16 +267,61 @@ namespace ShoeStore.Infrastructure.Services
             if (order.OrderDetails == null || !order.OrderDetails.Any())
                 throw new InvalidOperationException("Order has no items.");
 
-            if (order.StatusId == dto.StatusId)
+            var current = order.StatusId;
+            var next = dto.StatusId;
+            if (current == next)
+            {
+                order.Note = dto.Note ?? order.Note;
+                await _context.SaveChangesAsync();
                 return true;
+            }
+
+            // Allowed transitions logic:
+            // 3: Paid, 4: Pending, 5: Completed, 6: Cancelled
+            // 3 -> 4 (Allowed by user req? "from 3 to 4 then to 5"? User said "from 3 to 4 is from 3 to 5". Wait. 
+            // User said: "from 4 to 3... from 3 to 5". "from 3 4 5 to 6". "from 6 to 3 and 5". "from 6 to 4".
+            // 3 -> 4 might not be common if 3 is Paid and 4 is Pending. Usually 4->3. 
+            // Let's stick strictly to user's graph: 
+            // 4 -> 3
+            // 3 -> 5
+            // 3 -> 6, 4 -> 6, 5 -> 6
+            // 6 -> 3, 6 -> 4, 6 -> 5
+            
+            bool allowed = (current == StatusPendingConfirmation && next == StatusPaymentSuccess) // 4 -> 3
+                           || (current == StatusPaymentSuccess && next == StatusCompleted)        // 3 -> 5
+                           || (next == StatusCancelled)                                           // Any -> 6
+                           || (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusPendingConfirmation || next == StatusCompleted)); // 6 -> 3/4/5
+
+            if (!allowed)
+                throw new InvalidOperationException($"Transition {current} -> {next} is not allowed.");
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (dto.StatusId == StatusCancelled && order.StatusId != StatusCancelled)
-            {
-                var storeId = order.StoreId ?? WarehouseStoreId;
-                var storeProducts = await LoadStoreProductsAsync(order.OrderDetails, storeId);
+            var storeId = order.StoreId ?? WarehouseStoreId;
+            var storeProducts = await LoadStoreProductsAsync(order.OrderDetails, storeId);
 
+            // Inventory adjustments
+            
+            // Deduct: 4 -> 3, 6 -> 3, 6 -> 5
+            // Note: 6 -> 4 does NOT deduct (User said "from 6 to 4 then no add/sub")
+            if ((current == StatusPendingConfirmation && next == StatusPaymentSuccess) || 
+                (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusCompleted)))
+            {
+                foreach (var detail in order.OrderDetails)
+                {
+                    if (storeProducts.TryGetValue(detail.ProductId, out var sp))
+                    {
+                        if (sp.Quantity < detail.Quantity)
+                            throw new InvalidOperationException($"Product {sp.ProductId} out of stock for transition.");
+                        sp.Quantity -= detail.Quantity;
+                    }
+                }
+            }
+
+            // Restore: 3 -> 6, 5 -> 6
+            // Note: 4 -> 6 does NOT restore (User said "from 4 to 6 then no need")
+            if ((current == StatusPaymentSuccess || current == StatusCompleted) && next == StatusCancelled)
+            {
                 foreach (var detail in order.OrderDetails)
                 {
                     if (storeProducts.TryGetValue(detail.ProductId, out var sp))
@@ -272,8 +329,9 @@ namespace ShoeStore.Infrastructure.Services
                 }
             }
 
-            order.StatusId = dto.StatusId;
+            order.StatusId = next;
             order.UpdatedAt = DateTime.UtcNow;
+            order.Note = dto.Note ?? order.Note;
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
@@ -320,6 +378,18 @@ namespace ShoeStore.Infrastructure.Services
         {
             if (quantity <= 0)
                 throw new ValidationException("Quantity must be greater than zero.");
+        }
+
+        public async Task<bool> UpdateOrderInfoAsync(OrderInfoUpdateDto dto)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == dto.OrderId);
+            if (order == null) return false;
+
+            order.Note = dto.Note;
+            order.Address = dto.Address;
+            order.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
         }
 
     }

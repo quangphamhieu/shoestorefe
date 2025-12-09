@@ -15,5 +15,6 @@ namespace ShoeStore.Application.Interfaces.Services
         Task<bool> UpdateOrderDetailAsync(OrderDetailUpdateDto dto);
         Task<bool> DeleteOrderDetailAsync(long orderDetailId);
         Task<bool> UpdateOrderStatusAsync(OrderStatusUpdateDto dto);
+        Task<bool> UpdateOrderInfoAsync(OrderInfoUpdateDto dto);
     }
 }

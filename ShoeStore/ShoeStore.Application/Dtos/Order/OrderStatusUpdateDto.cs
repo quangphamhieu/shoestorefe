@@ -11,5 +11,7 @@ namespace ShoeStore.Application.Dtos.Order
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "StatusId must be greater than zero.")]
         public int StatusId { get; set; }
+
+        public string? Note { get; set; }
     }
 }

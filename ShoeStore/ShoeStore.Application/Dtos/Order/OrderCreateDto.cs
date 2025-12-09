@@ -27,5 +27,11 @@ namespace ShoeStore.Application.Dtos.Order
         [Required]
         [MinLength(1, ErrorMessage = "Order must contain at least one detail.")]
         public List<OrderDetailCreateDto> Details { get; set; } = new();
+
+        [StringLength(255)]
+        public string? Address { get; set; }
+
+        [StringLength(500)]
+        public string? Note { get; set; }
     }
 }

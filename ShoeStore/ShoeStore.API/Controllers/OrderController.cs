@@ -74,13 +74,24 @@ namespace ShoeStore.API.Controllers
         }
 
         [HttpPut("status")]
-        [Authorize(Policy = "ORDER_DELETE")]
+        [Authorize(Policy = "ORDER_UPDATE")]
         public async Task<IActionResult> UpdateStatus([FromBody] OrderStatusUpdateDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var success = await _service.UpdateOrderStatusAsync(dto);
+            return success ? Ok() : NotFound();
+        }
+
+        [HttpPut("info")]
+        [Authorize(Policy = "ORDER_UPDATE")]
+        public async Task<IActionResult> UpdateInfo([FromBody] OrderInfoUpdateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var success = await _service.UpdateOrderInfoAsync(dto);
             return success ? Ok() : NotFound();
         }
 
