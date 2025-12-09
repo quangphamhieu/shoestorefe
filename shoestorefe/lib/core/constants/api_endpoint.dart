@@ -1,5 +1,5 @@
 class ApiEndpoint {
-  static const baseUrl = "https://localhost:7097/api"; // thay bằng port backend
+  static const baseUrl = "https://172.16.52.127:7097/api"; // Chỉnh dựa theo ip lan của mạng
   static const brands = "$baseUrl/brands";
   static const stores = "$baseUrl/store";
   static const suppliers = "$baseUrl/supplier";

@@ -3,6 +3,15 @@ import 'package:shoestorefe/presentation/admin/screens/user/sign_up_screen.dart'
 import 'package:shoestorefe/presentation/admin/screens/user/user_screen.dart';
 import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
+import 'package:shoestorefe/presentation/customer/screens/cart_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/checkout_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_home_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_login_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_product_detail_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_signup_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/order_history_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/profile_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/search_results_screen.dart';
 import '../admin/screens/dashboard/dashboard_screen.dart';
 import '../admin/screens/brand/brand_screen.dart';
 import '../admin/screens/supplier/supplier_screen.dart';
@@ -18,13 +27,16 @@ import '../staff/screens/order/staff_order_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   // Màn hình mặc định luôn là trang home của customer
-  initialLocation: '/',
+  initialLocation: '/mobile-login', //Nếu là mobile thì đổi thành '/mobile-login'
   redirect: (context, state) {
     final isLoggedIn = TokenHandler().hasToken();
     final String location = state.matchedLocation;
 
     final bool isAuthRoute =
-        location == '/login' || location == '/signup';
+        location == '/login' ||
+        location == '/signup' ||
+        location == '/mobile-login' ||
+        location == '/mobile-signup';
 
     // Các route public mà user chưa đăng nhập vẫn xem được
     final Set<String> publicRoutes = {
@@ -32,6 +44,8 @@ final GoRouter appRouter = GoRouter(
       '/home',
       '/login',
       '/signup',
+      '/mobile-login',
+      '/mobile-signup',
     };
 
     // Các route chỉ dành cho admin (dashboard + module quản trị)
@@ -65,7 +79,7 @@ final GoRouter appRouter = GoRouter(
       } else if (role == "Staff") {
         return '/staff/order';
       } else if (role == "Customer") {
-        return '/home';
+        return '/home'; //Nếu là mobile thì đổi thành '/mobile-home'
       }
     }
 
@@ -89,6 +103,34 @@ final GoRouter appRouter = GoRouter(
         return ProductDetailScreen(productName: name);
       },
     ),
+    // Customer mobile routes
+    GoRoute(path: '/mobile-home', builder: (_, __) => const MobileHomeScreen()),
+    GoRoute(
+      path: '/mobile-login',
+      builder: (_, __) => const MobileLoginScreen(),
+    ),
+    GoRoute(
+      path: '/mobile-signup',
+      builder: (_, __) => const MobileSignUpScreen(),
+    ),
+    GoRoute(
+      path: '/mobile-product-detail',
+      builder: (_, state) {
+        final name = state.extra as String? ?? '';
+        return MobileProductDetailScreen(productName: name);
+      },
+    ),
+    GoRoute(
+      path: '/search-results',
+      builder: (_, state) {
+        final query = state.extra as String? ?? '';
+        return SearchResultsScreen(query: query);
+      },
+    ),
+    GoRoute(path: '/cart', builder: (_, __) => const CartScreen()),
+    GoRoute(path: '/checkout', builder: (_, __) => const CheckoutScreen()),
+    GoRoute(path: '/orders', builder: (_, __) => const OrderHistoryScreen()),
+    GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
     GoRoute(path: '/signup', builder: (_, __) => const SignUpScreen()),
     GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen()),
     GoRoute(path: '/brand', builder: (_, __) => const BrandScreen()),

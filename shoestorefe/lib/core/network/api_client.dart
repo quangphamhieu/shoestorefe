@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'token_handler.dart';
+import 'dio_adapter_stub.dart'
+    if (dart.library.io) 'dio_adapter_mobile.dart'
+    if (dart.library.html) 'dio_adapter_web.dart';
 
 class ApiClient {
   final Dio dio;
@@ -13,16 +16,46 @@ class ApiClient {
               headers: {"Content-Type": "application/json"},
             ),
           ) {
+    // Set the adapter based on the platform (Web/Mobile)
+    this.dio.httpClientAdapter = getAdapter();
+
     this.dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          final token = TokenHandler().getToken();
+          final tokenHandler = TokenHandler();
+          final token = tokenHandler.getToken();
+          final userId = tokenHandler.getUserId();
+
+          print('[ApiClient] 🔐 Request to: ${options.path}');
+          print('[ApiClient] 🔐 Has token: ${token.isNotEmpty}');
+          if (userId != null) {
+            print('[ApiClient] 👤 UserId from token: $userId');
+          } else {
+            print('[ApiClient] ⚠️ UserId not found in token!');
+          }
+
           if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           } else {
             options.headers.remove('Authorization');
+            print('[ApiClient] ⚠️ No token available!');
           }
           handler.next(options);
+        },
+        onResponse: (response, handler) {
+          print(
+            '[ApiClient] ✅ Response from ${response.requestOptions.path}: ${response.statusCode}',
+          );
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          print(
+            '[ApiClient] ❌ Error on ${error.requestOptions.path}: ${error.message}',
+          );
+          if (error.response != null) {
+            print('[ApiClient] ❌ Error response: ${error.response?.data}');
+          }
+          handler.next(error);
         },
       ),
     );

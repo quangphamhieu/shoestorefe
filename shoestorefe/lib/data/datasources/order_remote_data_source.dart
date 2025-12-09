@@ -16,6 +16,17 @@ class OrderRemoteDataSource {
     }
     return [];
   }
+  
+  Future<List<OrderModel>> getMyOrders() async {
+    final response = await client.get('${ApiEndpoint.orders}/myOrder');
+    final data = response.data;
+    if (data is List) {
+      return data
+          .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
+  }
 
   Future<OrderModel> create(Map<String, dynamic> body) async {
     final response = await client.post(ApiEndpoint.orders, body);

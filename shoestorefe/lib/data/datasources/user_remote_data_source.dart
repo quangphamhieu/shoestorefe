@@ -44,7 +44,15 @@ class UserRemoteDataSource {
     }
     return null;
   }
+  Future<UserModel?> updateMyProfile(Map<String, dynamic> body) async {
+    final response = await client.put("${ApiEndpoint.user}/my-profile", body);
+    final data = response.data;
 
+    if (data is Map<String, dynamic>) {
+      return UserModel.fromJson(data);
+    }
+    return null;
+  }
   Future<bool> delete(int id) async {
     final response = await client.delete("${ApiEndpoint.user}/$id");
     return response.statusCode == 200;

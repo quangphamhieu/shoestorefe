@@ -69,8 +69,7 @@ class ProductDetailProvider extends ChangeNotifier {
   Set<String> get availableSizes =>
       _variants.where((p) => p.size != null).map((p) => p.size!).toSet();
 
-  String? get effectiveSelectedColor =>
-      _selectedColor ?? displayVariant?.color;
+  String? get effectiveSelectedColor => _selectedColor ?? displayVariant?.color;
 
   /// Tổng số lượng tồn kho theo filter màu/size hiện tại (cộng dồn tất cả store)
   int get filteredStockQuantity {
@@ -89,8 +88,11 @@ class ProductDetailProvider extends ChangeNotifier {
     final Map<String, int> result = {};
     for (final product in _filteredVariants) {
       for (final StoreQuantity sq in product.stores) {
-        result.update(sq.storeName, (value) => value + sq.quantity,
-            ifAbsent: () => sq.quantity);
+        result.update(
+          sq.storeName,
+          (value) => value + sq.quantity,
+          ifAbsent: () => sq.quantity,
+        );
       }
     }
     return result;
@@ -132,7 +134,8 @@ class ProductDetailProvider extends ChangeNotifier {
 
   List<Product> get _filteredVariants {
     return _variants.where((p) {
-      final matchColor = _selectedColor == null ||
+      final matchColor =
+          _selectedColor == null ||
           p.color == null ||
           p.color == _selectedColor;
 
@@ -178,8 +181,9 @@ class ProductDetailProvider extends ChangeNotifier {
       final futures = ids.map((id) => getCommentsByProductIdUseCase(id));
       final results = await Future.wait(futures);
 
-      _comments = results.expand((list) => list).toList()
-        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      _comments =
+          results.expand((list) => list).toList()
+            ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (e) {
       _commentError = "Không thể tải bình luận: $e";
     }
@@ -195,7 +199,7 @@ class ProductDetailProvider extends ChangeNotifier {
 
     if (color != null && _selectedSize != null) {
       final hasCombo = _variants.any(
-            (p) => p.color == color && p.size == _selectedSize,
+        (p) => p.color == color && p.size == _selectedSize,
       );
       if (!hasCombo) _selectedSize = null;
     }
@@ -267,17 +271,13 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final updated = await updateCommentUseCase(
-        commentId,
-        content: trimmed,
-      );
+      final updated = await updateCommentUseCase(commentId, content: trimmed);
 
       if (updated == null) return "Không tìm thấy bình luận";
 
-      _comments = _comments
-          .map((c) => c.id == updated.id ? updated : c)
-          .toList()
-        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      _comments =
+          _comments.map((c) => c.id == updated.id ? updated : c).toList()
+            ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return null;
     } catch (e) {
@@ -329,8 +329,21 @@ class ProductDetailProvider extends ChangeNotifier {
 
   Future<void> addToCart() async {
     final variant = displayVariant;
-    if (variant == null) return;
+    if (variant == null) {
+      print('[ProductDetailProvider] Error: No variant selected');
+      throw Exception('Không có sản phẩm được chọn');
+    }
 
-    await addItemToCartUseCase.call(variant.id, _quantity);
+    print(
+      '[ProductDetailProvider] Adding to cart: Product ID=${variant.id}, Quantity=$_quantity',
+    );
+
+    try {
+      await addItemToCartUseCase.call(variant.id, _quantity);
+      print('[ProductDetailProvider] Added to cart successfully');
+    } catch (e) {
+      print('[ProductDetailProvider] Error adding to cart: $e');
+      rethrow;
+    }
   }
 }

@@ -56,7 +56,28 @@ class UserRepositoryImpl implements UserRepository {
       "statusId": statusId,
     });
   }
-
+  @override
+  Future<User?> updateMyProfile({
+    required int id,
+    required String fullName,
+    required String phone,
+    String? email,
+    required int gender,
+    required int roleId,
+    int? storeId,
+    required int statusId,
+  }) async {
+    return await remote.updateMyProfile({
+      "id": id,
+      "fullName": fullName,
+      "phone": phone,
+      "email": email,
+      "gender": gender,
+      "roleId": roleId,
+      "storeId": storeId,
+      "statusId": statusId,
+    });
+  }
   @override
   Future<bool> delete(int id) => remote.delete(id);
 

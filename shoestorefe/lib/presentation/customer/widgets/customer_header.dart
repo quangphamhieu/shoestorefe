@@ -2,11 +2,86 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../provider/customer_provider.dart';
+import '../provider/cart_provider.dart';
+import '../provider/order_history_provider.dart';
 import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
+import 'web_cart_overlay.dart';
+import 'web_order_history_overlay.dart';
 
-class CustomerHeader extends StatelessWidget {
+class CustomerHeader extends StatefulWidget {
   const CustomerHeader({super.key});
+
+  @override
+  State<CustomerHeader> createState() => _CustomerHeaderState();
+}
+
+class _CustomerHeaderState extends State<CustomerHeader> {
+  final LayerLink _cartLayerLink = LayerLink();
+  final LayerLink _historyLayerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+  String? _activeOverlay; // 'cart' or 'history'
+
+  @override
+  void dispose() {
+    _closeOverlay();
+    super.dispose();
+  }
+
+  void _closeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _activeOverlay = null;
+  }
+
+  void _toggleOverlay(
+      BuildContext context, LayerLink link, String name, Widget overlayWidget, double width) {
+    if (_activeOverlay == name) {
+      _closeOverlay();
+      return;
+    }
+
+    _closeOverlay(); // Close others first
+
+    // Load data
+    if (name == 'cart') {
+      context.read<CartProvider>().loadCart();
+    } else if (name == 'history') {
+      context.read<OrderHistoryProvider>().loadOrders();
+    }
+
+    // Icon size is 36. Alignment: right aligned.
+    final offset = Offset(36.0 - width, 45.0);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _closeOverlay,
+              behavior: HitTestBehavior.translucent,
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          Positioned(
+            width: width,
+            child: CompositedTransformFollower(
+              link: link,
+              showWhenUnlinked: false,
+              offset: offset,
+              child: Material(
+                color: Colors.transparent,
+                child: overlayWidget,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+    _activeOverlay = name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +92,8 @@ class CustomerHeader extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth;
-        final isTablet = maxWidth < 1100;
         final isMobile = maxWidth < 760;
+        final isTablet = maxWidth < 1100;
 
         final navItems = [
           _buildNavItem(
@@ -80,32 +155,58 @@ class CustomerHeader extends StatelessWidget {
         );
 
         final actionIcons = [
-          _buildHeaderIcon(Icons.account_circle_outlined),
-          _buildHeaderIcon(Icons.favorite_border),
+          _buildHeaderIcon(Icons.account_circle_outlined, onTap: () {
+            // Profile action
+          }),
+          _buildHeaderIcon(Icons.favorite_border, onTap: () {
+            // Wishlist action
+          }),
+          // History Icon (Only if logged in?)
+           if (isLoggedIn)
+            _buildInteractiveIcon(
+              _historyLayerLink,
+              Icons.receipt_long_outlined, // History icon
+              onTap: () => _toggleOverlay(
+                context, _historyLayerLink, 'history', const WebOrderHistoryOverlay(), 400),
+            ),
+          // Cart Icon
           Stack(
             clipBehavior: Clip.none,
             children: [
-              _buildHeaderIcon(Icons.shopping_bag_outlined),
-              Positioned(
-                right: -4,
-                top: -4,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
-                  child: const Text(
-                    '0',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+               _buildInteractiveIcon(
+                _cartLayerLink,
+                Icons.shopping_bag_outlined,
+                onTap: () => _toggleOverlay(
+                  context, _cartLayerLink, 'cart', const WebCartOverlay(), 350),
+              ),
+              Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
+                  final itemCount = cartProvider.cart?.items.length ?? 0;
+                  if (itemCount == 0) return const SizedBox.shrink();
+                  return Positioned(
+                    right: -4,
+                    top: -4,
+                    child: IgnorePointer(
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                        child: Text(
+                          '$itemCount',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                  );
+                }
               ),
             ],
           ),
@@ -271,15 +372,40 @@ class CustomerHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderIcon(IconData icon) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
+  Widget _buildHeaderIcon(IconData icon, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, size: 20, color: Colors.black87),
       ),
-      child: Icon(icon, size: 20, color: Colors.black87),
+    );
+  }
+
+  Widget _buildInteractiveIcon(LayerLink link, IconData icon, {required VoidCallback onTap}) {
+    return CompositedTransformTarget(
+      link: link,
+      child: Material( // Material for ripple effect
+        color: Colors.transparent, 
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 20, color: Colors.black87),
+          ),
+        ),
+      ),
     );
   }
 

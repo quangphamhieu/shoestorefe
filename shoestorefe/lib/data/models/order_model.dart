@@ -63,6 +63,7 @@ class OrderDetailModel extends OrderDetail {
     required super.id,
     required super.productId,
     super.productName,
+    super.productImageUrl,
     required super.quantity,
     required super.unitPrice,
   });
@@ -72,6 +73,7 @@ class OrderDetailModel extends OrderDetail {
       id: (json['id'] as num).toInt(),
       productId: (json['productId'] as num).toInt(),
       productName: json['productName'] as String?,
+      productImageUrl: json['productImageUrl'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       unitPrice: (json['unitPrice'] as num).toDouble(),
     );

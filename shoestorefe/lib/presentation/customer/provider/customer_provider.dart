@@ -59,6 +59,12 @@ class CustomerProvider extends ChangeNotifier {
   String _sortBy = 'newest'; // newest, price-asc, price-desc, name
   String get sortBy => _sortBy;
 
+  bool get hasActiveFilters =>
+      _selectedSize != null ||
+      _selectedColor != null ||
+      _minPrice != null ||
+      _maxPrice != null;
+
   // Customer: Nhóm products theo base name (bỏ size và color ở cuối)
   // Ví dụ: "Air Jordan 1 - Red - 42" và "Air Jordan 1 - Black - 43" -> "Air Jordan 1"
   String _getBaseName(String productName) {

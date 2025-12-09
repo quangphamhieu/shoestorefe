@@ -2,6 +2,7 @@ import '../entities/order.dart';
 
 abstract class OrderRepository {
   Future<List<Order>> getAll();
+  Future<List<Order>> getMyOrders();
   Future<Order> create({
     required int customerId,
     required int orderType,

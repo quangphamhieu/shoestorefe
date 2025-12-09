@@ -10,6 +10,10 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<List<Order>> getAll() async {
     return await remote.getAll();
   }
+  @override
+  Future<List<Order>> getMyOrders() async {
+    return await remote.getMyOrders();
+  }
 
   @override
   Future<Order> create({

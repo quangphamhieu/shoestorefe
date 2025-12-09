@@ -26,7 +26,16 @@ abstract class UserRepository {
     int? storeId,
     required int statusId,
   });
-
+  Future<User?> updateMyProfile({
+    required int id,
+    required String fullName,
+    required String phone,
+    String? email,
+    required int gender,
+    required int roleId,
+    int? storeId,
+    required int statusId,
+  });
   Future<bool> delete(int id);
 
   Future<LoginResponse?> login(String phoneOrEmail, String password);

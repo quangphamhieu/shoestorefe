@@ -9,28 +9,62 @@ class CartRemoteDataSource {
 
   /// Lấy giỏ hàng hiện tại của user
   Future<CartModel> getCart() async {
-    final response = await client.get("${ApiEndpoint.cart}/getCart");
+    print(
+      '[CartRemoteDataSource] 🔍 Fetching cart from: ${ApiEndpoint.cart}/getCart',
+    );
 
-    if (response.data is Map<String, dynamic>) {
-      return CartModel.fromJson(response.data as Map<String, dynamic>);
+    try {
+      final response = await client.get("${ApiEndpoint.cart}/getCart");
+
+      print('[CartRemoteDataSource] ✅ Response status: ${response.statusCode}');
+      print(
+        '[CartRemoteDataSource] 📦 Response type: ${response.data.runtimeType}',
+      );
+      print('[CartRemoteDataSource] 📦 Response data: ${response.data}');
+
+      if (response.data is Map<String, dynamic>) {
+        final cart = CartModel.fromJson(response.data as Map<String, dynamic>);
+        print(
+          '[CartRemoteDataSource] ✅ Parsed cart with ${cart.items.length} items',
+        );
+        return cart;
+      }
+
+      print('[CartRemoteDataSource] ❌ Invalid response format - not a Map');
+      throw Exception('Invalid cart response format');
+    } catch (e, stackTrace) {
+      print('[CartRemoteDataSource] ❌ Error fetching cart: $e');
+      print('[CartRemoteDataSource] Stack trace: $stackTrace');
+      rethrow;
     }
-
-    throw Exception('Invalid cart response format');
   }
 
   /// Thêm sản phẩm vào giỏ hàng
   Future<void> addToCart(Map<String, dynamic> requestBody) async {
-    final response = await client.post(
-      "${ApiEndpoint.cart}/add",
-      requestBody,
-    );
+    print('[CartRemoteDataSource] 🛒 Adding to cart with body: $requestBody');
 
-    // API chỉ cần trả success, không cần parse cart
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return;
+    try {
+      final response = await client.post(
+        "${ApiEndpoint.cart}/add",
+        requestBody,
+      );
+
+      print(
+        '[CartRemoteDataSource] ✅ Add to cart status: ${response.statusCode}',
+      );
+      print('[CartRemoteDataSource] 📦 Add to cart response: ${response.data}');
+
+      // API chỉ cần trả success, không cần parse cart
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return;
+      }
+
+      throw Exception('Invalid add-to-cart response format');
+    } catch (e, stackTrace) {
+      print('[CartRemoteDataSource] ❌ Error adding to cart: $e');
+      print('[CartRemoteDataSource] Stack trace: $stackTrace');
+      rethrow;
     }
-
-    throw Exception('Invalid add-to-cart response format');
   }
 
   /// Cập nhật số lượng sản phẩm
