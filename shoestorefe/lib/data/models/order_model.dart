@@ -17,6 +17,8 @@ class OrderModel extends Order {
     required super.paymentMethod,
     required super.createdAt,
     super.updatedAt,
+    super.address,
+    super.note,
     required super.details,
   });
 
@@ -53,6 +55,8 @@ class OrderModel extends Order {
           json['updatedAt'] != null
               ? DateTime.tryParse(json['updatedAt'] as String)
               : null,
+      address: json['address'] as String?,
+      note: json['note'] as String?,
       details: details,
     );
   }
@@ -64,6 +68,8 @@ class OrderDetailModel extends OrderDetail {
     required super.productId,
     super.productName,
     super.productImageUrl,
+    super.color,
+    super.size,
     required super.quantity,
     required super.unitPrice,
   });
@@ -74,6 +80,8 @@ class OrderDetailModel extends OrderDetail {
       productId: (json['productId'] as num).toInt(),
       productName: json['productName'] as String?,
       productImageUrl: json['productImageUrl'] as String?,
+      color: json['color'] as String?,
+      size: json['size'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       unitPrice: (json['unitPrice'] as num).toDouble(),
     );

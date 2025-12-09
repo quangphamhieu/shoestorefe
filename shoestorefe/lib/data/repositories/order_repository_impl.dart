@@ -56,4 +56,17 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<bool> deleteDetail(int orderDetailId) async {
     return await remote.deleteDetail(orderDetailId);
   }
+
+  @override
+  Future<bool> updateInfo({
+    required int orderId,
+    String? note,
+    String? address,
+  }) async {
+    return await remote.updateInfo(
+      orderId: orderId,
+      note: note,
+      address: address,
+    );
+  }
 }

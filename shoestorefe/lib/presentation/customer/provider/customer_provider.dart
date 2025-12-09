@@ -142,9 +142,14 @@ class CustomerProvider extends ChangeNotifier {
 
     // Color filter
     if (_selectedColor != null) {
+      final selected = _selectedColor!.toLowerCase();
       result =
           result
-              .where((group) => group.availableColors.contains(_selectedColor))
+              .where(
+                (group) => group.availableColors.any(
+                  (c) => c.toLowerCase().contains(selected),
+                ),
+              )
               .toList();
     }
 

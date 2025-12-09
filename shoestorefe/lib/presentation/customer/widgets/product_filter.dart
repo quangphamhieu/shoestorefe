@@ -26,6 +26,7 @@ class ProductFilter extends StatelessWidget {
             label: 'Màu sắc',
             value: provider.selectedColor,
             items: [
+              'All', // Add option for All
               'Black',
               'White',
               'Red',
@@ -38,6 +39,7 @@ class ProductFilter extends StatelessWidget {
               'Purple',
             ],
             displayMap: {
+              'All': 'Tất cả',
               'Black': 'Đen',
               'White': 'Trắng',
               'Red': 'Đỏ',
@@ -49,7 +51,13 @@ class ProductFilter extends StatelessWidget {
               'Pink': 'Hồng',
               'Purple': 'Tím',
             },
-            onChanged: (value) => provider.setColor(value),
+            onChanged: (value) {
+              if (value == 'All') {
+                provider.setColor(null);
+              } else {
+                provider.setColor(value);
+              }
+            },
           ),
           const SizedBox(width: 16),
           // Size Filter
@@ -58,6 +66,7 @@ class ProductFilter extends StatelessWidget {
             label: 'Kích thước',
             value: provider.selectedSize,
             items: [
+              'All',
               '35',
               '36',
               '37',
@@ -70,17 +79,31 @@ class ProductFilter extends StatelessWidget {
               '44',
               '45',
             ],
-            onChanged: (value) => provider.setSize(value),
+            displayMap: {'All': 'Tất cả'},
+             onChanged: (value) {
+              if (value == 'All') {
+                provider.setSize(null);
+              } else {
+                provider.setSize(value);
+              }
+            },
           ),
           const SizedBox(width: 16),
           // Price Filter
           _buildDropdown(
             context,
             label: 'Giá',
-            value: null,
-            items: ['Dưới 500k', '500k - 1tr', '1tr - 2tr', 'Trên 2tr'],
+            value: null, // This assumes price doesn't hold state in dropdown value visually, logic in provider
+            // Ideally we should track selected price text to show it.
+            // But preserving original behavior where value: null likely means it resets or just shows label?
+            // User requested "All" filter to clear. 
+            // If current implementation doesn't highlight selected price, adding 'Tất cả' is good.
+            items: ['Tất cả', 'Dưới 500k', '500k - 1tr', '1tr - 2tr', 'Trên 2tr'],
             onChanged: (value) {
               switch (value) {
+                case 'Tất cả':
+                   provider.setPriceRange(null, null);
+                   break;
                 case 'Dưới 500k':
                   provider.setPriceRange(null, 500000);
                   break;
@@ -131,6 +154,7 @@ class ProductFilter extends StatelessWidget {
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
+        color: Colors.white, // User requested White background, avoiding "skin color"
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -147,6 +171,7 @@ class ProductFilter extends StatelessWidget {
             size: 20,
             color: Colors.grey[600],
           ),
+          dropdownColor: Colors.white, // Ensure dropdown popup is also white
           items:
               items.map((item) {
                 return DropdownMenuItem<String>(

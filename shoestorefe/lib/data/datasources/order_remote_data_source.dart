@@ -63,4 +63,19 @@ class OrderRemoteDataSource {
     final successCodes = {200, 204};
     return successCodes.contains(response.statusCode);
   }
+
+  Future<bool> updateInfo({
+    required int orderId,
+    String? note,
+    String? address,
+  }) async {
+    final body = {
+      'orderId': orderId,
+      'note': note,
+      'address': address,
+    };
+    final response = await client.put('${ApiEndpoint.orders}/info', body);
+    final successCodes = {200, 204};
+    return successCodes.contains(response.statusCode);
+  }
 }

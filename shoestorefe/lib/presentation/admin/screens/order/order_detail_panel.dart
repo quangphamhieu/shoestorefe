@@ -60,6 +60,120 @@ class OrderDetailPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
+          // Info Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Address
+                if (order.address != null) ...[
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 18,
+                        color: Color(0xFF64748B),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Địa chỉ:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          order.address!,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                // Note
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.note_alt_outlined,
+                      size: 18,
+                      color: Color(0xFF64748B),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Ghi chú:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        order.note?.isNotEmpty == true
+                            ? order.note!
+                            : 'Không có ghi chú',
+                        style: TextStyle(
+                          fontStyle:
+                              order.note?.isNotEmpty == true
+                                  ? FontStyle.normal
+                                  : FontStyle.italic,
+                          color:
+                              order.note?.isNotEmpty == true
+                                  ? Colors.black87
+                                  : Colors.grey,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed:
+                          provider.isDetailMutating
+                              ? null
+                              : () async {
+                                final newNote = await _promptNote(
+                                  context,
+                                  order.note,
+                                );
+                                if (newNote != null &&
+                                    newNote != order.note &&
+                                    context.mounted) {
+                                  final success = await provider
+                                      .updateOrderInfo(
+                                        orderId: order.id,
+                                        note: newNote,
+                                      );
+                                  if (success && context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Cập nhật ghi chú thành công',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 16,
+                        color: Colors.blue,
+                      ),
+                      tooltip: 'Sửa ghi chú',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
           if (provider.isDetailMutating)
             const LinearProgressIndicator(
               minHeight: 3,
@@ -91,6 +205,20 @@ class OrderDetailPanel extends StatelessWidget {
                         flex: 3,
                         child: Text(
                           'Sản phẩm',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Size',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Màu',
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -161,6 +289,20 @@ class OrderDetailPanel extends StatelessWidget {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              detail.size ?? '-',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Color(0xFF334155)),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              detail.color ?? '-',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Color(0xFF334155)),
                             ),
                           ),
                           Expanded(
@@ -351,6 +493,32 @@ class OrderDetailPanel extends StatelessWidget {
                 backgroundColor: const Color(0xFFDC2626),
               ),
               child: const Text('Xóa'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<String?> _promptNote(BuildContext context, String? currentNote) {
+    final controller = TextEditingController(text: currentNote);
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cập nhật ghi chú'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(labelText: 'Ghi chú'),
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(controller.text),
+              child: const Text('Lưu'),
             ),
           ],
         );

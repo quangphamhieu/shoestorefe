@@ -16,4 +16,9 @@ abstract class OrderRepository {
     required int quantity,
   });
   Future<bool> deleteDetail(int orderDetailId);
+  Future<bool> updateInfo({
+    required int orderId,
+    String? note,
+    String? address,
+  });
 }

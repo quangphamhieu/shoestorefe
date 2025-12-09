@@ -98,6 +98,7 @@ import 'domain/usecases/order/create_order_usecase.dart';
 import 'domain/usecases/order/update_order_status_usecase.dart';
 import 'domain/usecases/order/update_order_detail_usecase.dart';
 import 'domain/usecases/order/delete_order_detail_usecase.dart';
+import 'domain/usecases/order/update_order_info_usecase.dart';
 import 'domain/usecases/dashboard/get_dashboard_overview_usecase.dart';
 import 'domain/usecases/comment/get_comments_by_product_id_usecase.dart';
 import 'domain/usecases/comment/create_comment_usecase.dart';
@@ -215,6 +216,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateOrderStatusUseCase(sl()));
   sl.registerLazySingleton(() => UpdateOrderDetailUseCase(sl()));
   sl.registerLazySingleton(() => DeleteOrderDetailUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateOrderInfoUseCase(sl()));
   sl.registerLazySingleton(() => GetDashboardOverviewUseCase(sl()));
   sl.registerLazySingleton(() => GetCommentsByProductIdUseCase(sl()));
   sl.registerLazySingleton(() => CreateCommentUseCase(sl()));
@@ -314,6 +316,7 @@ Future<void> init() async {
       updateStatusUseCase: sl(),
       updateDetailUseCase: sl(),
       deleteDetailUseCase: sl(),
+      updateInfoUseCase: sl(),
     ),
   );
   sl.registerFactory(

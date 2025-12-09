@@ -15,6 +15,8 @@ class Order {
   final int paymentMethod;
   final DateTime createdAt;
   final DateTime? updatedAt;
+  final String? address;
+  final String? note;
   final List<OrderDetail> details;
 
   Order({
@@ -32,6 +34,8 @@ class Order {
     required this.paymentMethod,
     required this.createdAt,
     this.updatedAt,
+    this.address,
+    this.note,
     required this.details,
   });
 }

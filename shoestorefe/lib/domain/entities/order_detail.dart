@@ -3,6 +3,8 @@ class OrderDetail {
   final int productId;
   final String? productName;
   final String? productImageUrl;
+  final String? color;
+  final String? size;
   final int quantity;
   final double unitPrice;
 
@@ -11,6 +13,8 @@ class OrderDetail {
     required this.productId,
     this.productName,
     this.productImageUrl,
+    this.color,
+    this.size,
     required this.quantity,
     required this.unitPrice,
   });

@@ -27,7 +27,7 @@ import '../staff/screens/order/staff_order_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   // Màn hình mặc định luôn là trang home của customer
-  initialLocation: '/mobile-login', //Nếu là mobile thì đổi thành '/mobile-login'
+  initialLocation: '/', //Nếu là mobile thì đổi thành '/mobile-login'
   redirect: (context, state) {
     final isLoggedIn = TokenHandler().hasToken();
     final String location = state.matchedLocation;

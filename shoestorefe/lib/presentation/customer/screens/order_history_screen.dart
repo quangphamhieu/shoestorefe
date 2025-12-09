@@ -214,6 +214,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                               color: Colors.grey[600],
                             ),
                           ),
+                          if (detail.size != null || detail.color != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                '${detail.size != null ? "Size: ${detail.size}" : ""}${detail.size != null && detail.color != null ? " - " : ""}${detail.color != null ? "Màu: ${detail.color}" : ""}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),

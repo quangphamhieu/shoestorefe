@@ -5,18 +5,21 @@ import '../../../domain/usecases/order/get_all_orders_usecase.dart';
 import '../../../domain/usecases/order/update_order_status_usecase.dart';
 import '../../../domain/usecases/order/update_order_detail_usecase.dart';
 import '../../../domain/usecases/order/delete_order_detail_usecase.dart';
+import '../../../domain/usecases/order/update_order_info_usecase.dart';
 
 class OrderProvider extends ChangeNotifier {
   final GetAllOrdersUseCase getAllUseCase;
   final UpdateOrderStatusUseCase updateStatusUseCase;
   final UpdateOrderDetailUseCase updateDetailUseCase;
   final DeleteOrderDetailUseCase deleteDetailUseCase;
+  final UpdateOrderInfoUseCase updateInfoUseCase;
 
   OrderProvider({
     required this.getAllUseCase,
     required this.updateStatusUseCase,
     required this.updateDetailUseCase,
     required this.deleteDetailUseCase,
+    required this.updateInfoUseCase,
   });
 
   List<Order> _orders = [];
@@ -203,6 +206,59 @@ class OrderProvider extends ChangeNotifier {
     _isDetailMutating = false;
     notifyListeners();
     return success;
+  }
+
+  Future<bool> updateOrderInfo({
+    required int orderId,
+    String? note,
+    String? address,
+  }) async {
+    _isDetailMutating = true;
+    notifyListeners();
+
+    final success = await updateInfoUseCase.call(
+      orderId: orderId,
+      note: note,
+      address: address,
+    );
+
+    if (success) {
+      _applyInfoUpdate(orderId: orderId, note: note, address: address);
+    }
+
+    _isDetailMutating = false;
+    notifyListeners();
+    return success;
+  }
+
+  void _applyInfoUpdate({
+    required int orderId,
+    String? note,
+    String? address,
+  }) {
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index == -1) return;
+
+    final old = _orders[index];
+    _orders[index] = Order(
+      id: old.id,
+      orderNumber: old.orderNumber,
+      customerId: old.customerId,
+      customerName: old.customerName,
+      createdBy: old.createdBy,
+      creatorName: old.creatorName,
+      storeId: old.storeId,
+      storeName: old.storeName,
+      statusId: old.statusId,
+      totalAmount: old.totalAmount,
+      orderType: old.orderType,
+      paymentMethod: old.paymentMethod,
+      createdAt: old.createdAt,
+      updatedAt: DateTime.now(),
+      address: address ?? old.address,
+      note: note ?? old.note,
+      details: old.details,
+    );
   }
 
   void _applyDetailUpdate({required int detailId, required int quantity}) {
