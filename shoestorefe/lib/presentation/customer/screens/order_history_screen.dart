@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:shoestorefe/presentation/customer/provider/order_history_provider.dart';
 import 'package:shoestorefe/presentation/customer/widgets/customer_bottom_nav.dart';
 import 'package:shoestorefe/domain/entities/order.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_order_detail_screen.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -112,11 +113,21 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+               builder: (_) => MobileOrderDetailScreen(order: order),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // Order Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,6 +285,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               ],
             ),
           ],
+        ),
         ),
       ),
     );

@@ -21,6 +21,8 @@ class OrderRepositoryImpl implements OrderRepository {
     required int orderType,
     required int paymentMethod,
     int? storeId,
+    String? address,
+    String? note,
     required List<Map<String, dynamic>> details,
   }) async {
     final body = {
@@ -28,6 +30,8 @@ class OrderRepositoryImpl implements OrderRepository {
       'orderType': orderType,
       'paymentMethod': paymentMethod,
       if (storeId != null) 'storeId': storeId,
+      if (address != null) 'address': address,
+      if (note != null) 'note': note,
       'details': details,
     };
     return await remote.create(body);

@@ -115,7 +115,7 @@ class WebCartOverlay extends StatelessWidget {
                           if (provider.selectedItems.isEmpty) {
                              provider.selectAll(true);
                           }
-                          context.go('/checkout');
+                          context.go('/web-checkout');
                           // Close overlay? handled by parent usually (click outside)
                         },
                         style: ElevatedButton.styleFrom(
@@ -144,12 +144,19 @@ class WebCartOverlay extends StatelessWidget {
     NumberFormat currencyFormat,
   ) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Checkbox
+        Checkbox(
+          value: provider.isSelected(item.id),
+          onChanged: (_) => provider.toggleSelection(item.id),
+          activeColor: Colors.black,
+        ),
+        
         // Image
         Container(
-          width: 60,
-          height: 60,
+          width: 50,
+          height: 50,
           decoration: BoxDecoration(
             color: Colors.grey[100],
             borderRadius: BorderRadius.circular(8),
@@ -172,18 +179,51 @@ class WebCartOverlay extends StatelessWidget {
             children: [
               Text(
                 product?.name ?? 'Loading...',
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
+              if (product?.size != null || product?.color != null)
+                Text(
+                  '${product?.size ?? ''} ${product?.color != null ? "- ${product!.color}" : ""}',
+                  style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                ),
               Text(
-                '${item.quantity} x ${currencyFormat.format(item.unitPrice)}',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                currencyFormat.format(item.unitPrice),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
+        
+        // Quantity
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () => provider.updateQuantity(item.id, item.quantity - 1),
+              icon: const Icon(Icons.remove_circle_outline, size: 20),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text('${item.quantity}', style: const TextStyle(fontSize: 13)),
+            ),
+             IconButton(
+              onPressed: () => provider.updateQuantity(item.id, item.quantity + 1),
+              icon: const Icon(Icons.add_circle_outline, size: 20),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 20,
+            ),
+          ],
+        ),
+        
+        const SizedBox(width: 8),
+
         // Delete
         IconButton(
           onPressed: () => provider.removeItem(item.id),

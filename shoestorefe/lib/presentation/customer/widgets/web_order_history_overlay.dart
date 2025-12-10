@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../provider/order_history_provider.dart';
 import '../../../../domain/entities/order.dart'; // Ensure correct import path
 
@@ -81,7 +82,7 @@ class WebOrderHistoryOverlay extends StatelessWidget {
                           itemCount: provider.orders.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
-                            return _buildOrderCard(provider.orders[index], provider, currencyFormat);
+                            return _buildOrderCard(context, provider.orders[index], provider, currencyFormat);
                           },
                         ),
             ),
@@ -92,125 +93,137 @@ class WebOrderHistoryOverlay extends StatelessWidget {
   }
 
   Widget _buildOrderCard(
+    BuildContext context,
     Order order,
     OrderHistoryProvider provider,
     NumberFormat currencyFormat,
   ) {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50], // Slightly different bg to distinguish from overlay
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Order Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '#${order.orderNumber}',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: provider.getStatusColor(order.statusId).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  provider.getStatusText(order.statusId),
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: provider.getStatusColor(order.statusId),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            dateFormat.format(order.createdAt),
-            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-          ),
-          const Divider(height: 16),
-
-          // Items (first 2)
-          ...order.details.take(2).map((detail) => Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
+    return InkWell(
+      onTap: () {
+        context.push('/web-order-detail', extra: order);
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Order Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(4),
-                    image: detail.productImageUrl != null
-                        ? DecorationImage(
-                            image: NetworkImage(detail.productImageUrl!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child: detail.productImageUrl == null
-                      ? const Icon(Icons.image, size: 16, color: Colors.grey)
-                      : null,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        detail.productName ?? 'Sản phẩm',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        'x${detail.quantity}',
-                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                ),
                 Text(
-                  currencyFormat.format(detail.unitPrice * detail.quantity),
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  '#${order.orderNumber}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: provider.getStatusColor(order.statusId).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    provider.getStatusText(order.statusId),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: provider.getStatusColor(order.statusId),
+                    ),
+                  ),
                 ),
               ],
             ),
-          )),
-
-          if (order.details.length > 2)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: 8),
-              child: Text(
-                '+ ${order.details.length - 2} sản phẩm khác',
-                style: TextStyle(fontSize: 11, color: Colors.grey[600], fontStyle: FontStyle.italic),
-              ),
+            const SizedBox(height: 4),
+            Text(
+              dateFormat.format(order.createdAt),
+              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
             ),
+            const Divider(height: 16),
 
-          const Divider(height: 16),
-          
-          // Total
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Tổng tiền:', style: TextStyle(fontSize: 12)),
-              Text(
-                currencyFormat.format(order.totalAmount),
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            // Items (first 2)
+            ...order.details.take(2).map((detail) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(4),
+                      image: detail.productImageUrl != null
+                          ? DecorationImage(
+                              image: NetworkImage(detail.productImageUrl!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child: detail.productImageUrl == null
+                        ? const Icon(Icons.image, size: 16, color: Colors.grey)
+                        : null,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          detail.productName ?? 'Sản phẩm',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
+                        if (detail.size != null || detail.color != null)
+                          Text(
+                            '${detail.size ?? ''} ${detail.color != null ? "- ${detail.color}" : ""}',
+                            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                          ),
+                        Text(
+                          'x${detail.quantity}',
+                          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    currencyFormat.format(detail.unitPrice * detail.quantity),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            )),
+
+            if (order.details.length > 2)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 8),
+                child: Text(
+                  '+ ${order.details.length - 2} sản phẩm khác',
+                  style: TextStyle(fontSize: 11, color: Colors.grey[600], fontStyle: FontStyle.italic),
+                ),
+              ),
+
+            const Divider(height: 16),
+            
+            // Total
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Tổng tiền:', style: TextStyle(fontSize: 12)),
+                Text(
+                  currencyFormat.format(order.totalAmount),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -103,7 +103,7 @@ class OrderProvider extends ChangeNotifier {
     try {
       final data = await getAllUseCase.call();
       data.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      _orders = data;
+      _orders = List<Order>.from(data);
     } catch (_) {
       _orders = [];
     }

@@ -155,12 +155,6 @@ class _CustomerHeaderState extends State<CustomerHeader> {
         );
 
         final actionIcons = [
-          _buildHeaderIcon(Icons.account_circle_outlined, onTap: () {
-            // Profile action
-          }),
-          _buildHeaderIcon(Icons.favorite_border, onTap: () {
-            // Wishlist action
-          }),
           // History Icon (Only if logged in?)
            if (isLoggedIn)
             _buildInteractiveIcon(
@@ -368,21 +362,6 @@ class _CustomerHeaderState extends State<CustomerHeader> {
             ],
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderIcon(IconData icon, {VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 20, color: Colors.black87),
       ),
     );
   }

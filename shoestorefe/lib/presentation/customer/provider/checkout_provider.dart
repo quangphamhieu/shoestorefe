@@ -59,8 +59,10 @@ class CheckoutProvider extends ChangeNotifier {
       final order = await orderRepository.create(
         customerId: userId,
         orderType: 0, // Online order (enum OrderType.Online = 0)
-        paymentMethod: 0, // Cash/COD (enum PaymentMethod.Cash = 0)
+        paymentMethod: 1, // Transfer/Online (enum PaymentMethod.Transfer = 1)
         storeId: null, // Online orders don't need storeId
+        address: address,
+        note: note,
         details: orderDetails,
       );
       _createdOrderId = order.id;

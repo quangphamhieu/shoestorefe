@@ -4,7 +4,10 @@ import 'package:shoestorefe/presentation/admin/screens/user/user_screen.dart';
 import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
 import 'package:shoestorefe/presentation/customer/screens/cart_screen.dart';
-import 'package:shoestorefe/presentation/customer/screens/checkout_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/mobile_checkout_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/web_checkout_screen.dart'; // NEW
+import 'package:shoestorefe/presentation/customer/screens/web_order_detail_screen.dart'; // NEW
+import 'package:shoestorefe/domain/entities/order.dart'; // NEW
 import 'package:shoestorefe/presentation/customer/screens/mobile_home_screen.dart';
 import 'package:shoestorefe/presentation/customer/screens/mobile_login_screen.dart';
 import 'package:shoestorefe/presentation/customer/screens/mobile_product_detail_screen.dart';
@@ -129,6 +132,15 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(path: '/cart', builder: (_, __) => const CartScreen()),
     GoRoute(path: '/checkout', builder: (_, __) => const CheckoutScreen()),
+    GoRoute(path: '/web-checkout', builder: (_, __) => const WebCheckoutScreen()),
+    GoRoute(
+      path: '/web-order-detail', 
+      builder: (_, state) {
+        // Need to import Order entity
+        final order = state.extra as Order;
+        return WebOrderDetailScreen(order: order);
+      }
+    ),
     GoRoute(path: '/orders', builder: (_, __) => const OrderHistoryScreen()),
     GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
     GoRoute(path: '/signup', builder: (_, __) => const SignUpScreen()),

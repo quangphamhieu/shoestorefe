@@ -8,6 +8,8 @@ import '../../../domain/entities/store_quantity.dart';
 import '../../../injection_container.dart';
 import '../provider/product_detail_provider.dart';
 import '../widgets/customer_header.dart';
+import 'package:go_router/go_router.dart';
+import '../provider/cart_provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productName;
@@ -445,7 +447,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: hasStock ? () {} : null,
+                onPressed: hasStock
+                    ? () async {
+                        if (provider.selectedSize == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Vui lòng chọn size'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+                        // Add to cart and navigate to checkout
+                        try {
+                          await provider.addToCart();
+                          if (context.mounted) {
+                             final cartProvider = context.read<CartProvider>();
+                             await cartProvider.loadCart(); 
+                             cartProvider.selectAll(true); 
+                             context.go('/web-checkout');
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Lỗi thêm vào giỏ: $e')),
+                            );
+                          }
+                        }
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE53935),
                   foregroundColor: Colors.white,
@@ -466,11 +496,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const SizedBox(width: 16),
             Expanded(
               child: OutlinedButton(
-                onPressed: hasStock ? () async {
-                  await provider.addToCart();
-                  if(!mounted) return;
-                  _showMessage("Đã thêm vào giỏ hàng",isError: false);
-                } : null,
+                onPressed: hasStock
+                    ? () async {
+                        if (provider.selectedSize == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Vui lòng chọn size'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+                        await provider.addToCart();
+                        if (!context.mounted) return;
+                        _showMessage("Đã thêm vào giỏ hàng", isError: false);
+                      }
+                    : null,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(

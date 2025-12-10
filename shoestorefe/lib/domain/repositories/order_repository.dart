@@ -8,6 +8,8 @@ abstract class OrderRepository {
     required int orderType,
     required int paymentMethod,
     int? storeId,
+    String? address,
+    String? note,
     required List<Map<String, dynamic>> details,
   });
   Future<bool> updateStatus({required int orderId, required int statusId});

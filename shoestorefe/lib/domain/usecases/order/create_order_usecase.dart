@@ -10,6 +10,8 @@ class CreateOrderUseCase {
     required int orderType,
     required int paymentMethod,
     int? storeId,
+    String? address,
+    String? note,
     required List<Map<String, dynamic>> details,
   }) {
     return repository.create(
@@ -17,6 +19,8 @@ class CreateOrderUseCase {
       orderType: orderType,
       paymentMethod: paymentMethod,
       storeId: storeId,
+      address: address,
+      note: note,
       details: details,
     );
   }

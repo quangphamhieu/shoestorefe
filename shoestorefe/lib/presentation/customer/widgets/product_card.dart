@@ -13,7 +13,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool _isFavorite = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,36 +94,7 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                 ),
-                // Favorite Button
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        size: 20,
-                        color: _isFavorite ? Colors.red : Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                ),
+
                 // Discount Badge
                 if (hasDiscount)
                   Positioned(
