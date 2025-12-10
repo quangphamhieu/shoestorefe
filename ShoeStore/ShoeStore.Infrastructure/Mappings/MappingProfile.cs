@@ -90,7 +90,11 @@ namespace ShoeStore.Infrastructure.Mappings
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty));
 
             // Order mappings
-            CreateMap<OrderDetail, OrderDetailResponseDto>();
+            CreateMap<OrderDetail, OrderDetailResponseDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : null))
+                .ForMember(dest => dest.ProductImageUrl, opt => opt.MapFrom(src => src.Product != null ? src.Product.ImageUrl : null))
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Product != null ? src.Product.Color : null))
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Product != null ? src.Product.Size : null));
 
             CreateMap<Order, OrderResponseDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer != null ? src.Customer.FullName : string.Empty))

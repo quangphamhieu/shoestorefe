@@ -775,7 +775,8 @@ namespace ShoeStore.Infrastructure.Persistence
                 new RolePermission { RoleId = 4, PermissionId = 47 }, // cart update
                 new RolePermission { RoleId = 4, PermissionId = 48 }, // cart delete
                 new RolePermission { RoleId = 4, PermissionId = 35 }, // order create
-                new RolePermission { RoleId = 4, PermissionId = 34 }  // order view (own)
+                new RolePermission { RoleId = 4, PermissionId = 34 },  // order view (own)
+                new RolePermission { RoleId = 4, PermissionId = 36 }  // order update (own)
             );
 
         }
