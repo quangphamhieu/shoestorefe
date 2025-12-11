@@ -19,6 +19,7 @@ import 'package:shoestorefe/presentation/admin/provider/login_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/notification_provider.dart' as customer_notif;
 import 'package:shoestorefe/presentation/admin/provider/sign_up_provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/user_provider.dart';
+import 'package:shoestorefe/presentation/customer/provider/chat_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/cart_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/checkout_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/order_history_provider.dart';
@@ -36,6 +37,7 @@ import 'data/datasources/order_remote_data_source.dart';
 import 'data/datasources/dashboard_remote_data_source.dart';
 import 'data/datasources/comment_remote_data_source.dart';
 import 'data/repositories/brand_repository_impl.dart';
+import 'data/repositories/chat_repository_impl.dart';
 import 'data/repositories/store_repository_impl.dart';
 import 'data/repositories/supplier_repository_impl.dart';
 import 'data/repositories/product_repository_impl.dart';
@@ -46,6 +48,7 @@ import 'data/repositories/order_repository_impl.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
 import 'data/repositories/comment_repository_impl.dart';
 import 'domain/repositories/brand_repository.dart';
+import 'domain/repositories/chat_repository.dart';
 import 'domain/repositories/store_repository.dart';
 import 'domain/repositories/supplier_repository.dart';
 import 'domain/repositories/product_repository.dart';
@@ -60,6 +63,7 @@ import 'domain/usecases/brand/get_brand_by_id_usecase.dart';
 import 'domain/usecases/brand/create_brand_usecase.dart';
 import 'domain/usecases/brand/update_brand_usecase.dart';
 import 'domain/usecases/brand/delete_brand_usecase.dart';
+import 'domain/usecases/chat/send_message_usecase.dart';
 import 'domain/usecases/store/get_all_stores_usecase.dart';
 import 'domain/usecases/store/get_store_by_id_usecase.dart';
 import 'domain/usecases/store/create_store_usecase.dart';
@@ -163,6 +167,7 @@ Future<void> init() async {
     () => CommentRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
+  sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
 
   // Usecases
   sl.registerLazySingleton(() => GetAllUsers(sl()));
@@ -223,6 +228,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateCommentUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
   sl.registerLazySingleton(() => AddItemToCart(sl()));
+  sl.registerLazySingleton(() => SendMessageUseCase(sl()));
 
   // Provider: register factory so each provider instance created by provider package is new if needed
   sl.registerFactory(() => SignUpProvider(sl()));
@@ -349,4 +355,5 @@ Future<void> init() async {
           addItemToCartUseCase: sl()
       )
   );
+  sl.registerFactory(() => ChatProvider(sendMessageUseCase: sl()));
 }
