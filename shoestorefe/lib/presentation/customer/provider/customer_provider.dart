@@ -38,6 +38,9 @@ class CustomerProvider extends ChangeNotifier {
   List<ProductGroup> _productGroups = [];
   List<ProductGroup> get productGroups => _productGroups;
 
+  String? _error;
+  String? get error => _error;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -217,7 +220,6 @@ class CustomerProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
   void setSearchQuery(String query) {
     _searchQuery = query;
     notifyListeners();
