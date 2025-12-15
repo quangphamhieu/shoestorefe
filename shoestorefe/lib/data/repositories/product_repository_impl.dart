@@ -52,6 +52,39 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<List<Product>> batchCreate({
+    required String name,
+    int? brandId,
+    int? supplierId,
+    required double costPrice,
+    required double originalPrice,
+    String? color,
+    required int sizeStart,
+    required int sizeEnd,
+    String? description,
+    String? imageUrl,
+    String? imageFilePath,
+    List<int>? imageBytes,
+    String? imageFileName,
+  }) async {
+    return await remote.batchCreate(
+      name: name,
+      brandId: brandId,
+      supplierId: supplierId,
+      costPrice: costPrice,
+      originalPrice: originalPrice,
+      color: color,
+      sizeStart: sizeStart,
+      sizeEnd: sizeEnd,
+      description: description,
+      imageUrl: imageUrl,
+      imageFilePath: imageFilePath,
+      imageBytes: imageBytes,
+      imageFileName: imageFileName,
+    );
+  }
+
+  @override
   Future<bool> delete(int id) async {
     return await remote.delete(id);
   }

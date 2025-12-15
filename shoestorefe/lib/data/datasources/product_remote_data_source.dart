@@ -78,6 +78,63 @@ class ProductRemoteDataSource {
     return ProductModel.fromJson(JsonUtils.normalizeMap(response.data));
   }
 
+  Future<List<ProductModel>> batchCreate({
+    required String name,
+    int? brandId,
+    int? supplierId,
+    required double costPrice,
+    required double originalPrice,
+    String? color,
+    required int sizeStart,
+    required int sizeEnd,
+    String? description,
+    String? imageUrl,
+    String? imageFilePath,
+    List<int>? imageBytes,
+    String? imageFileName,
+  }) async {
+    final formData = FormData.fromMap({
+      'Name': name,
+      if (brandId != null) 'BrandId': brandId,
+      if (supplierId != null) 'SupplierId': supplierId,
+      'CostPrice': costPrice,
+      'OriginalPrice': originalPrice,
+      if (color != null) 'Color': color,
+      'SizeStart': sizeStart,
+      'SizeEnd': sizeEnd,
+      if (description != null) 'Description': description,
+      if (imageUrl != null && imageFilePath == null && imageBytes == null)
+        'ImageUrl': imageUrl,
+      'StatusId': 1,
+      if (imageBytes != null)
+        'ImageFile': MultipartFile.fromBytes(
+          imageBytes,
+          filename: imageFileName ?? 'image.jpg',
+        )
+      else if (imageFilePath != null)
+        'ImageFile': await MultipartFile.fromFile(
+          imageFilePath,
+          filename: imageFilePath.split('/').last,
+        ),
+    });
+
+    final response = await client.postMultipart('${ApiEndpoint.products}/batch', formData);
+    final data = response.data;
+    
+    if (data is List) {
+       return data
+          .map((e) => ProductModel.fromJson(JsonUtils.normalizeMap(e)))
+          .toList();
+    } 
+    
+    if (data is Map && data['products'] is List) {
+      return (data['products'] as List)
+          .map((e) => ProductModel.fromJson(JsonUtils.normalizeMap(e)))
+          .toList();
+    }
+    return [];
+  }
+
   Future<ProductModel?> update(
     int id, {
     required String name,

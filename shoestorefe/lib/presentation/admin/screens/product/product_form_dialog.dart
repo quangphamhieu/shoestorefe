@@ -24,7 +24,8 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
   late final TextEditingController _costPriceController;
   late final TextEditingController _originalPriceController;
   late final TextEditingController _colorController;
-  late final TextEditingController _sizeController;
+  int _sizeStart = 37;
+  int _sizeEnd = 43;
   late final TextEditingController _descriptionController;
 
   int? _brandId;
@@ -44,7 +45,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _costPriceController = TextEditingController();
     _originalPriceController = TextEditingController();
     _colorController = TextEditingController();
-    _sizeController = TextEditingController();
+    // Size range for batch creation (no controller needed)
     _descriptionController = TextEditingController();
 
     Future.microtask(() {
@@ -65,7 +66,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
             _costPriceController.text = p.costPrice.toString();
             _originalPriceController.text = p.originalPrice.toString();
             _colorController.text = p.color ?? '';
-            _sizeController.text = p.size ?? '';
+            // Size is not editable in edit mode (single product)
             _descriptionController.text = p.description ?? '';
             _imageUrl = p.imageUrl;
             _statusId = p.statusId;
@@ -84,7 +85,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
     _costPriceController.dispose();
     _originalPriceController.dispose();
     _colorController.dispose();
-    _sizeController.dispose();
+    // No size controller to dispose
     _descriptionController.dispose();
     super.dispose();
   }
@@ -199,10 +200,6 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
         _colorController.text.trim().isEmpty
             ? null
             : _colorController.text.trim();
-    final size =
-        _sizeController.text.trim().isEmpty
-            ? null
-            : _sizeController.text.trim();
     final description =
         _descriptionController.text.trim().isEmpty
             ? null
@@ -222,7 +219,7 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
           costPrice: costPrice,
           originalPrice: originalPrice,
           color: color,
-          size: size,
+          size: null, // Size not editable in edit mode
           description: description,
           imageUrl:
               (_imageFile == null && _imageBytes == null) ? _imageUrl : null,
@@ -233,20 +230,21 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
         );
       }
     } else {
-      success = await provider.createProduct(
+      // Batch create mode - call provider
+      success = await provider.batchCreateProduct(
         name: name,
         brandId: _brandId,
         supplierId: _supplierId,
         costPrice: costPrice,
         originalPrice: originalPrice,
         color: color,
-        size: size,
+        sizeStart: _sizeStart,
+        sizeEnd: _sizeEnd,
         description: description,
-        imageUrl:
-            (_imageFile == null && _imageBytes == null) ? _imageUrl : null,
-        imageFilePath: _imageFile?.path,
-        imageBytes: _imageBytes?.toList(),
-        imageFileName: _imageFileName,
+        imageUrl: (_imageFile == null && _imageBytes == null) ? _imageUrl : null,
+                imageFilePath: _imageFile?.path,
+                        imageBytes: _imageBytes?.toList(),
+                                imageFileName: _imageFileName,
       );
     }
 
@@ -441,31 +439,79 @@ class _ProductFormDialogState extends State<ProductFormDialog> {
                               ],
                             ),
                             const SizedBox(height: 14),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _colorController,
-                                    decoration: _decoration(
-                                      'Màu sắc',
-                                      hint: 'Nhập màu sắc',
-                                    ),
-                                    textInputAction: TextInputAction.next,
-                                  ),
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _sizeController,
-                                    decoration: _decoration(
-                                      'Kích thước',
-                                      hint: 'Nhập kích thước',
-                                    ),
-                                    textInputAction: TextInputAction.next,
-                                  ),
-                                ),
-                              ],
+                            // Color field
+                            TextFormField(
+                              controller: _colorController,
+                              decoration: _decoration(
+                                'Màu sắc',
+                                hint: 'Nhập màu sắc',
+                                required: !widget.editMode,
+                              ),
+                              textInputAction: TextInputAction.next,
+                              validator: !widget.editMode
+                                  ? (value) {
+                                      if (value == null || value.trim().isEmpty)
+                                        return 'Vui lòng nhập màu sắc';
+                                      return null;
+                                    }
+                                  : null,
                             ),
+                            const SizedBox(height: 14),
+                            // Size range (only for create mode)
+                            if (!widget.editMode)
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<int>(
+                                      value: _sizeStart,
+                                      decoration: _decoration(
+                                        'Size bắt đầu',
+                                        required: true,
+                                      ),
+                                      items: List.generate(
+                                        16,
+                                        (i) => DropdownMenuItem<int>(
+                                          value: 35 + i,
+                                          child: Text('${35 + i}'),
+                                        ),
+                                      ),
+                                      onChanged: (v) => setState(() {
+                                        _sizeStart = v ?? 37;
+                                        if (_sizeStart > _sizeEnd) {
+                                          _sizeEnd = _sizeStart;
+                                        }
+                                      }),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Expanded(
+                                    child: DropdownButtonFormField<int>(
+                                      value: _sizeEnd,
+                                      decoration: _decoration(
+                                        'Size kết thúc',
+                                        required: true,
+                                      ),
+                                      items: List.generate(
+                                        16,
+                                        (i) => DropdownMenuItem<int>(
+                                          value: 35 + i,
+                                          child: Text('${35 + i}'),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null) return 'Chọn size kết thúc';
+                                        if (value < _sizeStart) {
+                                          return 'Phải >= size bắt đầu';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (v) => setState(() {
+                                        _sizeEnd = v ?? 43;
+                                      }),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             const SizedBox(height: 14),
                             TextFormField(
                               controller: _descriptionController,

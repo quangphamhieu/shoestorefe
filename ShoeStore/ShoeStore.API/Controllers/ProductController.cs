@@ -51,6 +51,22 @@ namespace ShoeStore.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
+        [HttpPost("batch")]
+        [Consumes("multipart/form-data")]
+        [Authorize(Policy ="PRODUCT_CREATE")]
+        public async Task<ActionResult<List<ProductDto>>> BatchCreate([FromForm] BatchCreateProductDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var createdProducts = await _productService.BatchCreateAsync(dto);
+            return Ok(new {
+                success = true,
+                productsCreated = createdProducts.Count,
+                products = createdProducts
+            });
+        }
+
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
         [Authorize(Policy = "PRODUCT_UPDATE")]

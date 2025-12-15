@@ -3,6 +3,7 @@ import '../../../domain/entities/product.dart';
 import '../../../domain/usecases/product/get_all_products_usecase.dart';
 import '../../../domain/usecases/product/get_product_by_id_usecase.dart';
 import '../../../domain/usecases/product/create_product_usecase.dart';
+import '../../../domain/usecases/product/batch_create_product_usecase.dart';
 import '../../../domain/usecases/product/update_product_usecase.dart';
 import '../../../domain/usecases/product/delete_product_usecase.dart';
 import '../../../domain/usecases/product/search_products_usecase.dart';
@@ -13,6 +14,7 @@ class ProductProvider extends ChangeNotifier {
   final GetAllProductsUseCase getAllUseCase;
   final GetProductByIdUseCase getByIdUseCase;
   final CreateProductUseCase createUseCase;
+  final BatchCreateProductUseCase batchCreateUseCase;
   final UpdateProductUseCase updateUseCase;
   final DeleteProductUseCase deleteUseCase;
   final SearchProductsUseCase searchUseCase;
@@ -23,6 +25,7 @@ class ProductProvider extends ChangeNotifier {
     required this.getAllUseCase,
     required this.getByIdUseCase,
     required this.createUseCase,
+    required this.batchCreateUseCase,
     required this.updateUseCase,
     required this.deleteUseCase,
     required this.searchUseCase,
@@ -107,6 +110,44 @@ class ProductProvider extends ChangeNotifier {
         originalPrice: originalPrice,
         color: color,
         size: size,
+        description: description,
+        imageUrl: imageUrl,
+        imageFilePath: imageFilePath,
+        imageBytes: imageBytes,
+        imageFileName: imageFileName,
+      );
+      await loadAll();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> batchCreateProduct({
+    required String name,
+    int? brandId,
+    int? supplierId,
+    required double costPrice,
+    required double originalPrice,
+    String? color,
+    required int sizeStart,
+    required int sizeEnd,
+    String? description,
+    String? imageUrl,
+    String? imageFilePath,
+    List<int>? imageBytes,
+    String? imageFileName,
+  }) async {
+    try {
+      await batchCreateUseCase.call(
+        name: name,
+        brandId: brandId,
+        supplierId: supplierId,
+        costPrice: costPrice,
+        originalPrice: originalPrice,
+        color: color,
+        sizeStart: sizeStart,
+        sizeEnd: sizeEnd,
         description: description,
         imageUrl: imageUrl,
         imageFilePath: imageFilePath,

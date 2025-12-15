@@ -1,0 +1,39 @@
+name: .NET Backend Build & Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'ShoeStore/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ShoeStore/ShoeStore.sln
+
+    - name: Build
+      run: dotnet build ShoeStore/ShoeStore.sln --no-restore --configuration Release
+
+    - name: Publish
+      run: dotnet publish ShoeStore/ShoeStore.sln --no-build --configuration Release --output ./publish
+
+    # Deploy to MonsterASP using FTP
+    # Note: User needs to set secrets: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+    - name: Deploy to MonsterASP (FTP)
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.MONSTER_ASP_FTP_SERVER }}
+        username: ${{ secrets.MONSTER_ASP_FTP_USERNAME }}
+        password: ${{ secrets.MONSTER_ASP_FTP_PASSWORD }}
+        local-dir: ./publish/

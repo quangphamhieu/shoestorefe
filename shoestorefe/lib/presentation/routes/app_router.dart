@@ -4,7 +4,7 @@ import 'package:shoestorefe/presentation/admin/screens/user/user_screen.dart';
 import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
 import 'package:shoestorefe/presentation/customer/screens/cart_screen.dart';
-import 'package:shoestorefe/presentation/customer/screens/mobile_checkout_screen.dart';
+import 'package:shoestorefe/presentation/customer/screens/checkout_screen.dart';
 import 'package:shoestorefe/presentation/customer/screens/web_checkout_screen.dart'; // NEW
 import 'package:shoestorefe/presentation/customer/screens/web_order_detail_screen.dart'; // NEW
 import 'package:shoestorefe/domain/entities/order.dart'; // NEW

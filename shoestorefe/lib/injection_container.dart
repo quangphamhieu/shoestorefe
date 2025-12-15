@@ -36,6 +36,7 @@ import 'data/datasources/notification_remote_data_source.dart';
 import 'data/datasources/order_remote_data_source.dart';
 import 'data/datasources/dashboard_remote_data_source.dart';
 import 'data/datasources/comment_remote_data_source.dart';
+import 'data/datasources/chat_remote_data_source.dart';
 import 'data/repositories/brand_repository_impl.dart';
 import 'data/repositories/chat_repository_impl.dart';
 import 'data/repositories/store_repository_impl.dart';
@@ -77,6 +78,7 @@ import 'domain/usecases/supplier/delete_supplier_usecase.dart';
 import 'domain/usecases/product/get_all_products_usecase.dart';
 import 'domain/usecases/product/get_product_by_id_usecase.dart';
 import 'domain/usecases/product/create_product_usecase.dart';
+import 'domain/usecases/product/batch_create_product_usecase.dart';
 import 'domain/usecases/product/update_product_usecase.dart';
 import 'domain/usecases/product/delete_product_usecase.dart';
 import 'domain/usecases/product/search_products_usecase.dart';
@@ -139,6 +141,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DashboardRemoteDataSource(sl()));
   sl.registerLazySingleton(() => CommentRemoteDataSource(sl()));
   sl.registerLazySingleton(() => CartRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => ChatRemoteDataSource(sl()));
 
   // Repository
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
@@ -196,6 +199,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllProductsUseCase(sl()));
   sl.registerLazySingleton(() => GetProductByIdUseCase(sl()));
   sl.registerLazySingleton(() => CreateProductUseCase(sl()));
+  sl.registerLazySingleton(() => BatchCreateProductUseCase(sl()));
   sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
   sl.registerLazySingleton(() => SearchProductsUseCase(sl()));
@@ -283,6 +287,7 @@ Future<void> init() async {
       getAllUseCase: sl(),
       getByIdUseCase: sl(),
       createUseCase: sl(),
+      batchCreateUseCase: sl(),
       updateUseCase: sl(),
       deleteUseCase: sl(),
       searchUseCase: sl(),

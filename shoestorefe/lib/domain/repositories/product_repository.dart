@@ -18,6 +18,21 @@ abstract class ProductRepository {
     List<int>? imageBytes,
     String? imageFileName,
   });
+  Future<List<Product>> batchCreate({
+    required String name,
+    int? brandId,
+    int? supplierId,
+    required double costPrice,
+    required double originalPrice,
+    String? color,
+    required int sizeStart,
+    required int sizeEnd,
+    String? description,
+    String? imageUrl,
+    String? imageFilePath,
+    List<int>? imageBytes,
+    String? imageFileName,
+  });
   Future<Product?> update(
     int id, {
     required String name,

@@ -8,6 +8,7 @@ namespace ShoeStore.Application.Interfaces.Services
         Task<ProductDto?> GetByIdAsync(int id);
         Task<IEnumerable<ProductDto>> GetListProductByName(string name);
         Task<ProductDto> CreateAsync(CreateProductDto dto);
+        Task<List<ProductDto>> BatchCreateAsync(BatchCreateProductDto dto);
         Task<ProductDto?> UpdateAsync(int id, UpdateProductDto dto);
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<ProductDto>> SearchAsync(SearchProductDto searchDto);

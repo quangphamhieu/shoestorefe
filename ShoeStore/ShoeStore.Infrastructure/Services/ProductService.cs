@@ -115,6 +115,80 @@ namespace ShoeStore.Infrastructure.Services
             return _mapper.Map<ProductDto>(created ?? product);
         }
 
+        // 🔹 Tạo nhiều sản phẩm cùng lúc (batch create với size range)
+        public async Task<List<ProductDto>> BatchCreateAsync(BatchCreateProductDto dto)
+        {
+            if (dto.SizeEnd < dto.SizeStart)
+            {
+                throw new ArgumentException("SizeEnd must be greater than or equal to SizeStart");
+            }
+
+            var createdProducts = new List<ProductDto>();
+
+            await using var txn = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Upload image if provided
+                if (dto.ImageFile != null)
+                {
+                    dto.ImageUrl = await _cloudinaryService.UploadImageAsync(dto.ImageFile);
+                }
+
+                // Loop through size range and create a product for each size
+                for (int size = dto.SizeStart; size <= dto.SizeEnd; size++)
+                {
+                    var product = new Product
+                    {
+                        Name = dto.Name,
+                        BrandId = dto.BrandId,
+                        SupplierId = dto.SupplierId,
+                        CostPrice = dto.CostPrice,
+                        OriginalPrice = dto.OriginalPrice,
+                        Color = dto.Color,
+                        Size = size.ToString(),
+                        Description = dto.Description,
+                        ImageUrl = dto.ImageUrl,
+                        StatusId = dto.StatusId,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    await _context.Products.AddAsync(product);
+                    await _context.SaveChangesAsync();
+
+                    // Generate unique SKU
+                    var baseSku = await GenerateSkuAsync(product);
+                    var sku = baseSku;
+                    int suffix = 0;
+                    while (await _context.Products.AnyAsync(p => p.SKU == sku && p.Id != product.Id))
+                    {
+                        suffix++;
+                        sku = $"{baseSku}-{suffix}";
+                    }
+
+                    product.SKU = sku;
+                    await _context.SaveChangesAsync();
+
+                    // Load the created product with relations
+                    var created = await _context.Products
+                        .Include(p => p.StoreProducts!)
+                            .ThenInclude(sp => sp.Store)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(p => p.Id == product.Id);
+
+                    createdProducts.Add(_mapper.Map<ProductDto>(created ?? product));
+                }
+
+                await txn.CommitAsync();
+                return createdProducts;
+            }
+            catch
+            {
+                await txn.RollbackAsync();
+                throw;
+            }
+        }
+
         // 🔹 Cập nhật sản phẩm
         public async Task<ProductDto?> UpdateAsync(int id, UpdateProductDto dto)
         {

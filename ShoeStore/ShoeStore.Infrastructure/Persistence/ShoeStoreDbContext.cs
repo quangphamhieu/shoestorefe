@@ -498,18 +498,23 @@ namespace ShoeStore.Infrastructure.Persistence
                       .HasForeignKey(a => a.UserId)
                       .OnDelete(DeleteBehavior.SetNull);
             });
-            modelBuilder.Entity<RolePermission>()
-                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+            // ---------- RolePermission ----------
+            modelBuilder.Entity<RolePermission>(entity =>
+            {
+                entity.ToTable("RolePermissions");
+                entity.HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
-            modelBuilder.Entity<RolePermission>()
-                .HasOne(rp => rp.Role)
-                .WithMany(r => r.RolePermissions)
-                .HasForeignKey(rp => rp.RoleId);
+                entity.HasOne(rp => rp.Role)
+                      .WithMany(r => r.RolePermissions)
+                      .HasForeignKey(rp => rp.RoleId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<RolePermission>()
-                .HasOne(rp => rp.Permission)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionId);
+                entity.HasOne(rp => rp.Permission)
+                      .WithMany(p => p.RolePermissions)
+                      .HasForeignKey(rp => rp.PermissionId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             modelBuilder.Entity<Status>().HasData(
                 new Status { Id = 1, Code = "ACTIVE", Name = "Active", Description = "Active status" },
