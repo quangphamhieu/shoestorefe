@@ -1,0 +1,33 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.pdb
+*.cache
+*.dll
+*.exe
+appsettings.Development.json
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+.pytest_cache/
+
+# Flutter / Dart
+.dart_tool/
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+android/.gradle
+ios/.symlinks
+ios/Pods/
+
+# Misc
+.DS_Store
+Thumbs.db

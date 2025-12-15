@@ -567,6 +567,54 @@
         }
       }
     },
+    "/api/Dashboard": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "months",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 6
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Notifications": {
       "get": {
         "tags": [
@@ -882,6 +930,37 @@
         }
       }
     },
+    "/api/Order/info": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInfoUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInfoUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInfoUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Products": {
       "get": {
         "tags": [
@@ -1048,6 +1127,27 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Products/getByName": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -1250,6 +1350,152 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Products/batch": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Name",
+                  "SizeEnd",
+                  "SizeStart"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 500,
+                    "type": "string"
+                  },
+                  "BrandId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SupplierId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CostPrice": {
+                    "minimum": 0,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "OriginalPrice": {
+                    "minimum": 0,
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "Color": {
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "SizeStart": {
+                    "maximum": 50,
+                    "minimum": 35,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SizeEnd": {
+                    "maximum": 50,
+                    "minimum": 35,
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Description": {
+                    "maxLength": 2000,
+                    "type": "string"
+                  },
+                  "ImageUrl": {
+                    "maxLength": 1000,
+                    "type": "string"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "StatusId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "BrandId": {
+                  "style": "form"
+                },
+                "SupplierId": {
+                  "style": "form"
+                },
+                "CostPrice": {
+                  "style": "form"
+                },
+                "OriginalPrice": {
+                  "style": "form"
+                },
+                "Color": {
+                  "style": "form"
+                },
+                "SizeStart": {
+                  "style": "form"
+                },
+                "SizeEnd": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "ImageUrl": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                },
+                "StatusId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2526,6 +2772,29 @@
         },
         "additionalProperties": false
       },
+      "BrandSalesDto": {
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "brandName": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantitySold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revenue": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "CommentDto": {
         "type": "object",
         "properties": {
@@ -2813,6 +3082,39 @@
         },
         "additionalProperties": false
       },
+      "DashboardResponseDto": {
+        "type": "object",
+        "properties": {
+          "topProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopProductDto"
+            },
+            "nullable": true
+          },
+          "profitSummary": {
+            "$ref": "#/components/schemas/ProfitSummaryDto"
+          },
+          "monthlyProfits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyProfitDto"
+            },
+            "nullable": true
+          },
+          "topBrands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BrandSalesDto"
+            },
+            "nullable": true
+          },
+          "profitGrowth": {
+            "$ref": "#/components/schemas/GrowthOverviewDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "Gender": {
         "enum": [
           0,
@@ -2820,6 +3122,50 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "GrowthOverviewDto": {
+        "type": "object",
+        "properties": {
+          "currentMonthProfit": {
+            "type": "number",
+            "format": "double"
+          },
+          "previousMonthProfit": {
+            "type": "number",
+            "format": "double"
+          },
+          "growthPercentage": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MonthlyProfitDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double"
+          },
+          "profit": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
       },
       "NotificationDto": {
         "type": "object",
@@ -2884,6 +3230,18 @@
             "items": {
               "$ref": "#/components/schemas/OrderDetailCreateDto"
             }
+          },
+          "address": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2931,6 +3289,27 @@
         },
         "additionalProperties": false
       },
+      "OrderInfoUpdateDto": {
+        "required": [
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OrderStatusUpdateDto": {
         "required": [
           "orderId",
@@ -2948,6 +3327,10 @@
             "minimum": 1,
             "type": "integer",
             "format": "int32"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3031,6 +3414,24 @@
               "$ref": "#/components/schemas/StoreQuantityDto"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfitSummaryDto": {
+        "type": "object",
+        "properties": {
+          "revenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double"
+          },
+          "profit": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -3333,6 +3734,32 @@
           "statusId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopProductDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantitySold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revenue": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

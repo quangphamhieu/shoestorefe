@@ -335,6 +335,6 @@ D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\Vonage.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\Infobip.Api.Client.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\JsonSubTypes.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\Polly.dll
-D:\shoestorefe\ShoeStore\ShoeStore.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\AutoMapper.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\shoestorefe\ShoeStore\ShoeStore.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

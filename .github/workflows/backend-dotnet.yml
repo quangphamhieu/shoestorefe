@@ -28,8 +28,17 @@ jobs:
     - name: Publish
       run: dotnet publish ShoeStore/ShoeStore.sln --no-build --configuration Release --output ./publish
 
-    # Deploy to MonsterASP using FTP
-    # Note: User needs to set secrets: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+    # Install LFTP to handle app_offline.htm (Stop/Start App)
+    - name: Install LFTP
+      run: sudo apt-get update && sudo apt-get install -y lftp
+
+    # 1. Stop App: Upload app_offline.htm
+    - name: Stop App (Upload app_offline.htm)
+      run: |
+        echo "<html><head><title>Updating</title></head><body><h1>Website is updating...</h1></body></html>" > app_offline.htm
+        lftp -c "open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; put app_offline.htm; bye"
+
+    # 2. Deploy Files
     - name: Deploy to MonsterASP (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -38,3 +47,9 @@ jobs:
         password: ${{ secrets.MONSTER_ASP_FTP_PASSWORD }}
         local-dir: ./publish/
         server-dir: ./wwwroot/
+
+    # 3. Start App: Delete app_offline.htm
+    - name: Start App (Delete app_offline.htm)
+      if: always()
+      run: |
+        lftp -c "open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; rm app_offline.htm; bye"

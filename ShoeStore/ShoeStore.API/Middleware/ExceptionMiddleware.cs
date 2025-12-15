@@ -39,7 +39,14 @@ namespace ShoeStore.API.Middleware
             else if (exception is UnauthorizedAccessException)
                 statusCode = (int)HttpStatusCode.Unauthorized; // 401
 
-            var result = JsonSerializer.Serialize(new { message = exception.Message });
+            var errorResponse = new 
+            { 
+                message = exception.Message, 
+                innerException = exception.InnerException?.Message ?? "",
+                stackTrace = exception.StackTrace // Optional: keep helpful for debugging
+            };
+
+            var result = JsonSerializer.Serialize(errorResponse);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
             return context.Response.WriteAsync(result);
