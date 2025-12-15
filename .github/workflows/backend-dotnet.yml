@@ -36,7 +36,7 @@ jobs:
     - name: Stop App (Upload app_offline.htm)
       run: |
         echo "<html><head><title>Updating</title></head><body><h1>Website is updating...</h1></body></html>" > app_offline.htm
-        lftp -c "open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; put app_offline.htm; bye"
+        lftp -c "set ssl:verify-certificate no; open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; put app_offline.htm; bye"
 
     # 2. Deploy Files
     - name: Deploy to MonsterASP (FTP)
@@ -52,4 +52,4 @@ jobs:
     - name: Start App (Delete app_offline.htm)
       if: always()
       run: |
-        lftp -c "open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; rm app_offline.htm; bye"
+        lftp -c "set ssl:verify-certificate no; open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; rm app_offline.htm; bye"

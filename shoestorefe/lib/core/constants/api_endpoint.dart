@@ -1,5 +1,5 @@
 class ApiEndpoint {
-  static const baseUrl = "http:///api"; // Chỉnh dựa theo ip lan của mạng
+  static const baseUrl = "http://helloshoestore.runasp.net/api"; // Chỉnh dựa theo ip lan của mạng
   static const brands = "$baseUrl/brands";
   static const stores = "$baseUrl/store";
   static const suppliers = "$baseUrl/supplier";
