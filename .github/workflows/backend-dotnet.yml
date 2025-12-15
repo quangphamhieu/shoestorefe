@@ -26,7 +26,7 @@ jobs:
       run: dotnet build ShoeStore/ShoeStore.sln --no-restore --configuration Release
 
     - name: Publish
-      run: dotnet publish ShoeStore/ShoeStore.sln --no-build --configuration Release --output ./publish
+      run: dotnet publish ShoeStore/ShoeStore.sln --configuration Release --output ./publish
 
     # Install LFTP to handle app_offline.htm (Stop/Start App)
     - name: Install LFTP
