@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
 using ShoeStore.Infrastructure.Extensions;
 using ShoeStore.Infrastructure.Mail;
 using ShoeStore.Infrastructure.Persistence.Interceptors;
@@ -8,6 +7,7 @@ using ShoeStore.API.Middleware;
 using System.Text;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace ShoeStore.API
 {
