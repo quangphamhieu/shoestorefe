@@ -17,5 +17,5 @@ class ApiEndpoint {
   static const user = "$baseUrl/user";
   static const dashboard = "$baseUrl/dashboard";
   static const cart = "$baseUrl/cart";
-  static const chat = "http://localhost:5000/chat";
+  static const chat = "https://shoestorefe.onrender.com/chat";
 }
