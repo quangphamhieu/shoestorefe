@@ -30,6 +30,7 @@ jobs:
 
     # Install LFTP to handle app_offline.htm (Stop/Start App)
     - name: Install LFTP
+      id: install_lftp
       run: sudo apt-get update && sudo apt-get install -y lftp
 
     # 1. Stop App: Upload app_offline.htm
@@ -50,6 +51,6 @@ jobs:
 
     # 3. Start App: Delete app_offline.htm
     - name: Start App (Delete app_offline.htm)
-      if: always()
+      if: always() && steps.install_lftp.outcome == 'success'
       run: |
         lftp -c "set ssl:verify-certificate no; open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; rm app_offline.htm; bye"
