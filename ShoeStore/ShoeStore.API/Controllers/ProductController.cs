@@ -33,6 +33,7 @@ namespace ShoeStore.Api.Controllers
 
         [HttpGet("{id}")]
         //[Authorize(Policy = "PRODUCT_VIEW")]
+        //
         public async Task<ActionResult<ProductDto>> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
