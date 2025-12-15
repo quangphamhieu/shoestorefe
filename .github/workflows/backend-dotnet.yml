@@ -37,3 +37,4 @@ jobs:
         username: ${{ secrets.MONSTER_ASP_FTP_USERNAME }}
         password: ${{ secrets.MONSTER_ASP_FTP_PASSWORD }}
         local-dir: ./publish/
+        server-dir: ./wwwroot/
