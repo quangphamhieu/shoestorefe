@@ -7,6 +7,8 @@ using ShoeStore.Infrastructure.Security;
 using ShoeStore.API.Middleware;
 using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+
 namespace ShoeStore.API
 {
     public class Program
@@ -169,11 +171,9 @@ namespace ShoeStore.API
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Enable Swagger in all environments for easier testing
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseCors("AllowFlutterApp");
             app.UseHttpsRedirection();
 
@@ -185,6 +185,25 @@ namespace ShoeStore.API
 
 
             app.MapControllers();
+
+            // Auto-migrate Database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ShoeStore.Infrastructure.Persistence.ShoeStoreDbContext>();
+                    if (context.Database.GetPendingMigrations().Any())
+                    {
+                        context.Database.Migrate();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+                }
+            }
 
             app.Run();
         }
