@@ -182,9 +182,14 @@ namespace ShoeStore.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            // Serve Flutter Web Static Files
+            app.UseStaticFiles();
 
             app.MapControllers();
+            
+            // SPA Fallback for Flutter
+            app.MapFallbackToFile("index.html");
 
             // Auto-migrate Database
             using (var scope = app.Services.CreateScope())

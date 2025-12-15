@@ -1,5 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class ApiEndpoint {
-  static const baseUrl = "http://helloshoestore.runasp.net/api"; // Chỉnh dựa theo ip lan của mạng
+  static const baseUrl = kIsWeb 
+      ? "/api" 
+      : "http://helloshoestore.runasp.net/api";
   static const brands = "$baseUrl/brands";
   static const stores = "$baseUrl/store";
   static const suppliers = "$baseUrl/supplier";
