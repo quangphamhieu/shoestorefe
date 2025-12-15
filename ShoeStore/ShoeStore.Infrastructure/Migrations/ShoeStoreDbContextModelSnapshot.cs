@@ -259,6 +259,9 @@ namespace ShoeStore.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -269,6 +272,9 @@ namespace ShoeStore.Infrastructure.Migrations
 
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
@@ -341,6 +347,335 @@ namespace ShoeStore.Infrastructure.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("OrderDetails", (string)null);
+                });
+
+            modelBuilder.Entity("ShoeStore.Domain.Entities.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 10,
+                            Code = "PRODUCT_VIEW",
+                            Description = "View products"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Code = "PRODUCT_CREATE",
+                            Description = "Create product"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Code = "PRODUCT_UPDATE",
+                            Description = "Update product"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Code = "PRODUCT_DELETE",
+                            Description = "Delete product"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Code = "PRODUCT_SEARCH",
+                            Description = "Search products"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Code = "PRODUCT_SUGGEST",
+                            Description = "Suggest product keywords"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Code = "PRODUCT_STORE_QUANTITY_MANAGE",
+                            Description = "Manage product-store quantity"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Code = "PROMOTION_VIEW",
+                            Description = "View promotions"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Code = "PROMOTION_CREATE",
+                            Description = "Create promotion"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Code = "PROMOTION_UPDATE",
+                            Description = "Update promotion"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Code = "PROMOTION_DELETE",
+                            Description = "Delete promotion"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Code = "BRAND_VIEW",
+                            Description = "View brands"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Code = "BRAND_CREATE",
+                            Description = "Create brand"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Code = "BRAND_UPDATE",
+                            Description = "Update brand"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Code = "BRAND_DELETE",
+                            Description = "Delete brand"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Code = "STORE_VIEW",
+                            Description = "View stores"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Code = "STORE_CREATE",
+                            Description = "Create store"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Code = "STORE_UPDATE",
+                            Description = "Update store"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Code = "STORE_DELETE",
+                            Description = "Delete store"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Code = "SUPPLIER_VIEW",
+                            Description = "View suppliers"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Code = "SUPPLIER_CREATE",
+                            Description = "Create supplier"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Code = "SUPPLIER_UPDATE",
+                            Description = "Update supplier"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Code = "SUPPLIER_DELETE",
+                            Description = "Delete supplier"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Code = "RECEIPT_VIEW",
+                            Description = "View receipts"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Code = "RECEIPT_CREATE",
+                            Description = "Create receipt"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Code = "RECEIPT_UPDATE",
+                            Description = "Update receipt"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Code = "RECEIPT_DELETE",
+                            Description = "Delete receipt"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Code = "ORDER_VIEW",
+                            Description = "View orders"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Code = "ORDER_CREATE",
+                            Description = "Create order"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Code = "ORDER_UPDATE",
+                            Description = "Update order"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Code = "ORDER_DELETE",
+                            Description = "Delete order"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Code = "ORDER_MANAGE_DETAILS",
+                            Description = "Manage order details/status"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Code = "NOTIFICATION_VIEW",
+                            Description = "View notifications"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Code = "NOTIFICATION_CREATE",
+                            Description = "Create notification"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Code = "NOTIFICATION_DELETE",
+                            Description = "Delete notification"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Code = "COMMENT_VIEW",
+                            Description = "View comments"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Code = "COMMENT_CREATE",
+                            Description = "Create comment"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Code = "COMMENT_UPDATE",
+                            Description = "Update comment"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Code = "COMMENT_DELETE",
+                            Description = "Delete comment"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Code = "CART_VIEW",
+                            Description = "View cart"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Code = "CART_CREATE",
+                            Description = "Create/Add to cart"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Code = "CART_UPDATE",
+                            Description = "Update cart item"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Code = "CART_DELETE",
+                            Description = "Remove from cart / clear cart"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Code = "USER_VIEW",
+                            Description = "View users"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Code = "USER_CREATE",
+                            Description = "Create user"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Code = "USER_UPDATE",
+                            Description = "Update user"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Code = "USER_DELETE",
+                            Description = "Delete user"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Code = "ROLE_MANAGE",
+                            Description = "Manage roles"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Code = "PERMISSION_MANAGE",
+                            Description = "Manage permissions"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Code = "DASHBOARD_VIEW",
+                            Description = "View dashboard"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Code = "AUDIT_VIEW",
+                            Description = "View audit logs"
+                        });
                 });
 
             modelBuilder.Entity("ShoeStore.Domain.Entities.Product", b =>
@@ -608,7 +943,7 @@ namespace ShoeStore.Infrastructure.Migrations
                         {
                             Id = (byte)2,
                             Code = "ADMIN",
-                            Name = "Adminitrator"
+                            Name = "Admin"
                         },
                         new
                         {
@@ -621,6 +956,643 @@ namespace ShoeStore.Infrastructure.Migrations
                             Id = (byte)4,
                             Code = "CUSTOMER",
                             Name = "Customer"
+                        });
+                });
+
+            modelBuilder.Entity("ShoeStore.Domain.Entities.RolePermission", b =>
+                {
+                    b.Property<byte>("RoleId")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 57
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 58
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 59
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 14
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 15
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 16
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 17
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 18
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 19
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 20
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 21
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 22
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 23
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 24
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 25
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 26
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 27
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 28
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 29
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 30
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 31
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 32
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 33
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 36
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 37
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 60
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 38
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 39
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 40
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 41
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 42
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 43
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 44
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 45
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 46
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 47
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 48
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 49
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 50
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 51
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 52
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 53
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 54
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 55
+                        },
+                        new
+                        {
+                            RoleId = (byte)1,
+                            PermissionId = 56
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 57
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 58
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 59
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 14
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 15
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 16
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 17
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 18
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 19
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 20
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 21
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 22
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 23
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 24
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 25
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 26
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 27
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 28
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 29
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 30
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 31
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 32
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 33
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 36
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 37
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 60
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 38
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 39
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 40
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 41
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 42
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 43
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 44
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 45
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 46
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 47
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 48
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 49
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 50
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 51
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 52
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 53
+                        },
+                        new
+                        {
+                            RoleId = (byte)2,
+                            PermissionId = 55
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 57
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 58
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 18
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 22
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 26
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 36
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 60
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 41
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 42
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 43
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 45
+                        },
+                        new
+                        {
+                            RoleId = (byte)3,
+                            PermissionId = 55
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 42
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 45
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 46
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 47
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 48
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 35
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 34
+                        },
+                        new
+                        {
+                            RoleId = (byte)4,
+                            PermissionId = 36
                         });
                 });
 
@@ -862,11 +1834,11 @@ namespace ShoeStore.Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2025, 11, 21, 7, 9, 27, 487, DateTimeKind.Local).AddTicks(2874),
+                            CreatedAt = new DateTime(2025, 12, 11, 17, 45, 33, 754, DateTimeKind.Local).AddTicks(9523),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             Gender = 0,
-                            PasswordHash = "AQAAAAIAAYagAAAAELZZ968zrUp4oUI9QSnZT9TQCym1i009TBtNaIeWa+TaZAyyrfYjGlP3IIegJIzZ3w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENZHNS+kXaoeDyg/uzDKinzzvkElWandfKIR52a5FmGfMLcuQDP1EGZlp3mvM98sEg==",
                             Phone = "0345602265",
                             RoleId = (byte)1,
                             StatusId = 1
@@ -1134,6 +2106,25 @@ namespace ShoeStore.Infrastructure.Migrations
                     b.Navigation("Receipt");
                 });
 
+            modelBuilder.Entity("ShoeStore.Domain.Entities.RolePermission", b =>
+                {
+                    b.HasOne("ShoeStore.Domain.Entities.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoeStore.Domain.Entities.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("ShoeStore.Domain.Entities.Store", b =>
                 {
                     b.HasOne("ShoeStore.Domain.Entities.Status", "Status")
@@ -1216,6 +2207,11 @@ namespace ShoeStore.Infrastructure.Migrations
                     b.Navigation("OrderDetails");
                 });
 
+            modelBuilder.Entity("ShoeStore.Domain.Entities.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
             modelBuilder.Entity("ShoeStore.Domain.Entities.Product", b =>
                 {
                     b.Navigation("OrderDetails");
@@ -1237,6 +2233,8 @@ namespace ShoeStore.Infrastructure.Migrations
 
             modelBuilder.Entity("ShoeStore.Domain.Entities.Role", b =>
                 {
+                    b.Navigation("RolePermissions");
+
                     b.Navigation("Users");
                 });
 
