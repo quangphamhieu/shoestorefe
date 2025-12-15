@@ -190,7 +190,7 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.19": {
+      "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "7.1.2"
@@ -209,7 +209,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.Cryptography.Internal/8.0.19": {
+      "Microsoft.AspNetCore.Cryptography.Internal/8.0.10": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll": {
@@ -222,10 +222,10 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Cryptography.KeyDerivation/8.0.19": {
+      "Microsoft.AspNetCore.Cryptography.KeyDerivation/8.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Cryptography.Internal": "8.0.19"
+          "Microsoft.AspNetCore.Cryptography.Internal": "8.0.10"
         },
         "compile": {
           "lib/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll": {
@@ -1027,10 +1027,10 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Identity.Core/8.0.19": {
+      "Microsoft.Extensions.Identity.Core/8.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Cryptography.KeyDerivation": "8.0.19",
+          "Microsoft.AspNetCore.Cryptography.KeyDerivation": "8.0.10",
           "Microsoft.Extensions.Logging": "8.0.1",
           "Microsoft.Extensions.Options": "8.0.2"
         },
@@ -3294,10 +3294,10 @@
         "mailkit.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.19": {
-      "sha512": "vkGkpvEGGLFHeYhlBqdJiOL/7aYiUmLg2PTfuDDjBDUDb5QTpoeWLNOOoodTlu88J+GluGE+DFF1kd9hxJd5bA==",
+    "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.10": {
+      "sha512": "rcPXghZCc82IB9U2Px1Ln5Zn3vjV4p83H/Few5T/904hBddjSz03COQ2zOGWBBvdTBY+GciAUJwgBFNWaxLfqw==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.jwtbearer/8.0.19",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/8.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3305,14 +3305,14 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
         "lib/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
-        "microsoft.aspnetcore.authentication.jwtbearer.8.0.19.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.8.0.10.nupkg.sha512",
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Cryptography.Internal/8.0.19": {
-      "sha512": "XJWKt8NNlPYU2zp618/IUMrQw9Y76aof+fMSRqkhBMpypfe3nWAStvc73qlRtQcGJVRi42I7PWkNbOzOOr5wHQ==",
+    "Microsoft.AspNetCore.Cryptography.Internal/8.0.10": {
+      "sha512": "MT/jvNoiXUB82drzqtqZqyAfxQH2b0kpEyjjMYrSLmqgAvBkMEKJelbqHazEo5Lxtq43uquPgeBtTuSrVog5lQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.cryptography.internal/8.0.19",
+      "path": "microsoft.aspnetcore.cryptography.internal/8.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3324,14 +3324,14 @@
         "lib/net8.0/Microsoft.AspNetCore.Cryptography.Internal.xml",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.xml",
-        "microsoft.aspnetcore.cryptography.internal.8.0.19.nupkg.sha512",
+        "microsoft.aspnetcore.cryptography.internal.8.0.10.nupkg.sha512",
         "microsoft.aspnetcore.cryptography.internal.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Cryptography.KeyDerivation/8.0.19": {
-      "sha512": "FhhxmC/V9LpmiMtPUgWjjZodgkpTdFYte5wQ+JzEgNMRd3V6eSgjoEWoVtUdg++rvzQKfJMWBHd8hlXp6FXBrQ==",
+    "Microsoft.AspNetCore.Cryptography.KeyDerivation/8.0.10": {
+      "sha512": "4jd0g3k2R1L1bhhpVmJOp7rAs76V9XLVuhl8J3sTAcl2dKMS78PsKG1HX75U73WEEwrsM4Bui2/N1/Blwgt5iw==",
       "type": "package",
-      "path": "microsoft.aspnetcore.cryptography.keyderivation/8.0.19",
+      "path": "microsoft.aspnetcore.cryptography.keyderivation/8.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3343,7 +3343,7 @@
         "lib/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.xml",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.xml",
-        "microsoft.aspnetcore.cryptography.keyderivation.8.0.19.nupkg.sha512",
+        "microsoft.aspnetcore.cryptography.keyderivation.8.0.10.nupkg.sha512",
         "microsoft.aspnetcore.cryptography.keyderivation.nuspec"
       ]
     },
@@ -4781,10 +4781,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Identity.Core/8.0.19": {
-      "sha512": "riWtT40hZ3gHSkdUK3+FVHD2dz7pK6axtwDod3qZfo9972TlsdeKQtLhEfbtMN2bxqQzGc1bjjlJOoevLH5Bxw==",
+    "Microsoft.Extensions.Identity.Core/8.0.10": {
+      "sha512": "tS0lNRccAxuAeIVxLBDdklSOL2vAzVUcYqY0njsRbJpNYrXNIKVeQGmhPJgBU0Vrq+iu0LLJ4KLCqGxsOIWpyw==",
       "type": "package",
-      "path": "microsoft.extensions.identity.core/8.0.19",
+      "path": "microsoft.extensions.identity.core/8.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4796,7 +4796,7 @@
         "lib/net8.0/Microsoft.Extensions.Identity.Core.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Identity.Core.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Identity.Core.xml",
-        "microsoft.extensions.identity.core.8.0.19.nupkg.sha512",
+        "microsoft.extensions.identity.core.8.0.10.nupkg.sha512",
         "microsoft.extensions.identity.core.nuspec"
       ]
     },
@@ -8952,9 +8952,10 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.19",
+      "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.10",
       "Microsoft.AspNetCore.Http >= 2.3.0",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.10",
+      "Microsoft.Extensions.Identity.Core >= 8.0.10",
       "ShoeStore.Application >= 1.0.0",
       "ShoeStore.Infrastructure >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
@@ -9020,7 +9021,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
-            "version": "[8.0.19, )"
+            "version": "[8.0.10, )"
           },
           "Microsoft.AspNetCore.Http": {
             "target": "Package",
@@ -9029,6 +9030,10 @@
           "Microsoft.EntityFrameworkCore.Tools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[8.0.10, )"
+          },
+          "Microsoft.Extensions.Identity.Core": {
             "target": "Package",
             "version": "[8.0.10, )"
           },
@@ -9059,5 +9064,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1605",
+      "level": "Error",
+      "message": "Warning As Error: Detected package downgrade: Microsoft.Extensions.Identity.Core from 8.0.19 to 8.0.10. Reference the package directly from the project to select a different version. \r\n ShoeStore.API -> ShoeStore.Infrastructure -> Microsoft.Extensions.Identity.Core (>= 8.0.19) \r\n ShoeStore.API -> Microsoft.Extensions.Identity.Core (>= 8.0.10)",
+      "libraryId": "Microsoft.Extensions.Identity.Core",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
