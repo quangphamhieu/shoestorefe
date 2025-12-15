@@ -75,26 +75,6 @@
             "Microsoft.Extensions.Identity.Core": {
               "target": "Package",
               "version": "[8.0.10, )"
-            },
-            "Microsoft.IdentityModel.Protocols": {
-              "target": "Package",
-              "version": "[7.1.2, )"
-            },
-            "Microsoft.IdentityModel.Protocols.OpenIdConnect": {
-              "target": "Package",
-              "version": "[7.1.2, )"
-            },
-            "Microsoft.IdentityModel.Tokens": {
-              "target": "Package",
-              "version": "[7.1.2, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.6.2, )"
-            },
-            "System.IdentityModel.Tokens.Jwt": {
-              "target": "Package",
-              "version": "[7.1.2, )"
             }
           },
           "imports": [
@@ -359,14 +339,6 @@
             "Microsoft.Extensions.Identity.Core": {
               "target": "Package",
               "version": "[8.0.10, )"
-            },
-            "Twilio": {
-              "target": "Package",
-              "version": "[7.13.6, )"
-            },
-            "Vonage": {
-              "target": "Package",
-              "version": "[8.16.0, )"
             }
           },
           "imports": [
