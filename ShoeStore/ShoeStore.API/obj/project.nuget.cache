@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "rB/Pp4z2HXg=",
-  "success": false,
+  "dgSpecHash": "oQ1dWoT1MG8=",
+  "success": true,
   "projectFilePath": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hieub\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
@@ -172,17 +172,5 @@
     "C:\\Users\\hieub\\.nuget\\packages\\twilio\\7.13.6\\twilio.7.13.6.nupkg.sha512",
     "C:\\Users\\hieub\\.nuget\\packages\\vonage\\8.16.0\\vonage.8.16.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1605",
-      "level": "Error",
-      "message": "Warning As Error: Detected package downgrade: Microsoft.Extensions.Identity.Core from 8.0.19 to 8.0.10. Reference the package directly from the project to select a different version. \r\n ShoeStore.API -> ShoeStore.Infrastructure -> Microsoft.Extensions.Identity.Core (>= 8.0.19) \r\n ShoeStore.API -> Microsoft.Extensions.Identity.Core (>= 8.0.10)",
-      "projectPath": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
-      "filePath": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
-      "libraryId": "Microsoft.Extensions.Identity.Core",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
