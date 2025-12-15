@@ -27,21 +27,8 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Build Web
+    - name: Build Web (Dry Run)
       run: flutter build web --release
-
-    # Deploy to Firebase Hosting
-    # Note: User needs to set secret: FIREBASE_SERVICE_ACCOUNT_KEY
-    # And have firebase.json in the project root
-    - name: Deploy to Firebase
-      if: success()
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: ${{ secrets.GITHUB_TOKEN }}
-        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-        channelId: live
-        projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
-        entryPoint: ./shoestorefe
 
     - name: Build Android APK
       run: flutter build apk --release
