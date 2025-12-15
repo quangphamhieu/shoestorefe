@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+# Load .env variables
+from dotenv import load_dotenv
+load_dotenv()
+
 import google.generativeai as genai
 import os
 import logging
@@ -12,8 +16,11 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# API Key
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDYwJ9RaetxzQU-6CDDq8U5SIRtqJUSeUo")
+# API Key - Get from Environment Variable
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    app.logger.warning("GEMINI_API_KEY not found in environment variables.")
+
 genai.configure(api_key=GEMINI_API_KEY)
 
 MODEL_NAME = "gemini-2.5-flash"
@@ -148,7 +155,12 @@ def fetch_all_data():
                     
                     stock_str = ", ".join(available_locs) if available_locs else "Hết hàng"
 
-                    products_summary.append(f"- {name} | Giá: {price}đ | Có bán tại: {stock_str} | Link: [Xem {name}](/product-detail?name={name})")
+                    # Deep link format: http://helloshoestore.runasp.net/#/product-detail/{EncodedName}
+                    import urllib.parse
+                    encoded_name = urllib.parse.quote(name)
+                    link = f"http://helloshoestore.runasp.net/#/product-detail/{encoded_name}"
+                    
+                    products_summary.append(f"- {name} | Giá: {price}đ | Có bán tại: {stock_str} | Link: [Xem chi tiết]({link})")
                 
                 STORE_CONTEXT["products"] = products_summary
         except Exception as e:
@@ -187,9 +199,13 @@ def get_system_instruction():
     2. Thông báo KHUYẾN MÃI: Phải nói rõ chương trình áp dụng "khi mua Online" hay "tại cửa hàng" nào, và áp dụng cho sản phẩm nào.
     3. Chỉ dẫn địa chỉ cửa hàng (chỉ liệt kê các cửa hàng vật lý).
     
-    THUẬT NGỮ CẦN TUÂN THỦ:
     - Store ID 1 -> GỌI LÀ "khi mua Online" hoặc "trên Website". KHÔNG gọi là "kho online".
     - Các Store khác -> Gọi là "Cửa hàng + Tên".
+
+    YÊU CẦU ĐỊNH DẠNG (BẮT BUỘC):
+    - Sử dụng **in đậm** cho tên sản phẩm và các thông tin quan trọng.
+    - Sử dụng danh sách gạch đầu dòng (-) cho các liệt kê để dễ đọc.
+    - KHÔNG viết thành một khối văn bản dài. Tách đoạn rõ ràng.
     
     DỮ LIỆU CỬA HÀNG:
     {store_text}

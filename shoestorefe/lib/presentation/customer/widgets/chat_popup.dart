@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../provider/chat_provider.dart';
 
 class ChatPopup extends StatefulWidget {
@@ -19,7 +21,9 @@ class _ChatPopupState extends State<ChatPopup> {
   void initState() {
     super.initState();
     // Scroll xuống cuối khi có tin nhắn mới
+    // Auto-init welcome message
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChatProvider>().init();
       _scrollToBottom();
     });
   }
@@ -46,6 +50,18 @@ class _ChatPopupState extends State<ChatPopup> {
 
     // Auto scroll xuống cuối sau khi có tin nhắn mới
     Future.delayed(const Duration(milliseconds: 300), _scrollToBottom);
+  }
+
+  Future<void> _handleLinkTap(String? url) async {
+    if (url == null) return;
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      }
+    } catch (e) {
+      debugPrint('Error launching url: $e');
+    }
   }
 
   @override
@@ -140,20 +156,29 @@ class _ChatPopupState extends State<ChatPopup> {
                               horizontal: 12,
                               vertical: 10,
                             ),
-                            constraints: const BoxConstraints(maxWidth: 260),
+                            constraints: const BoxConstraints(maxWidth: 280),
                             decoration: BoxDecoration(
                               color: isUser
                                   ? Colors.blue[500]
                                   : Colors.grey[200],
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Text(
-                              msg["text"] ?? "",
-                              style: TextStyle(
-                                color: isUser ? Colors.white : Colors.black87,
-                                fontSize: 14,
-                              ),
-                            ),
+                            child: isUser
+                                ? Text(
+                                    msg["text"] ?? "",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                : MarkdownBody(
+                                    data: msg["text"] ?? "",
+                                    onTapLink: (text, href, title) => _handleLinkTap(href),
+                                    styleSheet: MarkdownStyleSheet(
+                                      p: const TextStyle(fontSize: 14, color: Colors.black87),
+                                      strong: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                           ),
                         );
                       },

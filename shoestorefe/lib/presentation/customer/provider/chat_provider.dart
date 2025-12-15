@@ -49,9 +49,20 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  void init() {
+    if (_messages.isEmpty) {
+      _messages.add({
+        "role": "bot",
+        "text": "Chào bạn tôi là Trợ lý ảo Hello, tôi sẽ giúp bạn giải đáp mọi thắc mắc về cửa hàng."
+      });
+      notifyListeners();
+    }
+  }
+
   void clearMessages() {
     _messages.clear();
     _error = null;
+    init(); // Re-add welcome message after clear
     notifyListeners();
   }
 }
