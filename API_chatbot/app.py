@@ -250,6 +250,26 @@ def chat():
         app.logger.exception("Error in /chat:")
         return jsonify({"error": str(e)}), 500
 
+@app.route("/debug", methods=["GET"])
+def debug_data():
+    """Debug endpoint to check what data the AI actually has"""
+    try:
+        # Trigger an immediate fetch if empty
+        if not STORE_CONTEXT["products"]:
+            fetch_all_data()
+
+        status = {
+            "products_count": len(STORE_CONTEXT["products"]),
+            "stores_count": len(STORE_CONTEXT["stores"]),
+            "promotions_count": len(STORE_CONTEXT["promotions"]),
+            "sample_product": STORE_CONTEXT["products"][0] if STORE_CONTEXT["products"] else "None",
+            "backend_url": BASE_API_URL,
+            "last_error": "Check logs"
+        }
+        return jsonify(status), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     fetch_all_data()
     app.run(host="0.0.0.0", port=5000, debug=True)
