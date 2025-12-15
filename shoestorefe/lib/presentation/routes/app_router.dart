@@ -28,9 +28,11 @@ import '../customer/screens/home_screen.dart';
 import '../customer/screens/product_detail_screen.dart';
 import '../staff/screens/order/staff_order_screen.dart';
 
+import 'package:flutter/foundation.dart' show kIsWeb; // Add import
+
 final GoRouter appRouter = GoRouter(
-  // Màn hình mặc định luôn là trang home của customer
-  initialLocation: '/', //Nếu là mobile thì đổi thành '/mobile-login'
+  // Màn hình mặc định thay đổi tùy theo nền tảng
+  initialLocation: kIsWeb ? '/' : '/mobile-login', 
   redirect: (context, state) {
     final isLoggedIn = TokenHandler().hasToken();
     final String location = state.matchedLocation;
@@ -82,7 +84,9 @@ final GoRouter appRouter = GoRouter(
       } else if (role == "Staff") {
         return '/staff/order';
       } else if (role == "Customer") {
-        return '/home'; //Nếu là mobile thì đổi thành '/mobile-home'
+      } else if (role == "Customer") {
+        return kIsWeb ? '/home' : '/mobile-home';
+      }
       }
     }
 

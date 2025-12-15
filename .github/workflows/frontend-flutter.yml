@@ -34,6 +34,7 @@ jobs:
     # Note: User needs to set secret: FIREBASE_SERVICE_ACCOUNT_KEY
     # And have firebase.json in the project root
     - name: Deploy to Firebase
+      if: success()
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
         repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -41,3 +42,12 @@ jobs:
         channelId: live
         projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
         entryPoint: ./shoestorefe
+
+    - name: Build Android APK
+      run: flutter build apk --release
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: shoestore-app-release
+        path: shoestorefe/build/app/outputs/flutter-apk/app-release.apk
