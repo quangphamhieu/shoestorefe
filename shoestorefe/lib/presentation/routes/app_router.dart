@@ -84,9 +84,7 @@ final GoRouter appRouter = GoRouter(
       } else if (role == "Staff") {
         return '/staff/order';
       } else if (role == "Customer") {
-      } else if (role == "Customer") {
         return kIsWeb ? '/home' : '/mobile-home';
-      }
       }
     }
 
