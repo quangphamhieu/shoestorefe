@@ -56,7 +56,7 @@ def fetch_all_data():
         # 1. Fetch Stores
         stores = []
         try:
-            r_store = requests.get(f"{BASE_API_URL}/Store", headers=headers, timeout=10, verify=False)
+            r_store = requests.get(f"{BASE_API_URL}/store", headers=headers, timeout=10, verify=False)
             if r_store.status_code == 200:
                 raw_stores = r_store.json()
                 for s in raw_stores:
@@ -81,7 +81,7 @@ def fetch_all_data():
         # 2. Fetch Promotions
         promotions = []
         try:
-            r_promo = requests.get(f"{BASE_API_URL}/Promotion", headers=headers, timeout=10, verify=False)
+            r_promo = requests.get(f"{BASE_API_URL}/promotion", headers=headers, timeout=10, verify=False)
             if r_promo.status_code == 200:
                 raw_promos = r_promo.json()
                 

@@ -123,9 +123,9 @@
     },
     {
       "name": "flutter_markdown",
-      "rootUri": "file:///C:/Users/hieub/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_markdown-0.7.7+1",
+      "rootUri": "file:///C:/Users/hieub/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_markdown-0.6.23",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_plugin_android_lifecycle",
@@ -423,9 +423,9 @@
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///C:/Users/hieub/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.2",
+      "rootUri": "file:///C:/Users/hieub/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.2.5",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.2"
     },
     {
       "name": "url_launcher_android",
