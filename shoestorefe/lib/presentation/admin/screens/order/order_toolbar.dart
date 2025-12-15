@@ -97,32 +97,50 @@ class OrderToolbar extends StatelessWidget {
             runSpacing: 12,
             children: [
               if (hasSelection) ...[
-                _StatusActionButton(
-                  label: 'Xác nhận thanh toán',
-                  color: const Color(0xFF0EA5E9),
-                  icon: Icons.check_circle_outline,
-                  onPressed:
-                      !provider.isUpdatingStatus
-                          ? () => _handleUpdate(context, provider, 3)
-                          : null,
-                ),
-                _StatusActionButton(
-                  label: 'Giao hàng thành công',
-                  color: const Color(0xFF10B981),
-                  icon: Icons.local_shipping_outlined,
-                  onPressed:
-                      !provider.isUpdatingStatus
-                          ? () => _handleUpdate(context, provider, 5)
-                          : null,
-                ),
-                _StatusActionButton(
-                  label: 'Hủy đơn hàng',
-                  color: const Color(0xFFDC2626),
-                  icon: Icons.cancel_outlined,
-                  onPressed:
-                      !provider.isUpdatingStatus
-                          ? () => _handleUpdate(context, provider, 6)
-                          : null,
+                Builder(
+                  builder: (context) {
+                    final order = provider.selectedOrder;
+                    final status = order?.statusId;
+                    
+                    // Logic: 4 (Chờ xác nhận) -> 3 (Đã thanh toán/Xác nhận) -> 5 (Giao hàng)
+                    final canConfirm = status == 4 || status == 1 || status == 2;
+                    final canShip = status == 3; 
+                    final canCancel = status != 5 && status != 6;
+
+                    return Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        _StatusActionButton(
+                          label: 'Xác nhận thành công', // User calls it "Xác nhận thành công"
+                          color: const Color(0xFF0EA5E9),
+                          icon: Icons.check_circle_outline,
+                          onPressed:
+                              !provider.isUpdatingStatus && canConfirm
+                                  ? () => _handleUpdate(context, provider, 3)
+                                  : null,
+                        ),
+                        _StatusActionButton(
+                          label: 'Giao hàng thành công',
+                          color: const Color(0xFF10B981),
+                          icon: Icons.local_shipping_outlined,
+                          onPressed:
+                              !provider.isUpdatingStatus && canShip
+                                  ? () => _handleUpdate(context, provider, 5)
+                                  : null,
+                        ),
+                        _StatusActionButton(
+                          label: 'Hủy đơn hàng',
+                          color: const Color(0xFFDC2626),
+                          icon: Icons.cancel_outlined,
+                          onPressed:
+                              !provider.isUpdatingStatus && canCancel
+                                  ? () => _handleUpdate(context, provider, 6)
+                                  : null,
+                        ),
+                      ],
+                    );
+                  }
                 ),
               ],
             ],

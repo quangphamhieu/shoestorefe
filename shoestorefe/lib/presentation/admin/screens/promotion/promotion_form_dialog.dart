@@ -325,8 +325,7 @@ class _PromotionFormDialogState extends State<PromotionFormDialog> {
                       ? const Center(child: CircularProgressIndicator())
                       : Form(
                         key: _formKey,
-                        child: Flexible(
-                          child: SingleChildScrollView(
+                        child: SingleChildScrollView(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -798,7 +797,6 @@ class _PromotionFormDialogState extends State<PromotionFormDialog> {
                             ),
                           ),
                         ),
-                      ),
             ),
           ),
         ),
