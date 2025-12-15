@@ -22,7 +22,7 @@ jobs:
       uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-        flutter-version: '3.19.x' # Adjust version as needed
+        # flutter-version: '3.19.x' # Removed to use latest stable
 
     - name: Install dependencies
       run: flutter pub get

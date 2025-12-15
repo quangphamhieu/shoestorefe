@@ -437,7 +437,7 @@
       "name": "shoestorefe",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.3"
     }
   ],
   "generator": "pub",
