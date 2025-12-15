@@ -102,9 +102,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
     GoRoute(
-      path: '/product-detail',
+      path: '/product-detail/:name',
       builder: (_, state) {
-        final name = state.extra as String? ?? '';
+        // Use pathParameters instead of extra for deep linking
+        final name = state.pathParameters['name'] ?? '';
         return ProductDetailScreen(productName: name);
       },
     ),

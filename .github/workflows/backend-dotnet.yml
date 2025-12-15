@@ -5,6 +5,8 @@ on:
     branches: [ "main" ]
     paths:
       - 'ShoeStore/**'
+      - '.github/workflows/backend-dotnet.yml'
+      - 'shoestorefe/**'
   workflow_dispatch:
 
 jobs:

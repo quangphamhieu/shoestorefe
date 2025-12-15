@@ -40,10 +40,8 @@ class _ProductCardState extends State<ProductCard> {
 
     return GestureDetector(
       onTap: () {
-        // Điều hướng đến màn hình chi tiết sản phẩm với tên sản phẩm đại diện
         context.go(
-          '/product-detail',
-          extra: product.name,
+          '/product-detail/${Uri.encodeComponent(product.name)}',
         );
       },
       child: IntrinsicHeight(
