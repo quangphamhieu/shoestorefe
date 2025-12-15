@@ -190,18 +190,12 @@ namespace ShoeStore.API
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
+                var context = services.GetRequiredService<ShoeStore.Infrastructure.Persistence.ShoeStoreDbContext>();
+                
+                // FORCE MIGRATION - Throw exception if fails
+                if (context.Database.GetPendingMigrations().Any())
                 {
-                    var context = services.GetRequiredService<ShoeStore.Infrastructure.Persistence.ShoeStoreDbContext>();
-                    if (context.Database.GetPendingMigrations().Any())
-                    {
-                        context.Database.Migrate();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while migrating the database.");
+                    context.Database.Migrate();
                 }
             }
 
