@@ -42,7 +42,7 @@ STORE_CONTEXT = {
 }
 
 # Backend API URL
-BASE_API_URL = "https://localhost:7097/api"
+BASE_API_URL = "http://helloshoestore.runasp.net/api"
 
 # --- DATA FETCHING FUNCTIONS ---
 def fetch_all_data():
