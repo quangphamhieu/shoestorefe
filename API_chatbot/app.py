@@ -48,10 +48,15 @@ BASE_API_URL = "http://helloshoestore.runasp.net/api"
 def fetch_all_data():
     """Fetch Products, Stores, Promotions from Backend"""
     try:
+        # Common headers to avoid 403 Forbidden on some shared hosts
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+
         # 1. Fetch Stores
         stores = []
         try:
-            r_store = requests.get(f"{BASE_API_URL}/Store", timeout=5, verify=False)
+            r_store = requests.get(f"{BASE_API_URL}/Store", headers=headers, timeout=10, verify=False)
             if r_store.status_code == 200:
                 raw_stores = r_store.json()
                 for s in raw_stores:
@@ -76,7 +81,7 @@ def fetch_all_data():
         # 2. Fetch Promotions
         promotions = []
         try:
-            r_promo = requests.get(f"{BASE_API_URL}/Promotion", timeout=5, verify=False)
+            r_promo = requests.get(f"{BASE_API_URL}/Promotion", headers=headers, timeout=10, verify=False)
             if r_promo.status_code == 200:
                 raw_promos = r_promo.json()
                 
@@ -128,7 +133,8 @@ def fetch_all_data():
 
         # 3. Fetch Products (and availability)
         try:
-            r_prod = requests.get(f"{BASE_API_URL}/Products", timeout=5, verify=False)
+            # Note: ASP.NET Core routes are usually case-insensitive, but 'products' matches frontend config
+            r_prod = requests.get(f"{BASE_API_URL}/products", headers=headers, timeout=10, verify=False)
             if r_prod.status_code == 200:
                 raw_prods = r_prod.json()
                 products_summary = []
