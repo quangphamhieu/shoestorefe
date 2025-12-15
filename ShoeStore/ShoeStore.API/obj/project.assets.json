@@ -8133,13 +8133,9 @@
       "Microsoft.AspNetCore.Http >= 2.3.0",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.10",
       "Microsoft.Extensions.Identity.Core >= 8.0.10",
-      "Microsoft.IdentityModel.Protocols >= 7.1.2",
-      "Microsoft.IdentityModel.Protocols.OpenIdConnect >= 7.1.2",
-      "Microsoft.IdentityModel.Tokens >= 7.1.2",
       "ShoeStore.Application >= 1.0.0",
       "ShoeStore.Infrastructure >= 1.0.0",
-      "Swashbuckle.AspNetCore >= 6.6.2",
-      "System.IdentityModel.Tokens.Jwt >= 7.1.2"
+      "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
   "packageFolders": {
@@ -8218,25 +8214,9 @@
             "target": "Package",
             "version": "[8.0.10, )"
           },
-          "Microsoft.IdentityModel.Protocols": {
-            "target": "Package",
-            "version": "[7.1.2, )"
-          },
-          "Microsoft.IdentityModel.Protocols.OpenIdConnect": {
-            "target": "Package",
-            "version": "[7.1.2, )"
-          },
-          "Microsoft.IdentityModel.Tokens": {
-            "target": "Package",
-            "version": "[7.1.2, )"
-          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.6.2, )"
-          },
-          "System.IdentityModel.Tokens.Jwt": {
-            "target": "Package",
-            "version": "[7.1.2, )"
           }
         },
         "imports": [
