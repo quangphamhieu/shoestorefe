@@ -397,6 +397,7 @@ namespace ShoeStore.Infrastructure.Persistence
             {
                 entity.ToTable("OrderDetails");
                 entity.HasKey(od => od.Id);
+                entity.Property(od => od.UnitPrice).HasColumnType("decimal(18,2)");
 
                 entity.HasOne(od => od.Order)
                       .WithMany(o => o.OrderDetails)

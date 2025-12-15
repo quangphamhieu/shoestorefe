@@ -12,8 +12,8 @@ using ShoeStore.Infrastructure.Persistence;
 namespace ShoeStore.Infrastructure.Migrations
 {
     [DbContext(typeof(ShoeStoreDbContext))]
-    [Migration("20251211104534_MockupData")]
-    partial class MockupData
+    [Migration("20251215044346_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1837,11 +1837,11 @@ namespace ShoeStore.Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2025, 12, 11, 17, 45, 33, 754, DateTimeKind.Local).AddTicks(9523),
+                            CreatedAt = new DateTime(2025, 12, 15, 11, 43, 46, 129, DateTimeKind.Local).AddTicks(2572),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             Gender = 0,
-                            PasswordHash = "AQAAAAIAAYagAAAAENZHNS+kXaoeDyg/uzDKinzzvkElWandfKIR52a5FmGfMLcuQDP1EGZlp3mvM98sEg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEA1X2C2hvXLfv83+Ojj/re1t79RfnrXz/zrA5eDMGabH/xsIum7qlk9s81jmfe6E/Q==",
                             Phone = "0345602265",
                             RoleId = (byte)1,
                             StatusId = 1

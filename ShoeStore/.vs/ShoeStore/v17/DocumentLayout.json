@@ -3,12 +3,40 @@
   "WorkspaceRootPath": "D:\\shoestorefe\\ShoeStore\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\shoestore.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\shoestore.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|d:\\shoestorefe\\shoestore\\shoestore.application\\shoestore.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|solutionrelative:shoestore.application\\shoestore.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4687793D-718C-4547-9779-432480D807AD}|ShoeStore.Domain\\ShoeStore.Domain.csproj|d:\\shoestorefe\\shoestore\\shoestore.domain\\shoestore.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4687793D-718C-4547-9779-432480D807AD}|ShoeStore.Domain\\ShoeStore.Domain.csproj|solutionrelative:shoestore.domain\\shoestore.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\shoestore.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\shoestore.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,16 +59,8 @@
       "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|d:\\shoestorefe\\shoestore\\shoestore.application\\interfaces\\services\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|solutionrelative:shoestore.application\\interfaces\\services\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\migrations\\20251211104534_mockupdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\migrations\\20251211104534_mockupdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211103656_Init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -101,10 +121,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|d:\\shoestorefe\\shoestore\\shoestore.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{0E1EBAF7-5937-4A96-AEE4-609FABEEC49F}|ShoeStore.API\\ShoeStore.API.csproj|solutionrelative:shoestore.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|d:\\shoestorefe\\shoestore\\shoestore.application\\dtos\\dashboard\\dashboarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -185,10 +201,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\services\\promotionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\services\\promotionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|d:\\shoestorefe\\shoestore\\shoestore.application\\dtos\\notification\\createnotificationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -327,10 +339,6 @@
       "RelativeMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|solutionrelative:shoestore.application\\dtos\\order\\orderdetailcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|d:\\shoestorefe\\shoestore\\shoestore.infrastructure\\shoestore.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{71609BB9-1D23-43A1-A91F-ED646800B35A}|ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj|solutionrelative:shoestore.infrastructure\\shoestore.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|d:\\shoestorefe\\shoestore\\shoestore.application\\interfaces\\services\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1FA1DC6D-F8E3-4496-96AB-6E55277F6330}|ShoeStore.Application\\ShoeStore.Application.csproj|solutionrelative:shoestore.application\\interfaces\\services\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -411,6 +419,123 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "ShoeStore.API",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
+              "RelativeDocumentMoniker": "ShoeStore.API\\ShoeStore.API.csproj",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
+              "RelativeToolTip": "ShoeStore.API\\ShoeStore.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-15T03:03:50.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ShoeStore.Application",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\ShoeStore.Application.csproj",
+              "RelativeDocumentMoniker": "ShoeStore.Application\\ShoeStore.Application.csproj",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\ShoeStore.Application.csproj",
+              "RelativeToolTip": "ShoeStore.Application\\ShoeStore.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-15T03:33:48.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\ProductService.cs",
+              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\ProductService.cs",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\ProductService.cs",
+              "RelativeToolTip": "ShoeStore.Infrastructure\\Services\\ProductService.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAkwI4AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T06:59:27.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NotificationService.cs",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\NotificationService.cs",
+              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\NotificationService.cs",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\NotificationService.cs",
+              "RelativeToolTip": "ShoeStore.Infrastructure\\Services\\NotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T11:19:49.734Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "ShoeStore.API\\Properties\\launchSettings.json",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "ShoeStore.API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-08T08:29:56.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "20251215043916_Init.cs",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs",
+              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs",
+              "RelativeToolTip": "ShoeStore.Infrastructure\\Migrations\\20251215043916_Init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-15T04:39:18.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ShoeStore.Domain",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\ShoeStore.Domain.csproj",
+              "RelativeDocumentMoniker": "ShoeStore.Domain\\ShoeStore.Domain.csproj",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\ShoeStore.Domain.csproj",
+              "RelativeToolTip": "ShoeStore.Domain\\ShoeStore.Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-15T03:33:42.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ShoeStore.Infrastructure.csproj",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
+              "RelativeToolTip": "ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-17T06:48:37.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Program.cs",
+              "RelativeDocumentMoniker": "ShoeStore.API\\Program.cs",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Program.cs",
+              "RelativeToolTip": "ShoeStore.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-15T01:45:43.266Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "ProductController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\ProductController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\ProductController.cs",
@@ -423,33 +548,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.json",
-              "RelativeDocumentMoniker": "ShoeStore.API\\appsettings.json",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.json",
-              "RelativeToolTip": "ShoeStore.API\\appsettings.json",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-17T06:41:04.905Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "appsettings.Production.json",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.Production.json",
-              "RelativeDocumentMoniker": "ShoeStore.API\\appsettings.Production.json",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.Production.json",
-              "RelativeToolTip": "ShoeStore.API\\appsettings.Production.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-12-15T02:09:28.543Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "CartController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\CartController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\CartController.cs",
@@ -462,33 +561,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ShoeStore.API",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
-              "RelativeDocumentMoniker": "ShoeStore.API\\ShoeStore.API.csproj",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\ShoeStore.API.csproj",
-              "RelativeToolTip": "ShoeStore.API\\ShoeStore.API.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-12-15T03:03:50.908Z",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.json",
+              "RelativeDocumentMoniker": "ShoeStore.API\\appsettings.json",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.json",
+              "RelativeToolTip": "ShoeStore.API\\appsettings.json",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABgAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-17T06:41:04.905Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Program.cs",
-              "RelativeDocumentMoniker": "ShoeStore.API\\Program.cs",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Program.cs",
-              "RelativeToolTip": "ShoeStore.API\\Program.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwEAAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-15T01:45:43.266Z",
+              "DocumentIndex": 12,
+              "Title": "appsettings.Production.json",
+              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.Production.json",
+              "RelativeDocumentMoniker": "ShoeStore.API\\appsettings.Production.json",
+              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.Production.json",
+              "RelativeToolTip": "ShoeStore.API\\appsettings.Production.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-15T02:09:28.543Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 13,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\appsettings.Development.json",
               "RelativeDocumentMoniker": "ShoeStore.API\\appsettings.Development.json",
@@ -501,7 +600,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "IProductService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IProductService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IProductService.cs",
@@ -514,33 +613,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\ProductService.cs",
-              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\ProductService.cs",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\ProductService.cs",
-              "RelativeToolTip": "ShoeStore.Infrastructure\\Services\\ProductService.cs",
-              "ViewState": "AgIAANIAAAAAAAAAAAAUwIEBAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-13T06:59:27.983Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "20251211104534_MockupData.cs",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211104534_MockupData.cs",
-              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251211104534_MockupData.cs",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211104534_MockupData.cs",
-              "RelativeToolTip": "ShoeStore.Infrastructure\\Migrations\\20251211104534_MockupData.cs",
-              "ViewState": "AgIAAH8EAAAAAAAAAAAIwJIEAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-11T10:45:34.919Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 15,
               "Title": "20251211103656_Init.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211103656_Init.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251211103656_Init.cs",
@@ -551,7 +624,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 17,
               "Title": "20251211103219_MockupData.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211103219_MockupData.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251211103219_MockupData.cs",
@@ -562,20 +635,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "ShoeStoreDbContext.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Persistence\\ShoeStoreDbContext.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Persistence\\ShoeStoreDbContext.cs",
               "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Persistence\\ShoeStoreDbContext.cs",
               "RelativeToolTip": "ShoeStore.Infrastructure\\Persistence\\ShoeStoreDbContext.cs",
-              "ViewState": "AgIAAO4BAAAAAAAAAAAIwBQDAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAO8BAAAAAAAAAAAIwBUDAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-13T06:56:01.244Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 18,
               "Title": "20251211102735_MockupData1.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211102735_MockupData1.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251211102735_MockupData1.cs",
@@ -586,7 +659,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 19,
               "Title": "20251211102049_MockupData.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251211102049_MockupData.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251211102049_MockupData.cs",
@@ -597,7 +670,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "OrderService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\OrderService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\OrderService.cs",
@@ -610,7 +683,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 21,
               "Title": "Order.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Order.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Order.cs",
@@ -623,7 +696,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 22,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\User.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\User.cs",
@@ -636,7 +709,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 23,
               "Title": "OrderCreateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderCreateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderCreateDto.cs",
@@ -649,7 +722,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 24,
               "Title": "OrderController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\OrderController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\OrderController.cs",
@@ -662,7 +735,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 25,
               "Title": "ServiceCollectionExtensions.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Extensions\\ServiceCollectionExtensions.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Extensions\\ServiceCollectionExtensions.cs",
@@ -675,7 +748,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 26,
               "Title": "OrderDetail.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\OrderDetail.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\OrderDetail.cs",
@@ -688,7 +761,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 27,
               "Title": "CartItemDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Cart\\CartItemDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Cart\\CartItemDto.cs",
@@ -701,7 +774,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 28,
               "Title": "OrderRespondDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderRespondDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderRespondDto.cs",
@@ -714,7 +787,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 29,
               "Title": "MappingProfile.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Mappings\\MappingProfile.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Mappings\\MappingProfile.cs",
@@ -727,20 +800,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "ShoeStore.API\\Properties\\launchSettings.json",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Properties\\launchSettings.json",
-              "RelativeToolTip": "ShoeStore.API\\Properties\\launchSettings.json",
-              "ViewState": "AgIAABEAAAAAAAAAAABRwBoAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-12-08T08:29:56.316Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 32,
               "Title": "DashboardService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\DashboardService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\DashboardService.cs",
@@ -753,7 +813,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 31,
               "Title": "IDashboardService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IDashboardService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IDashboardService.cs",
@@ -766,7 +826,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 30,
               "Title": "DashboardDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Dashboard\\DashboardDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Dashboard\\DashboardDto.cs",
@@ -779,7 +839,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 96,
+              "DocumentIndex": 98,
               "Title": "20251126011358_UpdateStaffPermission.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251126011358_UpdateStaffPermission.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251126011358_UpdateStaffPermission.cs",
@@ -790,7 +850,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 33,
               "Title": "BrandController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\BrandController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\BrandController.cs",
@@ -803,7 +863,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 34,
               "Title": "PromotionController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\PromotionController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\PromotionController.cs",
@@ -816,7 +876,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 35,
               "Title": "UserController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\UserController.cs",
@@ -829,7 +889,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 97,
+              "DocumentIndex": 99,
               "Title": "20251126005833_UpdatePermission.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Migrations\\20251126005833_UpdatePermission.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Migrations\\20251126005833_UpdatePermission.cs",
@@ -840,7 +900,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 36,
               "Title": "StoreService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\StoreService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\StoreService.cs",
@@ -853,7 +913,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 37,
               "Title": "ReceiptController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\ReceiptController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\ReceiptController.cs",
@@ -866,7 +926,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 38,
               "Title": "ReceiptService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\ReceiptService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\ReceiptService.cs",
@@ -879,7 +939,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 39,
               "Title": "UserService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\UserService.cs",
@@ -892,7 +952,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 40,
               "Title": "AddToCartRequest.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Cart\\AddToCartRequest.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Cart\\AddToCartRequest.cs",
@@ -905,7 +965,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 41,
               "Title": "UpdateCommentDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Comment\\UpdateCommentDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Comment\\UpdateCommentDto.cs",
@@ -918,7 +978,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 42,
               "Title": "CartService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\CartService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\CartService.cs",
@@ -931,7 +991,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 44,
               "Title": "NotificationController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\NotificationController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\NotificationController.cs",
@@ -944,7 +1004,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 43,
               "Title": "CreateCommentDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Comment\\CreateCommentDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Comment\\CreateCommentDto.cs",
@@ -957,7 +1017,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 45,
               "Title": "UserUpdateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\User\\UserUpdateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\User\\UserUpdateDto.cs",
@@ -970,7 +1030,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 46,
               "Title": "UserSignUpDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\User\\UserSignUpDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\User\\UserSignUpDto.cs",
@@ -983,7 +1043,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 47,
               "Title": "UserResetPassDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\User\\UserResetPassDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\User\\UserResetPassDto.cs",
@@ -996,7 +1056,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 48,
               "Title": "UserCreateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\User\\UserCreateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\User\\UserCreateDto.cs",
@@ -1009,7 +1069,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 49,
               "Title": "PromotionService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\PromotionService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\PromotionService.cs",
@@ -1022,20 +1082,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
-              "Title": "NotificationService.cs",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\NotificationService.cs",
-              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\NotificationService.cs",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\NotificationService.cs",
-              "RelativeToolTip": "ShoeStore.Infrastructure\\Services\\NotificationService.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAIBQwEIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-20T11:19:49.734Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 50,
               "Title": "CreateNotificationDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Notification\\CreateNotificationDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Notification\\CreateNotificationDto.cs",
@@ -1048,7 +1095,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 51,
               "Title": "UpdateReceiptReceivedDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Receipt\\UpdateReceiptReceivedDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Receipt\\UpdateReceiptReceivedDto.cs",
@@ -1061,7 +1108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 52,
               "Title": "UpdateReceiptDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Receipt\\UpdateReceiptDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Receipt\\UpdateReceiptDto.cs",
@@ -1074,7 +1121,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 53,
               "Title": "CreateReceiptDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Receipt\\CreateReceiptDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Receipt\\CreateReceiptDto.cs",
@@ -1087,7 +1134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 54,
               "Title": "StoreQuantityDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Product\\StoreQuantityDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Product\\StoreQuantityDto.cs",
@@ -1100,7 +1147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 55,
               "Title": "StoreController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\StoreController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\StoreController.cs",
@@ -1113,7 +1160,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 56,
               "Title": "SupplierController.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Controllers\\SupplierController.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Controllers\\SupplierController.cs",
@@ -1126,7 +1173,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 57,
               "Title": "UpdateProductDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Product\\UpdateProductDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Product\\UpdateProductDto.cs",
@@ -1139,7 +1186,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 58,
               "Title": "CreateProductDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Product\\CreateProductDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Product\\CreateProductDto.cs",
@@ -1152,7 +1199,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 59,
               "Title": "ExceptionMiddleware.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.API\\Middleware\\ExceptionMiddleware.cs",
               "RelativeDocumentMoniker": "ShoeStore.API\\Middleware\\ExceptionMiddleware.cs",
@@ -1165,7 +1212,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 60,
               "Title": "UpdateSupplierDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Supplier\\UpdateSupplierDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Supplier\\UpdateSupplierDto.cs",
@@ -1178,7 +1225,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 61,
               "Title": "CreateSupplierDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Supplier\\CreateSupplierDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Supplier\\CreateSupplierDto.cs",
@@ -1191,7 +1238,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 62,
               "Title": "BrandService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\BrandService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\BrandService.cs",
@@ -1204,7 +1251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 63,
               "Title": "CreateBrandDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Brand\\CreateBrandDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Brand\\CreateBrandDto.cs",
@@ -1217,7 +1264,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 64,
               "Title": "SearchProductDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Product\\SearchProductDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Product\\SearchProductDto.cs",
@@ -1230,7 +1277,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 65,
               "Title": "ProductDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Product\\ProductDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Product\\ProductDto.cs",
@@ -1243,7 +1290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 66,
               "Title": "StoreProduct.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\StoreProduct.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\StoreProduct.cs",
@@ -1256,7 +1303,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 67,
               "Title": "Product.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Product.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Product.cs",
@@ -1269,7 +1316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 68,
               "Title": "SupplierService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Services\\SupplierService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Services\\SupplierService.cs",
@@ -1282,7 +1329,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 69,
               "Title": "ISupplierService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\ISupplierService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\ISupplierService.cs",
@@ -1295,7 +1342,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 70,
               "Title": "SupplierDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Supplier\\SupplierDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Supplier\\SupplierDto.cs",
@@ -1308,7 +1355,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 71,
               "Title": "Supplier.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Supplier.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Supplier.cs",
@@ -1321,7 +1368,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 72,
               "Title": "IStoreService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IStoreService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IStoreService.cs",
@@ -1334,7 +1381,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 73,
               "Title": "UpdateStoreDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Store\\UpdateStoreDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Store\\UpdateStoreDto.cs",
@@ -1347,7 +1394,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 74,
               "Title": "CreateStoreDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Store\\CreateStoreDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Store\\CreateStoreDto.cs",
@@ -1360,7 +1407,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 75,
               "Title": "StoreDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Store\\StoreDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Store\\StoreDto.cs",
@@ -1373,7 +1420,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 76,
               "Title": "Store.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Store.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Store.cs",
@@ -1386,7 +1433,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 77,
               "Title": "IBrandService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IBrandService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IBrandService.cs",
@@ -1399,7 +1446,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 78,
               "Title": "UpdateBrandDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Brand\\UpdateBrandDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Brand\\UpdateBrandDto.cs",
@@ -1412,7 +1459,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 79,
               "Title": "BrandDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Brand\\BrandDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Brand\\BrandDto.cs",
@@ -1425,7 +1472,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 80,
               "Title": "Brand.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Brand.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Brand.cs",
@@ -1438,7 +1485,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
+              "DocumentIndex": 81,
               "Title": "OrderStatusUpdateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderStatusUpdateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderStatusUpdateDto.cs",
@@ -1451,7 +1498,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 82,
               "Title": "OrderDetailUpdateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderDetailUpdateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderDetailUpdateDto.cs",
@@ -1464,7 +1511,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 80,
+              "DocumentIndex": 83,
               "Title": "OrderDetailCreateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderDetailCreateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderDetailCreateDto.cs",
@@ -1477,7 +1524,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 82,
+              "DocumentIndex": 84,
               "Title": "IEmailService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IEmailService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IEmailService.cs",
@@ -1490,20 +1537,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 81,
-              "Title": "ShoeStore.Infrastructure.csproj",
-              "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
-              "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
-              "ToolTip": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
-              "RelativeToolTip": "ShoeStore.Infrastructure\\ShoeStore.Infrastructure.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-11-17T06:48:37.953Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 83,
+              "DocumentIndex": 85,
               "Title": "IOrderService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Interfaces\\Services\\IOrderService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Interfaces\\Services\\IOrderService.cs",
@@ -1516,7 +1550,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 84,
+              "DocumentIndex": 86,
               "Title": "EmailService.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Mail\\EmailService.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Mail\\EmailService.cs",
@@ -1529,7 +1563,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 85,
+              "DocumentIndex": 87,
               "Title": "MailSetting.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Mail\\MailSetting.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Mail\\MailSetting.cs",
@@ -1542,7 +1576,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 86,
+              "DocumentIndex": 88,
               "Title": "Receipt.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Receipt.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Receipt.cs",
@@ -1555,7 +1589,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 87,
+              "DocumentIndex": 89,
               "Title": "Cart.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\Cart.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\Cart.cs",
@@ -1568,7 +1602,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 92,
+              "DocumentIndex": 94,
               "Title": "OrderUpdateDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Order\\OrderUpdateDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Order\\OrderUpdateDto.cs",
@@ -1579,7 +1613,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 88,
+              "DocumentIndex": 90,
               "Title": "CartItem.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\CartItem.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\CartItem.cs",
@@ -1592,7 +1626,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 89,
+              "DocumentIndex": 91,
               "Title": "ReceiptDetail.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Domain\\Entities\\ReceiptDetail.cs",
               "RelativeDocumentMoniker": "ShoeStore.Domain\\Entities\\ReceiptDetail.cs",
@@ -1605,7 +1639,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 90,
+              "DocumentIndex": 92,
               "Title": "PasswordHelper.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Security\\PasswordHelper.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Security\\PasswordHelper.cs",
@@ -1618,7 +1652,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 91,
+              "DocumentIndex": 93,
               "Title": "JwtTokenGenerator.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Infrastructure\\Security\\JwtTokenGenerator.cs",
               "RelativeDocumentMoniker": "ShoeStore.Infrastructure\\Security\\JwtTokenGenerator.cs",
@@ -1631,7 +1665,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 93,
+              "DocumentIndex": 95,
               "Title": "CreatePromotionDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Promotion\\CreatePromotionDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Promotion\\CreatePromotionDto.cs",
@@ -1644,7 +1678,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 94,
+              "DocumentIndex": 96,
               "Title": "UpdatePromotionDto.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Promotion\\UpdatePromotionDto.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Promotion\\UpdatePromotionDto.cs",
@@ -1657,7 +1691,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 95,
+              "DocumentIndex": 97,
               "Title": "UpdateCartItem.cs",
               "DocumentMoniker": "D:\\shoestorefe\\ShoeStore\\ShoeStore.Application\\Dtos\\Cart\\UpdateCartItem.cs",
               "RelativeDocumentMoniker": "ShoeStore.Application\\Dtos\\Cart\\UpdateCartItem.cs",
