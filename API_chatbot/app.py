@@ -42,7 +42,7 @@ STORE_CONTEXT = {
 }
 
 # Backend API URL
-BASE_API_URL = "http://helloshoestore.runasp.net/api"
+BASE_API_URL = "https://helloshoestore.runasp.net/api"
 
 # --- DATA FETCHING FUNCTIONS ---
 def fetch_all_data():
@@ -164,7 +164,7 @@ def fetch_all_data():
                     # Deep link format: http://helloshoestore.runasp.net/#/product-detail/{EncodedName}
                     import urllib.parse
                     encoded_name = urllib.parse.quote(name)
-                    link = f"http://helloshoestore.runasp.net/#/product-detail/{encoded_name}"
+                    link = f"https://helloshoestore.runasp.net/#/product-detail/{encoded_name}"
                     
                     products_summary.append(f"- {name} | Giá: {price}đ | Có bán tại: {stock_str} | Link: [Xem chi tiết]({link})")
                 

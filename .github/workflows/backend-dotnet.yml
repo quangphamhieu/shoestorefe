@@ -6,7 +6,7 @@ on:
     paths:
       - 'ShoeStore/**'
       - '.github/workflows/backend-dotnet.yml'
-      - 'shoestorefe/**'
+      # - 'shoestorefe/**' # Removed: Backend no longer handles Frontend build
   workflow_dispatch:
 
 jobs:
