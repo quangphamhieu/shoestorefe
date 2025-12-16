@@ -24,25 +24,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShoeStore/ShoeStore.sln
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-    
-    - name: Install Flutter dependencies
-      run: |
-        cd shoestorefe
-        flutter pub get
-
-    - name: Build Flutter Web
-      run: |
-        cd shoestorefe
-        flutter build web --release --base-href /
-
-    - name: Copy Flutter Web to wwwroot
-      run: |
-        mkdir -p ShoeStore/ShoeStore.API/wwwroot
-        cp -r shoestorefe/build/web/* ShoeStore/ShoeStore.API/wwwroot/
+    # Flutter steps removed for decoupled deployment
 
     - name: Build .NET
       run: dotnet build ShoeStore/ShoeStore.sln --no-restore --configuration Release

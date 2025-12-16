@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ApiEndpoint {
-  static const baseUrl = kIsWeb 
-      ? "/api" 
-      : "http://helloshoestore.runasp.net/api";
+  static const baseUrl = "https://helloshoestore.runasp.net/api";
   static const brands = "$baseUrl/brands";
   static const stores = "$baseUrl/store";
   static const suppliers = "$baseUrl/supplier";

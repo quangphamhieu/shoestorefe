@@ -27,8 +27,18 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Build Web (Dry Run)
+    - name: Build Web (Release)
       run: flutter build web --release
+
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: ${{ secrets.GITHUB_TOKEN }}
+        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        channelId: live
+        projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+      env:
+        FIREBASE_CLI_PREVIEWS: hostingchannels
 
     - name: Build Android APK
       run: flutter build apk --release
