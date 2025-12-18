@@ -14,6 +14,11 @@ class ApiClient {
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 10),
               headers: {"Content-Type": "application/json"},
+              followRedirects: true, // Explicitly enable following redirects
+              maxRedirects: 5,
+              validateStatus: (status) {
+                return status! < 500; // Accept 307/308 to inspect them if follow fails
+              },
             ),
           ) {
     // Set the adapter based on the platform (Web/Mobile)
@@ -53,6 +58,8 @@ class ApiClient {
             '[ApiClient] ❌ Error on ${error.requestOptions.path}: ${error.message}',
           );
           if (error.response != null) {
+            print('[ApiClient] ❌ Status Code: ${error.response?.statusCode}');
+            print('[ApiClient] ❌ Redirect Location: ${error.response?.headers.value('location')}');
             print('[ApiClient] ❌ Error response: ${error.response?.data}');
           }
           handler.next(error);
