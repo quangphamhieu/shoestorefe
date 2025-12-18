@@ -641,6 +641,66 @@ class _StaffOrderFormDialogState extends State<StaffOrderFormDialog> {
       });
     }
   }
+
+
+
+
+  Future<void> _handleSubmit(
+    BuildContext context,
+    StaffOrderProvider provider,
+  ) async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_orderDetails.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng thêm ít nhất một sản phẩm')),
+      );
+      return;
+    }
+
+    if (_storeId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Không thể xác định cửa hàng. Vui lòng liên hệ quản trị viên.'),
+          backgroundColor: Color(0xFFDC2626),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+    });
+
+    final success = await provider.createOrder(
+      customerId: _selectedCustomerId!,
+      paymentMethod: _paymentMethod,
+      storeId: _storeId,
+      details: _orderDetails,
+    );
+
+    setState(() {
+      _loading = false;
+    });
+
+    if (!context.mounted) return;
+
+    if (success) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tạo đơn hàng thành công'),
+          backgroundColor: Color(0xFF10B981),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tạo đơn hàng thất bại'),
+          backgroundColor: Color(0xFFDC2626),
+        ),
+      );
+    }
+  }
 }
 
 class _ProductSelectionDialog extends StatefulWidget {
@@ -679,14 +739,10 @@ class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
         orElse: () => StoreQuantity(storeId: -1, storeName: '', quantity: 0, salePrice: 0),
       );
       
-      // Filter out if not in store or out of stock (optional: user might want to see out of stock items?)
-      // User request: "only get products that have storeproduct with storeid == staff storeid"
       if (storeQty.storeId != widget.storeId) return false;
 
-      // Filter out already added products
       if (widget.existingProductIds.contains(p.id)) return false;
 
-      // 2. Search filter
       final matchesSearch = p.name.toLowerCase().contains(search) || 
                             (p.sku?.toLowerCase().contains(search) ?? false);
       
@@ -714,7 +770,6 @@ class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header
             Row(
               children: [
                 const Text(
@@ -730,9 +785,7 @@ class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
             ),
             const SizedBox(height: 16),
 
-            // Step 1: Select Product (if not selected) or Show Selected
             if (_selectedProduct == null) ...[
-               // Search Bar
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Tìm theo tên, mã SKU...',
@@ -793,7 +846,6 @@ class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
                     ),
               ),
             ] else ...[
-              // Step 2: Input Quantity for Selected Product
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -880,62 +932,6 @@ class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
       ),
     );
   }
-
-  Future<void> _handleSubmit(
-    BuildContext context,
-    StaffOrderProvider provider,
-  ) async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_orderDetails.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng thêm ít nhất một sản phẩm')),
-      );
-      return;
-    }
-
-    if (_storeId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Không thể xác định cửa hàng. Vui lòng liên hệ quản trị viên.'),
-          backgroundColor: Color(0xFFDC2626),
-        ),
-      );
-      return;
-    }
-
-    setState(() {
-      _loading = true;
-    });
-
-    final success = await provider.createOrder(
-      customerId: _selectedCustomerId!,
-      paymentMethod: _paymentMethod,
-      storeId: _storeId,
-      details: _orderDetails,
-    );
-
-    setState(() {
-      _loading = false;
-    });
-
-    if (!context.mounted) return;
-
-    if (success) {
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tạo đơn hàng thành công'),
-          backgroundColor: Color(0xFF10B981),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tạo đơn hàng thất bại'),
-          backgroundColor: Color(0xFFDC2626),
-        ),
-      );
-    }
-  }
 }
+
 
