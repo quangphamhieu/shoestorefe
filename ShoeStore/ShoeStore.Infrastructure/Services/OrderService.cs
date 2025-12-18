@@ -10,27 +10,33 @@ using ShoeStore.Application.Interfaces.Services;
 using ShoeStore.Domain.Entities;
 using ShoeStore.Infrastructure.Persistence;
 
+using Microsoft.Extensions.Logging;
+
 namespace ShoeStore.Infrastructure.Services
 {
     public class OrderService : IOrderService
     {
         private readonly ShoeStoreDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<OrderService> _logger;
         private const int WarehouseStoreId = 1;
         private const int StatusPaymentSuccess = 3;       // Đã thanh toán
         private const int StatusPendingConfirmation = 4;  // Đang giao / chờ xác nhận
         private const int StatusCompleted = 5;            // Hoàn tất
         private const int StatusCancelled = 6;            // Hủy
 
-        public OrderService(ShoeStoreDbContext context, IMapper mapper)
+        public OrderService(ShoeStoreDbContext context, IMapper mapper, ILogger<OrderService> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // ================= CREATE ORDER =================
         public async Task<OrderResponseDto> CreateOrderAsync(OrderCreateDto dto, long userId)
         {
+            _logger.LogInformation("CreateOrderAsync started: Type={OrderType}, Customer={CustomerId}, Store={StoreId}", dto.OrderType, dto.CustomerId, dto.StoreId);
+
             ArgumentNullException.ThrowIfNull(dto);
             ValidateOrderDetails(dto);
 
@@ -82,56 +88,70 @@ namespace ShoeStore.Infrastructure.Services
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            foreach (var item in dto.Details)
-            {
-                if (!storeProducts.TryGetValue(item.ProductId, out var storeProduct))
-                    throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' is not available in the selected store.");
-
-                EnsureDetailQuantity(item.Quantity);
-
-                // Inventory check
-                if (storeProduct.Quantity < item.Quantity)
-                   throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
-
-                // ALWAYS deduct inventory immediately (Online needs to reserve stock)
-                // User requested explicit check
-                if (isOffline || isOnline)
+            try {
+                foreach (var item in dto.Details)
                 {
-                    storeProduct.Quantity -= item.Quantity;
+                    if (!storeProducts.TryGetValue(item.ProductId, out var storeProduct))
+                        throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' is not available in the selected store.");
+
+                    EnsureDetailQuantity(item.Quantity);
+
+                    // Inventory check
+                    if (storeProduct.Quantity < item.Quantity)
+                    {
+                        _logger.LogError("Out of stock: Product {ProductId} has {Qty} but requested {Req}", item.ProductId, storeProduct.Quantity, item.Quantity);
+                        throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
+                    }
+
+                    // ALWAYS deduct inventory immediately (Online needs to reserve stock)
+                    // User requested explicit check
+                    if (isOffline || isOnline)
+                    {
+                        var oldQty = storeProduct.Quantity;
+                        storeProduct.Quantity -= item.Quantity;
+                        _logger.LogInformation("Deducted stock for Product {ProductId}: {Old} -> {New} (Store {StoreId})", item.ProductId, oldQty, storeProduct.Quantity, storeId);
+                    }
+
+                    var detail = new OrderDetail
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitPrice = storeProduct.SalePrice
+                    };
+
+                    orderDetails.Add(detail);
+                    totalAmount += detail.UnitPrice * detail.Quantity;
                 }
 
-                var detail = new OrderDetail
+                var order = new Order
                 {
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity,
-                    UnitPrice = storeProduct.SalePrice
+                    OrderNumber = $"OD-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
+                    CustomerId = dto.CustomerId,
+                    CreatedBy = userId,
+                    StoreId = storeId,
+                    OrderType = dto.OrderType,
+                    PaymentMethod = dto.PaymentMethod,
+                    StatusId = isOffline ? StatusPaymentSuccess : StatusPendingConfirmation,
+                    TotalAmount = totalAmount,
+                    CreatedAt = DateTime.UtcNow,
+                    Address = dto.Address,
+                    Note = dto.Note,
+                    OrderDetails = orderDetails
                 };
 
-                orderDetails.Add(detail);
-                totalAmount += detail.UnitPrice * detail.Quantity;
+                await _context.Orders.AddAsync(order);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("CreateOrderAsync success: OrderId={OrderId}, Status={Status}", order.Id, order.StatusId);
+
+                return await GetOrderByIdAsync(order.Id) ?? throw new InvalidOperationException("Failed to load the created order.");
             }
-
-            var order = new Order
+            catch (Exception ex)
             {
-                OrderNumber = $"OD-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
-                CustomerId = dto.CustomerId,
-                CreatedBy = userId,
-                StoreId = storeId,
-                OrderType = dto.OrderType,
-                PaymentMethod = dto.PaymentMethod,
-                StatusId = isOffline ? StatusPaymentSuccess : StatusPendingConfirmation,
-                TotalAmount = totalAmount,
-                CreatedAt = DateTime.UtcNow,
-                Address = dto.Address,
-                Note = dto.Note,
-                OrderDetails = orderDetails
-            };
-
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            return await GetOrderByIdAsync(order.Id) ?? throw new InvalidOperationException("Failed to load the created order.");
+                _logger.LogError(ex, "CreateOrderAsync failed");
+                throw;
+            }
         }
 
         // ================= GET ORDER BY ID =================
@@ -252,6 +272,7 @@ namespace ShoeStore.Infrastructure.Services
 
         public async Task<bool> UpdateOrderStatusAsync(OrderStatusUpdateDto dto)
         {
+            _logger.LogInformation("UpdateOrderStatusAsync: Order={OrderId}, NewStatus={Status}", dto.OrderId, dto.StatusId);
             ArgumentNullException.ThrowIfNull(dto);
 
             var statusExists = await _context.Statuses.AsNoTracking().AnyAsync(s => s.Id == dto.StatusId);
@@ -270,6 +291,8 @@ namespace ShoeStore.Infrastructure.Services
 
             var current = order.StatusId;
             var next = dto.StatusId;
+            _logger.LogInformation("Transition: {Current} -> {Next}", current, next);
+
             if (current == next)
             {
                 order.Note = dto.Note ?? order.Note;
@@ -294,7 +317,10 @@ namespace ShoeStore.Infrastructure.Services
                            || (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusPendingConfirmation || next == StatusCompleted)); // 6 -> 3/4/5
 
             if (!allowed)
+            {
+                _logger.LogWarning("Invalid transition attempted: {Current} -> {Next}", current, next);
                 throw new InvalidOperationException($"Transition {current} -> {next} is not allowed.");
+            }
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -307,6 +333,7 @@ namespace ShoeStore.Infrastructure.Services
             // Note: 4 -> 3 does NOT deduct anymore (already deducted at creation)
             if (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusPendingConfirmation || next == StatusCompleted))
             {
+                _logger.LogInformation("Restocking from Cancelled state.");
                 foreach (var detail in order.OrderDetails)
                 {
                     if (storeProducts.TryGetValue(detail.ProductId, out var sp))
@@ -317,11 +344,16 @@ namespace ShoeStore.Infrastructure.Services
                     }
                 }
             }
+            else 
+            {
+                 _logger.LogInformation("No stock deduction for this transition (already deducted or not applicable).");
+            }
 
             // Restore: 3 -> 6, 5 -> 6
             // Note: 4 -> 6 does NOT restore (User said "from 4 to 6 then no need")
             if ((current == StatusPaymentSuccess || current == StatusCompleted) && next == StatusCancelled)
             {
+                _logger.LogInformation("Restoring stock (Paid/Completed -> Cancelled).");
                 foreach (var detail in order.OrderDetails)
                 {
                     if (storeProducts.TryGetValue(detail.ProductId, out var sp))
