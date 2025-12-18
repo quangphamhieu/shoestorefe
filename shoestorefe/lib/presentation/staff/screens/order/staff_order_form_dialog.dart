@@ -7,6 +7,7 @@ import '../../../admin/provider/user_provider.dart';
 import '../../../admin/provider/product_provider.dart';
 import '../../../../domain/entities/user.dart';
 import '../../../../domain/entities/product.dart';
+import '../../../../domain/entities/store_quantity.dart';
 import '../../../../domain/usecases/user/get_user_by_id.dart';
 import '../../../../domain/usecases/user/sign_up.dart';
 import '../../../../injection_container.dart' as di;
@@ -617,97 +618,267 @@ class _StaffOrderFormDialogState extends State<StaffOrderFormDialog> {
     BuildContext context,
     ProductProvider productProvider,
   ) async {
-    int? selectedProductId;
-    final quantityController = TextEditingController(text: '1');
-    final formKey = GlobalKey<FormState>();
+    // Validate store first
+    if (_storeId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không xác định được cửa hàng của nhân viên')),
+      );
+      return;
+    }
 
-    final result = await showDialog<bool>(
+    final result = await showDialog<Map<String, dynamic>>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Thêm sản phẩm'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButtonFormField<int>(
-                value: selectedProductId,
-                decoration: const InputDecoration(
-                  labelText: 'Sản phẩm *',
-                  border: OutlineInputBorder(),
-                ),
-                items: productProvider.products
-                    .where((p) => p.statusId == 1)
-                    .map((product) => DropdownMenuItem<int>(
-                          value: product.id,
-                          child: Text(
-                            product.sku ?? product.name,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  selectedProductId = value;
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Vui lòng chọn sản phẩm';
-                  }
-                  // Check if product already added
-                  if (_orderDetails.any((d) => d['productId'] == value)) {
-                    return 'Sản phẩm đã được thêm vào đơn';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: quantityController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Số lượng *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập số lượng';
-                  }
-                  final parsed = int.tryParse(value);
-                  if (parsed == null || parsed <= 0) {
-                    return 'Số lượng phải lớn hơn 0';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState?.validate() == true &&
-                  selectedProductId != null) {
-                Navigator.of(context).pop(true);
-              }
-            },
-            child: const Text('Thêm'),
-          ),
-        ],
+      builder: (context) => _ProductSelectionDialog(
+        products: productProvider.products,
+        storeId: _storeId!,
+        existingProductIds: _orderDetails.map((d) => d['productId'] as int).toSet(),
       ),
     );
 
-    if (result == true && selectedProductId != null) {
+    if (result != null) {
       setState(() {
-        _orderDetails.add({
-          'productId': selectedProductId!,
-          'quantity': int.parse(quantityController.text),
-        });
+        _orderDetails.add(result);
       });
     }
+  }
+}
+
+class _ProductSelectionDialog extends StatefulWidget {
+  final List<Product> products;
+  final int storeId;
+  final Set<int> existingProductIds;
+
+  const _ProductSelectionDialog({
+    required this.products,
+    required this.storeId,
+    required this.existingProductIds,
+  });
+
+  @override
+  State<_ProductSelectionDialog> createState() => _ProductSelectionDialogState();
+}
+
+class _ProductSelectionDialogState extends State<_ProductSelectionDialog> {
+  String _searchQuery = '';
+  Product? _selectedProduct;
+  final _quantityController = TextEditingController(text: '1');
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    super.dispose();
+  }
+
+  List<Product> get _filteredProducts {
+    final search = _searchQuery.toLowerCase();
+    return widget.products.where((p) {
+      // 1. Must check if product exists in this store
+      final storeQty = p.stores.firstWhere(
+        (s) => s.storeId == widget.storeId,
+        orElse: () => StoreQuantity(storeId: -1, storeName: '', quantity: 0, salePrice: 0),
+      );
+      
+      // Filter out if not in store or out of stock (optional: user might want to see out of stock items?)
+      // User request: "only get products that have storeproduct with storeid == staff storeid"
+      if (storeQty.storeId != widget.storeId) return false;
+
+      // Filter out already added products
+      if (widget.existingProductIds.contains(p.id)) return false;
+
+      // 2. Search filter
+      final matchesSearch = p.name.toLowerCase().contains(search) || 
+                            (p.sku?.toLowerCase().contains(search) ?? false);
+      
+      return matchesSearch;
+    }).toList();
+  }
+
+  int _getStoreQuantity(Product p) {
+    try {
+      return p.stores.firstWhere((s) => s.storeId == widget.storeId).quantity;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        width: 600,
+        height: 700,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            Row(
+              children: [
+                const Text(
+                  'Thêm sản phẩm',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Step 1: Select Product (if not selected) or Show Selected
+            if (_selectedProduct == null) ...[
+               // Search Bar
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Tìm theo tên, mã SKU...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                onChanged: (val) {
+                  setState(() {
+                    _searchQuery = val;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: _filteredProducts.isEmpty 
+                  ? const Center(child: Text('Không tìm thấy sản phẩm phù hợp tại cửa hàng này', style: TextStyle(color: Colors.grey)))
+                  : ListView.separated(
+                      itemCount: _filteredProducts.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final product = _filteredProducts[index];
+                        final qty = _getStoreQuantity(product);
+                        return ListTile(
+                          title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                          subtitle: Text('SKU: ${product.sku ?? "N/A"} | Giá: ${product.originalPrice}'),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: qty > 0 ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Kho: $qty',
+                              style: TextStyle(
+                                color: qty > 0 ? const Color(0xFF166534) : const Color(0xFF991B1B),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            if (qty <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Sản phẩm này đã hết hàng tại cửa hàng')),
+                              );
+                              return;
+                            }
+                            setState(() {
+                              _selectedProduct = product;
+                              _quantityController.text = '1';
+                            });
+                          },
+                        );
+                      },
+                    ),
+              ),
+            ] else ...[
+              // Step 2: Input Quantity for Selected Product
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_selectedProduct!.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 4),
+                          Text('SKU: ${_selectedProduct!.sku}'),
+                          const SizedBox(height: 4),
+                          Text('Tồn kho hiện tại: ${_getStoreQuantity(_selectedProduct!)}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedProduct = null;
+                        });
+                      },
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      tooltip: 'Chọn lại sản phẩm',
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _quantityController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Số lượng thêm',
+                    border: OutlineInputBorder(),
+                    helperText: 'Nhập số lượng muốn thêm vào đơn hàng',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Nhập số lượng';
+                    final val = int.tryParse(value);
+                    if (val == null || val <= 0) return 'Số lượng phải > 0';
+                    final currentStock = _getStoreQuantity(_selectedProduct!);
+                    if (val > currentStock) return 'Không đủ tồn kho (Còn $currentStock)';
+                    return null;
+                  },
+                ),
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Hủy'),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).pop({
+                          'productId': _selectedProduct!.id,
+                          'quantity': int.parse(_quantityController.text),
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF10B981),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Xác nhận thêm'),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _handleSubmit(
