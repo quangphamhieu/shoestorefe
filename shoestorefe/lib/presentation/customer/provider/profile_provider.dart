@@ -23,7 +23,6 @@ class ProfileProvider extends ChangeNotifier {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
   final TextEditingController currentPasswordController =
       TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
@@ -44,10 +43,6 @@ class ProfileProvider extends ChangeNotifier {
         nameController.text = _user!.fullName;
         phoneController.text = _user!.phone ?? '';
 
-        // Load address from SharedPreferences (backend doesn't support address yet)
-        final prefs = await SharedPreferences.getInstance();
-        final savedAddress = prefs.getString('user_address_${_user!.id}') ?? '';
-        addressController.text = savedAddress;
       }
     } catch (e) {
       _error = e.toString();
@@ -65,10 +60,6 @@ class ProfileProvider extends ChangeNotifier {
         nameController.text = _user!.fullName;
         phoneController.text = _user!.phone ?? '';
 
-        // Reload address from SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        final savedAddress = prefs.getString('user_address_${_user!.id}') ?? '';
-        addressController.text = savedAddress;
       }
     }
     notifyListeners();
@@ -114,14 +105,6 @@ class ProfileProvider extends ChangeNotifier {
         // Update controllers with new data
         nameController.text = _user!.fullName;
         phoneController.text = _user!.phone ?? '';
-
-        // Save address to SharedPreferences (backend doesn't support address yet)
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-          'user_address_${_user!.id}',
-          addressController.text.trim(),
-        );
-        print('[ProfileProvider] ✅ Address saved to local storage');
 
         _isEditing = false;
         _isLoading = false;

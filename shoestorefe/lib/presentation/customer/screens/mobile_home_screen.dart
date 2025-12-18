@@ -169,36 +169,6 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
 
                     const SizedBox(height: 24),
 
-                    // Categories Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Danh mục',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text('Xem tất cả'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 100,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildCategoryCard('Thể thao', Icons.sports_soccer),
-                          _buildCategoryCard('Cao gót', Icons.landscape),
-                          _buildCategoryCard('Sandal', Icons.beach_access),
-                          _buildCategoryCard('Giày tây', Icons.work),
-                        ],
-                      ),
-                    ),
 
                     const SizedBox(height: 24),
 

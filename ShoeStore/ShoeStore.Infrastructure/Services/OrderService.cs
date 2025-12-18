@@ -93,11 +93,8 @@ namespace ShoeStore.Infrastructure.Services
                 if (storeProduct.Quantity < item.Quantity)
                    throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
 
-                // Only deduct inventory immediately for Offline orders (Status 3)
-                if (isOffline)
-                {
-                    storeProduct.Quantity -= item.Quantity;
-                }
+                // ALWAYS deduct inventory immediately (Online needs to reserve stock)
+                storeProduct.Quantity -= item.Quantity;
 
                 var detail = new OrderDetail
                 {
@@ -302,10 +299,9 @@ namespace ShoeStore.Infrastructure.Services
 
             // Inventory adjustments
             
-            // Deduct: 4 -> 3, 6 -> 3, 6 -> 5
-            // Note: 6 -> 4 does NOT deduct (User said "from 6 to 4 then no add/sub")
-            if ((current == StatusPendingConfirmation && next == StatusPaymentSuccess) || 
-                (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusCompleted)))
+            // Deduct: 6 -> 3, 6 -> 4, 6 -> 5
+            // Note: 4 -> 3 does NOT deduct anymore (already deducted at creation)
+            if (current == StatusCancelled && (next == StatusPaymentSuccess || next == StatusPendingConfirmation || next == StatusCompleted))
             {
                 foreach (var detail in order.OrderDetails)
                 {

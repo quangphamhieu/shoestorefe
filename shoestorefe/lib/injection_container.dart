@@ -241,7 +241,10 @@ Future<void> init() async {
     () => CartProvider(cartRepository: sl(), productRepository: sl()),
   );
   sl.registerFactory(() => CheckoutProvider(orderRepository: sl()));
-  sl.registerFactory(() => OrderHistoryProvider(orderRepository: sl()));
+  sl.registerFactory(() => OrderHistoryProvider(
+        orderRepository: sl(),
+        updateInfoUseCase: sl(),
+      ));
   sl.registerFactory(() => ProfileProvider(userRepository: sl()));
   sl.registerFactory(
     () => customer_notif.NotificationProvider(notificationRepository: sl()),

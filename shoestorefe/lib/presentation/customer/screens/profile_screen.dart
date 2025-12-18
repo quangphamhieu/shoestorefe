@@ -205,14 +205,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
           ),
-          const SizedBox(height: 12),
-          _buildInfoField(
-            label: 'Địa chỉ',
-            controller: provider.addressController,
-            enabled: provider.isEditing,
-            icon: Icons.location_on_outlined,
-            maxLines: 2,
-          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shoestorefe/presentation/admin/provider/order_provider.dart';
+import 'package:shoestorefe/presentation/customer/provider/order_history_provider.dart';
 import 'package:shoestorefe/domain/entities/order.dart';
 
 class MobileOrderDetailScreen extends StatefulWidget {
@@ -17,17 +17,8 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // We reuse OrderProvider for updateOrderInfo logic.
-    // Ensure OrderProvider is available in the context (usually from main/global provider or injected)
-    // If OrderProvider is not globally available for customers, we might need to inject it or use a specific generic UseCase.
-    // Assuming OrderProvider handles loading/updating logic that is shared or accessible.
-    // NOTE: OrderProvider is currently in 'admin' folder but if the use case is shared, it might work.
-    // If not, we should better instantiate a local provider or use the repository directly if simple,
-    // but reusing the provider is cleaner if logic is same.
-    // However, customer might not have rights to ALL order provider features.
-    // For "Update Info" specifically (Address/Note), the customer should be allowed for their own pending orders.
-
-    final provider = context.watch<OrderProvider>();
+    // Replaced OrderProvider with OrderHistoryProvider for Customer App consistency
+    final provider = context.watch<OrderHistoryProvider>();
 
     return Scaffold(
       backgroundColor: Colors.grey[50], // Light background
@@ -61,11 +52,8 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
     );
   }
 
-  Widget _buildHeader(OrderProvider provider) {
-    // Current Order might be updated in provider list, so we might want to find it from provider if available
-    // to get live updates.
-    // If provider doesn't have it (e.g. specialized customer provider?), we use widget.order.
-    // But since we update via provider, let's try to find the updated version in provider.orders if it exists.
+  Widget _buildHeader(OrderHistoryProvider provider) {
+    // Try to find the latest version of the order in the provider to reflect updates
     final liveOrder = provider.orders.firstWhere(
       (o) => o.id == widget.order.id,
       orElse: () => widget.order,
@@ -138,6 +126,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      constraints: const BoxConstraints(maxWidth: 120), // Prevent overflow
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
@@ -145,16 +134,18 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
       child: Text(
         text,
         style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
     );
   }
 
-  Widget _buildInfoSection(BuildContext context, OrderProvider provider) {
+  Widget _buildInfoSection(BuildContext context, OrderHistoryProvider provider) {
     final liveOrder = provider.orders.firstWhere(
       (o) => o.id == widget.order.id,
       orElse: () => widget.order,
     );
-    final isEditable = liveOrder.statusId == 4; // Only Pending orders usually editable? User rule not specified, assuming Pending.
+    final isEditable = liveOrder.statusId == 4;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -189,10 +180,8 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          _buildInfoRow(Icons.person_outline, liveOrder.customerName ?? 'Khách lẻ'), // Use customerName or fallback
+          _buildInfoRow(Icons.person_outline, liveOrder.customerName ?? 'Khách lẻ'),
           const SizedBox(height: 12),
-          // We don't have phone in Order entity directly easily visible unless extended, 
-          // but we have Address and Note.
           _buildInfoRow(Icons.location_on_outlined, liveOrder.address ?? 'Chưa có địa chỉ'),
           const SizedBox(height: 12),
           _buildInfoRow(Icons.note_outlined, (liveOrder.note != null && liveOrder.note!.isNotEmpty) ? liveOrder.note! : 'Không có ghi chú'),
@@ -248,8 +237,6 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
               final detail = widget.order.details[index];
               return Row(
                 children: [
-                  // Placeholder image since Detail doesn't always have image URL fully populated depending on backend return
-                  // Assuming basic details. If image URL is needed, backend DTO needs to provide it.
                   Container(
                     width: 60,
                     height: 60,
@@ -257,7 +244,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    clipBehavior: Clip.antiAlias, // Ensure image is clipped
+                    clipBehavior: Clip.antiAlias,
                     child: detail.productImageUrl != null
                         ? Image.network(
                             detail.productImageUrl!,
@@ -343,7 +330,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
     );
   }
 
-  void _showEditDialog(BuildContext context, OrderProvider provider, Order order) {
+  void _showEditDialog(BuildContext context, OrderHistoryProvider provider, Order order) {
     final addressController = TextEditingController(text: order.address);
     final noteController = TextEditingController(text: order.note);
 
@@ -398,13 +385,12 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                            Navigator.pop(ctx);
+                           // Use OrderHistoryProvider's updateOrderInfo
                            await provider.updateOrderInfo(
                              orderId: order.id,
                              address: addressController.text.trim(),
                              note: noteController.text.trim()
                            );
-                           // Force refresh logic if needed, but provider update should trigger notifyListeners
-                           // and since we listen to provider in build(), the UI should update spontaneously.
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
