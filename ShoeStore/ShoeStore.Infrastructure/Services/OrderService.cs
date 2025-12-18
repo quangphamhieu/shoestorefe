@@ -94,7 +94,11 @@ namespace ShoeStore.Infrastructure.Services
                    throw new InvalidOperationException($"Product '{products[item.ProductId].Name}' only has {storeProduct.Quantity} unit(s) left.");
 
                 // ALWAYS deduct inventory immediately (Online needs to reserve stock)
-                storeProduct.Quantity -= item.Quantity;
+                // User requested explicit check
+                if (isOffline || isOnline)
+                {
+                    storeProduct.Quantity -= item.Quantity;
+                }
 
                 var detail = new OrderDetail
                 {
