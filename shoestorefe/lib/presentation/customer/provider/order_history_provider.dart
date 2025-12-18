@@ -4,6 +4,7 @@ import 'package:shoestorefe/domain/entities/order.dart';
 import 'package:shoestorefe/domain/repositories/order_repository.dart';
 
 class OrderHistoryProvider extends ChangeNotifier {
+  final OrderRepository orderRepository;
   final UpdateOrderInfoUseCase updateInfoUseCase;
 
   OrderHistoryProvider({

@@ -194,7 +194,6 @@ class ProfileProvider extends ChangeNotifier {
   void dispose() {
     nameController.dispose();
     phoneController.dispose();
-    addressController.dispose();
     currentPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
