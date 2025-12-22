@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../domain/entities/role_permission.dart';
 import '../../../../domain/repositories/role_permission_repository.dart';
 
+import '../../../../core/network/token_handler.dart';
+
 class RolePermissionProvider extends ChangeNotifier {
   final RolePermissionRepository repository;
 
@@ -29,6 +31,7 @@ class RolePermissionProvider extends ChangeNotifier {
       _roles = await repository.getAllRoles();
     } catch (e) {
       _error = e.toString();
+      debugPrint("JWT Payload: ${TokenHandler().decodeToken()}");
     } finally {
       _isLoading = false;
       notifyListeners();
