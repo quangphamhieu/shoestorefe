@@ -7,6 +7,7 @@
       "name": "shoestorefe",
       "version": "1.0.0+1",
       "dependencies": [
+        "collection",
         "cupertino_icons",
         "dio",
         "file_picker",
@@ -50,6 +51,11 @@
         "test_api",
         "vector_math"
       ]
+    },
+    {
+      "name": "collection",
+      "version": "1.19.1",
+      "dependencies": []
     },
     {
       "name": "url_launcher",
@@ -210,11 +216,6 @@
     {
       "name": "meta",
       "version": "1.17.0",
-      "dependencies": []
-    },
-    {
-      "name": "collection",
-      "version": "1.19.1",
       "dependencies": []
     },
     {
