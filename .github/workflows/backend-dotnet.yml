@@ -46,7 +46,7 @@ jobs:
     # 2. Deploy Files (Using LFTP for better stability/SSL handling)
     - name: Deploy to MonsterASP (LFTP)
       run: |
-        lftp -c "set chmod:enable no; set ssl:verify-certificate no; open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; mirror -R -v -P 2 --overwrite --ignore-time --parallel=2 --no-perms ./publish/ .; bye"
+        lftp -c "set chmod:enable no; set ssl:verify-certificate no; open -u ${{ secrets.MONSTER_ASP_FTP_USERNAME }},${{ secrets.MONSTER_ASP_FTP_PASSWORD }} ${{ secrets.MONSTER_ASP_FTP_SERVER }}; cd wwwroot; mirror -R -v -P 2 --overwrite --parallel=2 --no-perms ./publish/ .; bye"
 
     # 3. Start App: Delete app_offline.htm
     - name: Start App (Delete app_offline.htm)
