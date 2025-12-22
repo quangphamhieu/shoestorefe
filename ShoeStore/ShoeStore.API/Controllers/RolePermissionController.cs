@@ -7,7 +7,6 @@ namespace ShoeStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Super Admin, Admin")]
 public class RolePermissionController : ControllerBase
 {
     private readonly IRolePermissionService _rolePermissionService;
