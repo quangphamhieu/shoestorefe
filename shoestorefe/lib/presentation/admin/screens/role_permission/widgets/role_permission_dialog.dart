@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../domain/entities/role_permission.dart';
-import '../../provider/role_permission_provider.dart';
+import '../../../provider/role_permission_provider.dart';
 
 class RolePermissionDialog extends StatefulWidget {
   final int roleId;
