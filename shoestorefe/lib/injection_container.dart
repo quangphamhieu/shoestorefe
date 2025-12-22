@@ -37,6 +37,7 @@ import 'data/datasources/order_remote_data_source.dart';
 import 'data/datasources/dashboard_remote_data_source.dart';
 import 'data/datasources/comment_remote_data_source.dart';
 import 'data/datasources/chat_remote_data_source.dart';
+import 'data/datasources/role_permission_remote_data_source.dart';
 import 'data/repositories/brand_repository_impl.dart';
 import 'data/repositories/chat_repository_impl.dart';
 import 'data/repositories/store_repository_impl.dart';
@@ -48,6 +49,7 @@ import 'data/repositories/notification_repository_impl.dart';
 import 'data/repositories/order_repository_impl.dart';
 import 'data/repositories/dashboard_repository_impl.dart';
 import 'data/repositories/comment_repository_impl.dart';
+import 'data/repositories/role_permission_repository_impl.dart';
 import 'domain/repositories/brand_repository.dart';
 import 'domain/repositories/chat_repository.dart';
 import 'domain/repositories/store_repository.dart';
@@ -59,6 +61,7 @@ import 'domain/repositories/notification_repository.dart';
 import 'domain/repositories/order_repository.dart';
 import 'domain/repositories/dashboard_repository.dart';
 import 'domain/repositories/comment_repository.dart';
+import 'domain/repositories/role_permission_repository.dart';
 import 'domain/usecases/brand/get_all_brands_usecase.dart';
 import 'domain/usecases/brand/get_brand_by_id_usecase.dart';
 import 'domain/usecases/brand/create_brand_usecase.dart';
@@ -119,6 +122,7 @@ import 'presentation/admin/provider/receipt_provider.dart';
 import 'presentation/admin/provider/notification_provider.dart';
 import 'presentation/admin/provider/order_provider.dart';
 import 'presentation/admin/provider/dashboard_provider.dart';
+import 'presentation/admin/provider/role_permission_provider.dart';
 import 'presentation/staff/provider/staff_order_provider.dart';
 import 'presentation/customer/provider/customer_provider.dart';
 
@@ -142,6 +146,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CommentRemoteDataSource(sl()));
   sl.registerLazySingleton(() => CartRemoteDataSource(sl()));
   sl.registerLazySingleton(() => ChatRemoteDataSource(sl()));
+  sl.registerLazySingleton(() => RolePermissionRemoteDataSource(sl()));
 
   // Repository
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
@@ -171,6 +176,7 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
   sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
+  sl.registerLazySingleton<RolePermissionRepository>(() => RolePermissionRepositoryImpl(remoteDataSource: sl()));
 
   // Usecases
   sl.registerLazySingleton(() => GetAllUsers(sl()));
@@ -338,6 +344,7 @@ Future<void> init() async {
       sl(),
     ),
   );
+  sl.registerFactory(() => RolePermissionProvider(repository: sl()));
   sl.registerFactory(
     () => StaffOrderProvider(
       getAllUseCase: sl(),

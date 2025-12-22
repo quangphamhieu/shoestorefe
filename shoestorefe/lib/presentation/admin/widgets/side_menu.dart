@@ -17,6 +17,7 @@ class SideMenu extends StatelessWidget {
         'route': '/dashboard',
       },
       {'icon': Icons.people_outline, 'title': 'Người dùng', 'route': '/user'},
+      {'icon': Icons.admin_panel_settings_outlined, 'title': 'Phân quyền', 'route': '/role-permission'},
       {'icon': Icons.store_outlined, 'title': 'Cửa hàng', 'route': '/store'},
       {
         'icon': Icons.branding_watermark_outlined,

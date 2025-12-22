@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:shoestorefe/presentation/admin/screens/user/sign_up_screen.dart';
 import 'package:shoestorefe/presentation/admin/screens/user/user_screen.dart';
+import 'package:shoestorefe/presentation/admin/screens/role_permission/role_permission_screen.dart';
 import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
 import 'package:shoestorefe/presentation/customer/screens/cart_screen.dart';
@@ -64,6 +65,7 @@ final GoRouter appRouter = GoRouter(
       '/store',
       '/promotion',
       '/user',
+      '/role-permission',
     };
 
     // Các route dành cho staff
@@ -156,6 +158,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/store', builder: (_, __) => const StoreScreen()),
     GoRoute(path: '/promotion', builder: (_, __) => const PromotionScreen()),
     GoRoute(path: '/user', builder: (_, __) => const UserScreen()),
+    GoRoute(path: '/role-permission', builder: (_, __) => const RolePermissionScreen()),
     // Staff routes
     GoRoute(path: '/staff/order', builder: (_, __) => const StaffOrderScreen()),
   ],
