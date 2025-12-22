@@ -25,6 +25,7 @@ import 'presentation/admin/provider/order_provider.dart';
 import 'presentation/customer/provider/customer_provider.dart';
 import 'presentation/staff/provider/staff_order_provider.dart';
 import 'presentation/admin/provider/dashboard_provider.dart';
+import 'presentation/admin/provider/role_permission_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,6 +65,7 @@ class ShoeStoreApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.sl<customer_notification.NotificationProvider>(),
         ),
+        ChangeNotifierProvider(create: (_) => di.sl<RolePermissionProvider>()),
       ],
       child: MaterialApp.router(
         title: 'ShoeStore',
