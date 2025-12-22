@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../widgets/app_header.dart';
+import '../../widgets/side_menu.dart';
 import '../../provider/role_permission_provider.dart';
-import 'widgets/role_permission_dialog.dart';
+import 'role_permission_table.dart';
+import 'role_permission_toolbar.dart';
 
 class RolePermissionScreen extends StatefulWidget {
   static const String routeName = '/admin/role-permissions';
@@ -18,65 +21,69 @@ class _RolePermissionScreenState extends State<RolePermissionScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RolePermissionProvider>().fetchRoles();
-      context.read<RolePermissionProvider>().fetchPermissions(); // Pre-fetch all permissions
+      context.read<RolePermissionProvider>().fetchPermissions();
+      // Reset selection when entering screen
+      context.read<RolePermissionProvider>().selectRole(null);
     });
-  }
-
-  void _showPermissionDialog(BuildContext context, int roleId, String roleName) {
-    showDialog(
-      context: context,
-      builder: (context) => RolePermissionDialog(
-        roleId: roleId,
-        roleName: roleName,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<RolePermissionProvider>();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Role Permissions'),
-        centerTitle: true,
-      ),
-      body: Consumer<RolePermissionProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading && provider.roles.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (provider.error != null) {
-            return Center(child: Text('Error: ${provider.error}'));
-          }
-
-          if (provider.roles.isEmpty) {
-            return const Center(child: Text('No roles found.'));
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: provider.roles.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final role = provider.roles[index];
-              return Card(
-                elevation: 2,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    child: Text(role.code.isNotEmpty ? role.code[0] : '?'),
+      body: Row(
+        children: [
+          const SideMenu(),
+          Expanded(
+            child: Container(
+              color: const Color(0xFFF5F7FA),
+              child: Column(
+                children: [
+                   const AppHeader(),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(32, 24, 32, 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const RolePermissionToolbar(),
+                          const SizedBox(height: 24),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 25,
+                                    offset: const Offset(0, 12),
+                                  ),
+                                ],
+                              ),
+                              child: provider.isLoading && provider.roles.isEmpty
+                                  ? const Center(child: CircularProgressIndicator())
+                                  : provider.error != null
+                                      ? Center(child: Text('Error: ${provider.error}'))
+                                      : SingleChildScrollView(
+                                          padding: const EdgeInsets.all(20),
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: RolePermissionTable(roles: provider.roles),
+                                          ),
+                                        ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  title: Text(role.name),
-                  subtitle: Text('Code: ${role.code}'),
-                  trailing: ElevatedButton.icon(
-                    onPressed: () => _showPermissionDialog(context, role.id, role.name),
-                    icon: const Icon(Icons.edit),
-                    label: const Text('Update Permission'),
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

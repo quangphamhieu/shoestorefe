@@ -8,12 +8,14 @@ class RolePermissionProvider extends ChangeNotifier {
   List<Role> _roles = [];
   List<Permission> _allPermissions = [];
   RolePermission? _selectedRolePermissions;
+  int? _selectedRoleId; // Track selected role for checkbox
   bool _isLoading = false;
   String? _error;
 
   List<Role> get roles => _roles;
   List<Permission> get allPermissions => _allPermissions;
   RolePermission? get selectedRolePermissions => _selectedRolePermissions;
+  int? get selectedRoleId => _selectedRoleId;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -73,5 +75,10 @@ class RolePermissionProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void selectRole(int? roleId) {
+    _selectedRoleId = roleId;
+    notifyListeners();
   }
 }
