@@ -17,14 +17,14 @@ namespace ShoeStore.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<DashboardResponseDto>> Get([FromQuery] int? storeId, [FromQuery] int months = 6)
+        public async Task<ActionResult<DashboardResponseDto>> Get([FromQuery] int? storeId, [FromQuery] int? brandId, [FromQuery] int months = 6)
         {
             if (months <= 0)
             {
                 months = 6;
             }
 
-            var result = await _dashboardService.GetOverviewAsync(storeId, months);
+            var result = await _dashboardService.GetOverviewAsync(storeId, brandId, months);
             return Ok(result);
         }
     }

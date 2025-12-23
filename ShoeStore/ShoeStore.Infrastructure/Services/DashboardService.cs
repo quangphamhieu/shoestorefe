@@ -19,13 +19,15 @@ namespace ShoeStore.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int monthCount = 6)
+        public async Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int? brandId, int monthCount = 6)
         {
             if (monthCount <= 0)
                 monthCount = 6;
 
             var detailQuery = _context.OrderDetails
                 .AsNoTracking()
+                .Include(d => d.Product) // Ensure Product is included for filtering
+                .Include(d => d.Order)
                 .Where(d => CompletedStatuses.Contains(d.Order.StatusId));
 
             if (storeId.HasValue)
@@ -33,6 +35,12 @@ namespace ShoeStore.Infrastructure.Services
                 detailQuery = detailQuery.Where(d => d.Order.StoreId == storeId.Value);
             }
 
+            if (brandId.HasValue)
+            {
+                detailQuery = detailQuery.Where(d => d.Product.BrandId == brandId.Value);
+            }
+
+            // --- 1. Top Products (Global or Filtered) ---
             var topProducts = await detailQuery
                 .GroupBy(d => new { d.ProductId, d.Product.Name, d.Product.SKU })
                 .Select(g => new TopProductDto
@@ -48,7 +56,36 @@ namespace ShoeStore.Infrastructure.Services
                 .Take(5)
                 .ToListAsync();
 
-            var profitSummary = await detailQuery
+            // --- Time Filter Setup ---
+            var now = DateTime.UtcNow;
+            
+            // Start date for the "Overview Cards" (Revenue, Profit, Cost).
+            // User asked: "prices... growth... apply".
+            // If monthCount = 6, Overview Cards usually show CURRENT MONTH? Or Total in Range?
+            // Usually "Revenue" card shows TOTAL or CURRENT MONTH?
+            // The user complained: "Monthly profit... only 6 months... I want 1 year, 6 months...".
+            // And "Revenue, profit, cost growth when filter must be applied".
+            // Let's assume the "Big Cards" show the Total for the Selected Time Range (or Current Month? Unclear).
+            // Usually dashboard cards show "Total Performance in Selected Period" or "Current Month".
+            // The previous code calculated "ProfitSummary" with NO date filter (Lifetime).
+            // The previous code calculated "Growth" as Current Month vs Previous Month.
+            // Let's refine:
+            // 1. ProfitSummary (Total Cards): Apply Date Range? Or Lifetime?
+            // User said: "when filtered... must apply". If I pick "Last 1 Month", I expect the Total Revenue to be of that 1 Month.
+            
+            var rangeStartDate = new DateTime(now.Year, now.Month, 1).AddMonths(-(monthCount - 1));
+            // e.g. If 1 month selected: Start = 1st of Current Month.
+            // If 6 months selected: Start = 1st of Current - 5 Months.
+
+            // Filter query by Date Range for everything?
+            // Note: If I filter detailQuery by date here, it affects everything.
+            // But TopProducts usually is "All Time" or "In Range"? Standard is "In Range".
+            // Let's apply Date Range to detailQuery for EVERYTHING to be consistent.
+            
+            var scopedQuery = detailQuery.Where(d => d.Order.CreatedAt >= rangeStartDate);
+
+            // --- 2. Profit Summary (Cards) ---
+            var profitSummary = await scopedQuery
                 .GroupBy(_ => 1)
                 .Select(g => new ProfitSummaryDto
                 {
@@ -58,11 +95,8 @@ namespace ShoeStore.Infrastructure.Services
                 })
                 .FirstOrDefaultAsync() ?? new ProfitSummaryDto();
 
-            var now = DateTime.UtcNow;
-            var startMonth = new DateTime(now.Year, now.Month, 1).AddMonths(-(monthCount - 1));
-
-            var monthlyProfits = await detailQuery
-                .Where(d => d.Order.CreatedAt >= startMonth)
+            // --- 3. Monthly Profits (Chart) ---
+            var monthlyProfits = await scopedQuery
                 .GroupBy(d => new { d.Order.CreatedAt.Year, d.Order.CreatedAt.Month })
                 .Select(g => new MonthlyProfitDto
                 {
@@ -76,7 +110,8 @@ namespace ShoeStore.Infrastructure.Services
                 .ThenBy(g => g.Month)
                 .ToListAsync();
 
-            var brandStats = await detailQuery
+            // --- 4. Brand Stats ---
+            var brandStats = await scopedQuery
                 .Where(d => d.Product.BrandId != null)
                 .GroupBy(d => new { d.Product.BrandId, d.Product.Brand!.Name })
                 .Select(g => new BrandSalesDto
@@ -90,9 +125,14 @@ namespace ShoeStore.Infrastructure.Services
                 .ThenByDescending(x => x.Revenue)
                 .ToListAsync();
 
+            // --- 5. Growth (Current Month vs Previous Month) ---
+            // This needs specific logic regardless of the main filter range, 
+            // BUT needs to respect Store/Brand filter.
+            
             var currentMonthStart = new DateTime(now.Year, now.Month, 1);
             var previousMonthStart = currentMonthStart.AddMonths(-1);
 
+            // Use 'detailQuery' (filtered by Store/Brand but NO date) to calculate specific months
             var currentMonthProfit = await detailQuery
                 .Where(d => d.Order.CreatedAt >= currentMonthStart)
                 .SumAsync(x => (x.UnitPrice - x.Product.CostPrice) * x.Quantity);
@@ -105,9 +145,9 @@ namespace ShoeStore.Infrastructure.Services
 
             return new DashboardResponseDto
             {
-                TopProducts = topProducts,
+                TopProducts = topProducts, // Now also filtered by Date Range
                 ProfitSummary = profitSummary,
-                MonthlyProfits = FillMissingMonths(monthlyProfits, startMonth, monthCount),
+                MonthlyProfits = FillMissingMonths(monthlyProfits, rangeStartDate, monthCount),
                 TopBrands = brandStats,
                 ProfitGrowth = new GrowthOverviewDto
                 {

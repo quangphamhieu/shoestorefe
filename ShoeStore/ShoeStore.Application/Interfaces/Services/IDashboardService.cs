@@ -5,6 +5,7 @@ namespace ShoeStore.Application.Interfaces.Services
 {
     public interface IDashboardService
     {
-        Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int monthCount = 6);
+        Task<DashboardResponseDto> GetOverviewAsync(int? storeId, int? brandId, int monthCount = 6);
+
     }
 }

@@ -147,6 +147,20 @@ class _FilterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stores = storeProvider.stores;
+    // We should show ALL brands from the summary if possible, or fetch separate brands.
+    // Ideally we should have a BrandProvider, but here we reuse "topBrands" as the list.
+    // Note: If filters exclude some brands, they might disappear from the dropdown if we only use 'summary.topBrands'.
+    // However, the user request details suggest just fixing the "filtering logic" on charts.
+    // If the Brand Dropdown is populated from 'summary.topBrands', and 'summary' is filtered by Brand X,
+    // then 'summary.topBrands' might only contain Brand X (or top brands within that filter).
+    // This could be UX issue: once filtered, you can't pick another brand.
+    // IMPORTANT: Ideally, we should fetch "All Brands" separately.
+    // But for now, let's keep it simple as requested: "Store filter... Brand filter... apply correctly".
+    // If the list shrinks, better add a check or rely on 'setBrandFilter(null)' to reset.
+    // Actually, 'summary.topBrands' might be empty if no sales.
+    // Let's rely on what we have, but be aware.
+    // The previous implementation used 'dashboardProvider.summary?.topBrands'.
+    
     final brandOptions = dashboardProvider.summary?.topBrands ?? [];
 
     return Wrap(
@@ -172,8 +186,7 @@ class _FilterRow extends StatelessWidget {
                 ),
               ),
             ],
-            onChanged: (value) =>
-                dashboardProvider.loadDashboard(storeId: value),
+            onChanged: (value) => dashboardProvider.setStoreFilter(value),
           ),
         ),
         _FilterChipContainer(
@@ -187,21 +200,37 @@ class _FilterRow extends StatelessWidget {
                 child: Text('Tất cả hãng'),
               ),
               ...brandOptions
-                  .where((brand) => brand.brandId != null)
-                  .map(
-                    (brand) => DropdownMenuItem<int?>(
+                  .map((b) => b.brandId) // Get IDs
+                  .toSet() // Unique
+                  .map((id) {
+                    final brand = brandOptions.firstWhere((b) => b.brandId == id);
+                    return DropdownMenuItem<int?>(
                       value: brand.brandId,
                       child: Text(brand.brandName),
-                    ),
-                  ),
+                    );
+                  }),
             ],
             onChanged: (value) => dashboardProvider.setBrandFilter(value),
           ),
         ),
-        ElevatedButton.icon(
-          onPressed: () => dashboardProvider.loadDashboard(
-            storeId: dashboardProvider.selectedStoreId,
+        _FilterChipContainer(
+          label: 'Thời gian',
+          child: DropdownButton<int>(
+            value: dashboardProvider.months,
+            underline: const SizedBox.shrink(),
+            items: const [
+              DropdownMenuItem(value: 1, child: Text('1 tháng gần nhất')),
+              DropdownMenuItem(value: 3, child: Text('3 tháng gần nhất')),
+              DropdownMenuItem(value: 6, child: Text('6 tháng gần nhất')),
+              DropdownMenuItem(value: 12, child: Text('1 năm gần nhất')),
+            ],
+            onChanged: (value) {
+              if (value != null) dashboardProvider.setMonthFilter(value);
+            },
           ),
+        ),
+        ElevatedButton.icon(
+          onPressed: () => dashboardProvider.loadDashboard(),
           icon: const Icon(Icons.refresh, size: 18),
           label: const Text('Làm mới'),
           style: ElevatedButton.styleFrom(

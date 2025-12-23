@@ -21,9 +21,16 @@ class DashboardProvider extends ChangeNotifier {
   int? get selectedBrandId => _selectedBrandId;
   int get months => _months;
 
-  Future<void> loadDashboard({int? storeId, int? months}) async {
-    _selectedStoreId = storeId;
-    _selectedBrandId = null;
+  Future<void> loadDashboard({int? storeId, int? brandId, int? months}) async {
+    if (storeId != null) _selectedStoreId = storeId;
+    // Allow clearing filter if explicitly passed as null? simpler logic:
+    // If param passed, update state. If not, keep current state.
+    // Actually user might want to clear brand.
+    // Let's assume the UI calls explicit values.
+    
+    // For specific "setter" actions, we use setBrand/setStore methods.
+    // loadDashboard can just trigger the fetch with current state.
+    
     if (months != null && months > 0) {
       _months = months;
     }
@@ -35,16 +42,9 @@ class DashboardProvider extends ChangeNotifier {
     try {
       _summary = await getDashboardOverviewUseCase.call(
         storeId: _selectedStoreId,
+        brandId: _selectedBrandId,
         months: _months,
       );
-
-      final brands = _summary?.topBrands ?? [];
-      if (brands.isEmpty) {
-        _selectedBrandId = null;
-      } else if (_selectedBrandId != null &&
-          brands.every((b) => b.brandId != _selectedBrandId)) {
-        _selectedBrandId = null;
-      }
     } catch (e) {
       _error = e.toString();
     }
@@ -53,18 +53,26 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBrandFilter(int? brandId) {
-    _selectedBrandId = brandId;
-    notifyListeners();
+  void setStoreFilter(int? storeId) {
+    _selectedStoreId = storeId;
+    loadDashboard();
   }
 
+  void setBrandFilter(int? brandId) {
+    _selectedBrandId = brandId;
+    loadDashboard();
+  }
+  
+  void setMonthFilter(int months) {
+    _months = months;
+    loadDashboard();
+  }
+
+  // With server-side filtering, 'topBrands' returned are already filtered (or just 1 brand row).
+  // So we just return the list as is.
   List<BrandSalesStat> get filteredBrandStats {
     if (_summary == null) return [];
-    if (_selectedBrandId == null) return _summary!.topBrands;
-
-    return _summary!.topBrands
-        .where((brand) => brand.brandId == _selectedBrandId)
-        .toList();
+    return _summary!.topBrands;
   }
 }
 

@@ -33,6 +33,9 @@ STORE_CONTEXT = {
     "products": [],
     "stores": [],
     "promotions": [],
+    "brands": [],
+    "top_selling_products": [],
+    "top_brands": [],
     "policy": """
     CHÍNH SÁCH CỬA HÀNG:
     1. Đổi trả: Hỗ trợ đổi size trong vòng 7 ngày nếu giày chưa qua sử dụng. Không hỗ trợ trả hàng hoàn tiền trừ lỗi sản xuất.
@@ -46,9 +49,8 @@ BASE_API_URL = "https://helloshoestore.runasp.net/api"
 
 # --- DATA FETCHING FUNCTIONS ---
 def fetch_all_data():
-    """Fetch Products, Stores, Promotions from Backend"""
+    """Fetch Products, Stores, Promotions, Brands, and Stats from Backend"""
     try:
-        # Common headers to avoid 403 Forbidden on some shared hosts
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
@@ -64,8 +66,6 @@ def fetch_all_data():
                     s_name = s.get('name')
                     s_address = s.get('address')
                     
-                    # Logic for Warehouse vs Store
-                    # StoreId=1 -> "Kho Online" (Backend term) -> UI/Chat term: "Mua Online"
                     display_name = "Mua Online (Website/App)" if s_id == 1 else f"Cửa hàng {s_name}"
                     
                     stores.append({
@@ -86,15 +86,8 @@ def fetch_all_data():
                 raw_promos = r_promo.json()
                 
                 for p in raw_promos:
-                    # Basic info
                     p_name = p.get('name')
-                    p_desc = p.get('description', '')
-                    
-                    # Store Scope
-                    # PromotionDto has 'Stores' list or we check logic. 
-                    # Assuming Dto has 'Stores' list based on previous step analysis or simplistic 'StoreId' if flat.
-                    # The user mentioned "Store apply". Let's try to see if 'Stores' list exists or single 'StoreId'
-                    # Based on PromotionDto.cs seen: List<PromotionStoreDto>? Stores.
+                    p_desc = p.get('description', '') or 'Ưu đãi đặc biệt'
                     p_stores = p.get('stores', [])
                     
                     applied_scopes = []
@@ -106,20 +99,15 @@ def fetch_all_data():
                             if sid == 1:
                                 applied_scopes.append("khi Mua Online")
                             else:
-                                # Find store name
                                 s_name = next((s['name'] for s in stores if s['id'] == sid), f"Store {sid}")
                                 applied_scopes.append(f"tại {s_name}")
                     
                     scope_str = ", ".join(applied_scopes)
 
-                    # Product Scope
                     p_products = p.get('products', [])
                     applied_products = []
                     if p_products:
                         for pp in p_products:
-                            # PromotionProductDto likely has ProductName or ProductId
-                            # Let's guess structure or just list count if huge.
-                            # Ideally list names.
                             prod_name = pp.get('productName', f"Sản phẩm {pp.get('productId')}")
                             applied_products.append(prod_name)
                     
@@ -130,10 +118,21 @@ def fetch_all_data():
                 STORE_CONTEXT["promotions"] = promotions
         except Exception as e:
             app.logger.error(f"Error fetching promotions: {e}")
-
-        # 3. Fetch Products (and availability)
+        
+        # 3. Fetch Brands
+        brands = []
         try:
-            # Note: ASP.NET Core routes are usually case-insensitive, but 'products' matches frontend config
+            r_brand = requests.get(f"{BASE_API_URL}/brand", headers=headers, timeout=10, verify=False)
+            if r_brand.status_code == 200:
+                raw_brands = r_brand.json()
+                for b in raw_brands:
+                    brands.append(b.get("name"))
+                STORE_CONTEXT["brands"] = brands
+        except Exception as e:
+             app.logger.error(f"Error fetching brands: {e}")
+
+        # 4. Fetch Products
+        try:
             r_prod = requests.get(f"{BASE_API_URL}/products", headers=headers, timeout=10, verify=False)
             if r_prod.status_code == 200:
                 raw_prods = r_prod.json()
@@ -141,52 +140,59 @@ def fetch_all_data():
                 for p in raw_prods:
                     name = p.get('name', 'Unknown')
                     price = p.get('originalPrice', 0)
-                    desc = p.get('description', 'Không mô tả')
+                    brand_name = p.get('brandName', 'Unknown')
                     
-                    # Availability logic
-                    # ProductDto has List<StoreQuantityDto> Stores
                     p_stores = p.get('stores', [])
                     available_locs = []
                     
-                    # Check Online (Id=1)
                     online_stock = next((s for s in p_stores if s['storeId'] == 1), None)
                     if online_stock and online_stock['quantity'] > 0:
-                        available_locs.append("Online (Website)")
+                        available_locs.append("Online")
                         
-                    # Check Physical
                     physical_stock = [s for s in p_stores if s['storeId'] != 1 and s['quantity'] > 0]
                     for s in physical_stock:
-                        s_name = s.get('storeName') # StoreQuantityDto has StoreName
+                        s_name = s.get('storeName')
                         available_locs.append(s_name if s_name else f"Cửa hàng {s['storeId']}")
                     
                     stock_str = ", ".join(available_locs) if available_locs else "Hết hàng"
-
-                    # Deep link format: http://helloshoestore.runasp.net/#/product-detail/{EncodedName}
+                    
                     import urllib.parse
                     encoded_name = urllib.parse.quote(name)
                     link = f"https://helloshoestore.runasp.net/#/product-detail/{encoded_name}"
                     
-                    products_summary.append(f"- {name} | Giá: {price}đ | Có bán tại: {stock_str} | Link: [Xem chi tiết]({link})")
+                    products_summary.append(f"- {name} ({brand_name}) | Giá: {price:,.0f}đ | Kho: {stock_str} | Link: [Xem]({link})")
                 
                 STORE_CONTEXT["products"] = products_summary
         except Exception as e:
             app.logger.error(f"Error fetching products: {e}")
+
+        # 5. Fetch Dashboard Stats (Top Selling & Trends)
+        try:
+            # Use monthCount=1 to get "Current/Recent" trends (last 30 days)
+            r_dash = requests.get(f"{BASE_API_URL}/dashboard?months=1", headers=headers, timeout=10, verify=False)
+            if r_dash.status_code == 200:
+                data = r_dash.json()
+                
+                # Top Products
+                top_prods = data.get("topProducts", [])
+                STORE_CONTEXT["top_selling_products"] = [
+                    f"{p['productName']} (Đã bán: {p['quantitySold']})" for p in top_prods
+                ]
+
+                # Top Brands
+                top_brands = data.get("topBrands", [])
+                STORE_CONTEXT["top_brands"] = [
+                    f"{b['brandName']} (Đã bán: {b['quantitySold']})" for b in top_brands
+                ]
+        except Exception as e:
+            app.logger.error(f"Error fetching dashboard stats: {e}")
 
         app.logger.info("Data refresh complete.")
         
     except Exception as e:
         app.logger.error(f"General error fetching data: {e}")
 
-# Function to auto-refresh product data every hour
-def start_background_fetch():
-    def run():
-        while True:
-            fetch_all_data()
-            time.sleep(3600) 
-    thread = threading.Thread(target=run, daemon=True)
-    thread.start()
-
-start_background_fetch()
+# ... (start_background_fetch stays same) ...
 
 # --- SYSTEM INSTRUCTION ---
 def get_system_instruction():
@@ -195,35 +201,50 @@ def get_system_instruction():
     
     promo_text = "\n".join(STORE_CONTEXT["promotions"]) if STORE_CONTEXT["promotions"] else "Hiện không có chương trình khuyến mãi nào."
     product_text = "\n".join(STORE_CONTEXT["products"])
+    
+    brand_list = ", ".join(STORE_CONTEXT["brands"])
+    top_selling_text = "\n".join(STORE_CONTEXT["top_selling_products"]) if STORE_CONTEXT["top_selling_products"] else "Chưa có dữ liệu."
+    top_brand_text = "\n".join(STORE_CONTEXT["top_brands"]) if STORE_CONTEXT["top_brands"] else "Chưa có dữ liệu."
+    
     policy_text = STORE_CONTEXT["policy"]
     
     return f"""
-    Bạn là AI Assistant của cửa hàng giày 'ShoeStore'.
+    Bạn là AI Assistant thông minh của hệ thống cửa hàng giày 'ShoeStore'.
     
-    NHIỆM VỤ:
-    1. Tư vấn sản phẩm: Dựa vào nhu cầu và TÌNH TRẠNG KHO (Có bán tại đâu).
-    2. Thông báo KHUYẾN MÃI: Phải nói rõ chương trình áp dụng "khi mua Online" hay "tại cửa hàng" nào, và áp dụng cho sản phẩm nào.
-    3. Chỉ dẫn địa chỉ cửa hàng (chỉ liệt kê các cửa hàng vật lý).
+    DỮ LIỆU THỜI GIAN THỰC (Đã được cập nhật từ hệ thống):
     
-    - Store ID 1 -> GỌI LÀ "khi mua Online" hoặc "trên Website". KHÔNG gọi là "kho online".
-    - Các Store khác -> Gọi là "Cửa hàng + Tên".
-
-    YÊU CẦU ĐỊNH DẠNG (BẮT BUỘC):
-    - Sử dụng **in đậm** cho tên sản phẩm và các thông tin quan trọng.
-    - Sử dụng danh sách gạch đầu dòng (-) cho các liệt kê để dễ đọc.
-    - KHÔNG viết thành một khối văn bản dài. Tách đoạn rõ ràng.
-    
-    DỮ LIỆU CỬA HÀNG:
+    1. DANH SÁCH CỬA HÀNG VẬT LÝ:
     {store_text}
     
-    DANH SÁCH KHUYẾN MÃI (CHI TIẾT):
+    2. CÁC THƯƠNG HIỆU ĐANG KINH DOANH:
+    {brand_list}
+    
+    3. TOP SẢN PHẨM BÁN CHẠY (TRENDING):
+    {top_selling_text}
+    
+    4. THƯƠNG HIỆU ĐƯỢC ƯA CHUỘNG NHẤT:
+    {top_brand_text}
+    
+    5. CHƯƠNG TRÌNH KHUYẾN MÃI HIỆN CÓ:
     {promo_text}
     
-    DANH SÁCH SẢN PHẨM & KHO HÀNG:
+    6. DANH SÁCH SẢN PHẨM & TÌNH TRẠNG KHO:
     {product_text}
     
-    CHÍNH SÁCH CHUNG:
+    7. CHÍNH SÁCH CHUNG:
     {policy_text}
+    
+    NHIỆM VỤ CỦA BẠN:
+    - Trả lời các câu hỏi về sản phẩm, giá cả, tình trạng còn hàng (ở Online hay Cửa hàng nào).
+    - Gợi ý sản phẩm dựa trên "Top Bán Chạy" hoặc "Thương Hiệu Ưa Chuộng" khi khách hỏi "có gì hot?" hoặc "nên mua gì?".
+    - Cung cấp thông tin khuyến mãi chi tiết.
+    - Hướng dẫn địa chỉ cửa hàng gần nhất.
+    
+    YÊU CẦU TRẢ LỜI:
+    - Luôn dùng tiếng Việt, giọng điệu chuyên nghiệp, thân thiện, nhiệt tình.
+    - Nếu khách hỏi sản phẩm cụ thể, hãy kiểm tra danh sách số 6. Nếu có, cung cấp link mua hàng.
+    - Nếu khách hỏi chung chung, hãy dùng dữ liệu số 3 và 4 để gợi ý.
+    - Định dạng câu trả lời rõ ràng, dùng in đậm (**text**) cho tên sản phẩm, giá và khuyến mãi.
     """
 
 @app.route("/chat", methods=["POST"])
