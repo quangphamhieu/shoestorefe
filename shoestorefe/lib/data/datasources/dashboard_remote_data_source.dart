@@ -9,11 +9,13 @@ class DashboardRemoteDataSource {
 
   Future<DashboardSummaryModel> fetchOverview({
     int? storeId,
+    int? brandId,
     int months = 6,
   }) async {
     final queryParams = <String, dynamic>{
       'months': months,
       if (storeId != null) 'storeId': storeId,
+      if (brandId != null) 'brandId': brandId,
     };
 
     final response = await client.get(

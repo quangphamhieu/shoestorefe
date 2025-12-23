@@ -6,8 +6,8 @@ class GetDashboardOverviewUseCase {
 
   GetDashboardOverviewUseCase(this.repository);
 
-  Future<DashboardSummary> call({int? storeId, int months = 6}) {
-    return repository.fetchOverview(storeId: storeId, months: months);
+  Future<DashboardSummary> call({int? storeId, int? brandId, int months = 6}) {
+    return repository.fetchOverview(storeId: storeId, brandId: brandId, months: months);
   }
 }
 

@@ -122,7 +122,8 @@ def fetch_all_data():
         # 3. Fetch Brands
         brands = []
         try:
-            r_brand = requests.get(f"{BASE_API_URL}/brand", headers=headers, timeout=10, verify=False)
+            # Route is api/Brands based on BrandsController
+            r_brand = requests.get(f"{BASE_API_URL}/brands", headers=headers, timeout=10, verify=False)
             if r_brand.status_code == 200:
                 raw_brands = r_brand.json()
                 for b in raw_brands:
