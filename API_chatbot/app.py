@@ -162,7 +162,7 @@ def fetch_all_data():
                     
                     import urllib.parse
                     encoded_name = urllib.parse.quote(name)
-                    link = f"https://helloshoestore.runasp.net/#/product-detail/{encoded_name}"
+                    link = f"https://helloshoestore.web.app/#/product-detail/{encoded_name}"
                     
                     products_summary.append(f"- {name} ({brand_name}) | Giá: {price:,.0f}đ | Kho: {stock_str} | Link: [Xem]({link})")
                 
@@ -304,7 +304,11 @@ def debug_data():
         status = {
             "products_count": len(STORE_CONTEXT["products"]),
             "stores_count": len(STORE_CONTEXT["stores"]),
+            # Show actual list names for debugging
+            "stores_list": [s['name'] for s in STORE_CONTEXT["stores"]],
             "promotions_count": len(STORE_CONTEXT["promotions"]),
+            "promotions_list": STORE_CONTEXT["promotions"], 
+            "brands_list": STORE_CONTEXT["brands"],
             "sample_product": STORE_CONTEXT["products"][0] if STORE_CONTEXT["products"] else "None",
             "backend_url": BASE_API_URL,
             "last_error": "Check logs"
