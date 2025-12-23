@@ -51,11 +51,25 @@ BASE_API_URL = "https://helloshoestore.runasp.net/api"
 def fetch_all_data():
     """Fetch Products, Stores, Promotions, Brands, and Stats from Backend"""
     try:
+        app.logger.info("Starting data fetch...")
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
 
-        # 1. Fetch Stores
+        # 1. Fetch Brands FIRST (to map BrandId -> Name)
+        brand_map = {}
+        try:
+            r_brand = requests.get(f"{BASE_API_URL}/brands", headers=headers, timeout=10, verify=False)
+            if r_brand.status_code == 200:
+                raw_brands = r_brand.json()
+                for b in raw_brands:
+                    brand_map[b.get('id')] = b.get('name')
+                
+                STORE_CONTEXT["brands"] = list(brand_map.values())
+        except Exception as e:
+             app.logger.error(f"Error fetching brands: {e}")
+
+        # 2. Fetch Stores
         stores = []
         try:
             r_store = requests.get(f"{BASE_API_URL}/store", headers=headers, timeout=10, verify=False)
@@ -78,7 +92,7 @@ def fetch_all_data():
         except Exception as e:
             app.logger.error(f"Error fetching stores: {e}")
 
-        # 2. Fetch Promotions
+        # 3. Fetch Promotions
         promotions = []
         try:
             r_promo = requests.get(f"{BASE_API_URL}/promotion", headers=headers, timeout=10, verify=False)
@@ -118,19 +132,6 @@ def fetch_all_data():
                 STORE_CONTEXT["promotions"] = promotions
         except Exception as e:
             app.logger.error(f"Error fetching promotions: {e}")
-        
-        # 3. Fetch Brands
-        brands = []
-        try:
-            # Route is api/Brands based on BrandsController
-            r_brand = requests.get(f"{BASE_API_URL}/brands", headers=headers, timeout=10, verify=False)
-            if r_brand.status_code == 200:
-                raw_brands = r_brand.json()
-                for b in raw_brands:
-                    brands.append(b.get("name"))
-                STORE_CONTEXT["brands"] = brands
-        except Exception as e:
-             app.logger.error(f"Error fetching brands: {e}")
 
         # 4. Fetch Products
         try:
@@ -141,7 +142,9 @@ def fetch_all_data():
                 for p in raw_prods:
                     name = p.get('name', 'Unknown')
                     price = p.get('originalPrice', 0)
-                    brand_name = p.get('brandName', 'Unknown')
+                    brand_id = p.get('brandId')
+                    # Resolving Brand Name locally
+                    brand_name = brand_map.get(brand_id, 'Unknown') 
                     
                     p_stores = p.get('stores', [])
                     available_locs = []
@@ -193,7 +196,20 @@ def fetch_all_data():
     except Exception as e:
         app.logger.error(f"General error fetching data: {e}")
 
-# ... (start_background_fetch stays same) ...
+# Function to auto-refresh product data every day (24h)
+def start_background_fetch():
+    def run():
+        # Wait a bit for server to be fully ready if needed, or run immediately
+        app.logger.info("Starting background data fetch loop...")
+        while True:
+            app.logger.info("Executing periodic data fetch...")
+            fetch_all_data()
+            app.logger.info("Data fetch complete. Waiting 24 hours...")
+            time.sleep(86400) 
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+
+start_background_fetch()
 
 # --- SYSTEM INSTRUCTION ---
 def get_system_instruction():
@@ -251,6 +267,11 @@ def get_system_instruction():
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
+        # Lazy load if data is missing (handles first request or worker startup)
+        if not STORE_CONTEXT["products"]:
+             app.logger.info("Context empty. Triggering immediate fetch...")
+             fetch_all_data()
+
         data = request.get_json(force=True, silent=True) or {}
         user_message = data.get("message", "")
         
