@@ -82,9 +82,17 @@ class UserRemoteDataSource {
     throw Exception('Invalid response format');
   }
 
-  Future<bool> resetPassword(Map<String, dynamic> body) async {
+  Future<bool> changePassword(Map<String, dynamic> body) async {
     final response = await client.post(
-      "${ApiEndpoint.user}/reset-password",
+      "${ApiEndpoint.user}/change-password",
+      body,
+    );
+    return response.statusCode == 200;
+  }
+
+  Future<bool> forgotPassword(Map<String, dynamic> body) async {
+    final response = await client.post(
+      "${ApiEndpoint.user}/forgot-password",
       body,
     );
     return response.statusCode == 200;

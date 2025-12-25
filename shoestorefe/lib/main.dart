@@ -12,6 +12,7 @@ import 'presentation/routes/app_router.dart';
 import 'core/network/token_handler.dart';
 import 'presentation/admin/provider/login_provider.dart';
 import 'presentation/admin/provider/sign_up_provider.dart';
+import 'presentation/admin/provider/forgot_password_provider.dart';
 import 'presentation/admin/provider/user_provider.dart';
 import 'presentation/admin/provider/brand_provider.dart';
 import 'presentation/admin/provider/menu_provider.dart';
@@ -54,6 +55,7 @@ class ShoeStoreApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.sl<StaffOrderProvider>()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
         ChangeNotifierProvider(create: (_) => di.sl<SignUpProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ForgotPasswordProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<UserProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<CustomerProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<ProductDetailProvider>()),

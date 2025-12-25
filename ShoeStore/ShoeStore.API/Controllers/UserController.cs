@@ -93,17 +93,44 @@ namespace ShoeStore.WebApi.Controllers
             return Ok(result);
         }
 
-        // -------------------- RESET PASSWORD --------------------
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] UserResetPassDto dto)
+        // -------------------- CHANGE PASSWORD --------------------
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserChangePasswordDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _userService.ResetPasswordAsync(dto);
-            if (!result)
-                return BadRequest("Đổi mật khẩu thất bại.");
-            return Ok("Đổi mật khẩu thành công.");
+            try
+            {
+                var result = await _userService.ChangePasswordAsync(dto);
+                if (!result)
+                    return BadRequest("Đổi mật khẩu thất bại.");
+                return Ok("Đổi mật khẩu thành công.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // -------------------- FORGOT PASSWORD --------------------
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] UserForgotPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var result = await _userService.ForgotPasswordAsync(dto);
+                if (!result)
+                    return BadRequest("Khôi phục mật khẩu thất bại.");
+                return Ok("Mật khẩu mới đã được gửi đến email của bạn.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

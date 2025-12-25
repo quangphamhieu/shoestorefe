@@ -121,24 +121,11 @@ namespace ShoeStore.Application.Services
             };
         }
 
-        public async Task<bool> ResetPasswordAsync(UserResetPassDto dto)
+        public async Task<bool> ChangePasswordAsync(UserChangePasswordDto dto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == dto.PhoneOrEmail || u.Email == dto.PhoneOrEmail);
             if (user == null)
                 throw new InvalidOperationException("User not found.");
-
-            // If OtpCode provided -> forgot password flow (no old password required)
-            if (!string.IsNullOrWhiteSpace(dto.OtpCode))
-            {
-                // TODO: validate OTP (not implemented) - assume valid
-                user.PasswordHash = _passwordHelper.HashPassword(dto.NewPassword);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-
-            // Otherwise it's change password flow - require old password
-            if (string.IsNullOrWhiteSpace(dto.OldPassword))
-                throw new InvalidOperationException("Old password is required when not using OTP.");
 
             if (!_passwordHelper.VerifyPassword(dto.OldPassword, user.PasswordHash))
                 throw new InvalidOperationException("Old password is incorrect.");
@@ -147,6 +134,62 @@ namespace ShoeStore.Application.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<bool> ForgotPasswordAsync(UserForgotPasswordDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == dto.PhoneOrEmail || u.Email == dto.PhoneOrEmail);
+            if (user == null)
+                throw new InvalidOperationException("Không tìm thấy người dùng.");
+
+            // Kiểm tra email có hợp lệ không
+            if (string.IsNullOrWhiteSpace(user.Email))
+                throw new InvalidOperationException("Người dùng không có email để nhận mật khẩu mới.");
+
+            // Tạo mật khẩu ngẫu nhiên
+            string newPassword = GenerateRandomPassword();
+
+            // Hash và lưu mật khẩu mới
+            user.PasswordHash = _passwordHelper.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            // Gửi email với mật khẩu mới
+            string subject = "Khôi phục mật khẩu - HieuShoeStore";
+            string html = $"<p>Xin chào {user.FullName},</p>" +
+                          $"<p>Mật khẩu mới của bạn là: <strong>{newPassword}</strong></p>" +
+                          $"<p>Vui lòng đăng nhập và đổi mật khẩu ngay sau khi nhận được email này.</p>" +
+                          $"<p>Nếu bạn không yêu cầu khôi phục mật khẩu, vui lòng liên hệ với chúng tôi ngay.</p>";
+            
+            await _emailService.SendEmailAsync(user.Email, subject, html);
+
+            return true;
+        }
+
+        private string GenerateRandomPassword()
+        {
+            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const string digitChars = "0123456789";
+            const string specialChars = "!@#$%^&*";
+            const string allChars = upperChars + lowerChars + digitChars + specialChars;
+
+            var random = new Random();
+            var password = new char[10];
+
+            // Đảm bảo có ít nhất 1 ký tự mỗi loại
+            password[0] = upperChars[random.Next(upperChars.Length)];
+            password[1] = lowerChars[random.Next(lowerChars.Length)];
+            password[2] = digitChars[random.Next(digitChars.Length)];
+            password[3] = specialChars[random.Next(specialChars.Length)];
+
+            // Điền các ký tự còn lại ngẫu nhiên
+            for (int i = 4; i < password.Length; i++)
+            {
+                password[i] = allChars[random.Next(allChars.Length)];
+            }
+
+            // Xáo trộn mật khẩu
+            return new string(password.OrderBy(x => random.Next()).ToArray());
         }
 
         public async Task<UserDto> SignupAsync(UserSignUpDto dto)

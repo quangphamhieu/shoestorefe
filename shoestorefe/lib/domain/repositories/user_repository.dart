@@ -48,10 +48,13 @@ abstract class UserRepository {
     required int gender,
   });
 
-  Future<bool> resetPassword({
+  Future<bool> changePassword({
     required String phoneOrEmail,
+    required String oldPassword,
     required String newPassword,
-    String? oldPassword,
-    String? otpCode,
+  });
+
+  Future<bool> forgotPassword({
+    required String phoneOrEmail,
   });
 }

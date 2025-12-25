@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/login_provider.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
 import 'package:shoestorefe/presentation/routes/app_router.dart';
+import 'package:shoestorefe/presentation/widgets/forgot_password_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -185,7 +186,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // TODO: Implement forgot password
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const ForgotPasswordDialog(),
+                                    );
                                   },
                                   child: const Text(
                                     "Quên mật khẩu?",

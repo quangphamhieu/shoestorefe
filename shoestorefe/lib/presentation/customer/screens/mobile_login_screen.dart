@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/login_provider.dart';
+import 'package:shoestorefe/presentation/widgets/forgot_password_dialog.dart';
 
 class MobileLoginScreen extends StatefulWidget {
   const MobileLoginScreen({super.key});
@@ -104,12 +105,9 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Implement forgot password
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Tính năng đang phát triển'),
-                        duration: Duration(seconds: 2),
-                      ),
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ForgotPasswordDialog(),
                     );
                   },
                   child: const Text(
@@ -162,6 +160,22 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                           : () async {
                             await provider.login();
                             if (provider.user != null && mounted) {
+                              // Kiểm tra role - chỉ cho phép Customer đăng nhập mobile
+                              if (provider.user!.roleName != 'Customer') {
+                                // Xóa thông tin đăng nhập
+                                provider.clear();
+                                // Hiển thị lỗi
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Chỉ tài khoản khách hàng mới có thể đăng nhập trên ứng dụng di động',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                );
+                                return;
+                              }
                               // Navigate to mobile home after successful login
                               context.go('/mobile-home');
                             }

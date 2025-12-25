@@ -12,12 +12,14 @@ import 'package:shoestorefe/domain/usecases/user/delete_user.dart';
 import 'package:shoestorefe/domain/usecases/user/get_all_user.dart';
 import 'package:shoestorefe/domain/usecases/user/get_user_by_id.dart';
 import 'package:shoestorefe/domain/usecases/user/login.dart';
-import 'package:shoestorefe/domain/usecases/user/reset_password.dart';
+import 'package:shoestorefe/domain/usecases/user/change_password.dart';
+import 'package:shoestorefe/domain/usecases/user/forgot_password.dart';
 import 'package:shoestorefe/domain/usecases/user/sign_up.dart';
 import 'package:shoestorefe/domain/usecases/user/update_user.dart';
 import 'package:shoestorefe/presentation/admin/provider/login_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/notification_provider.dart' as customer_notif;
 import 'package:shoestorefe/presentation/admin/provider/sign_up_provider.dart';
+import 'package:shoestorefe/presentation/admin/provider/forgot_password_provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/user_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/chat_provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/cart_provider.dart';
@@ -186,7 +188,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteUser(sl()));
   sl.registerLazySingleton(() => LoginUser(sl()));
   sl.registerLazySingleton(() => SignupUser(sl()));
-  sl.registerLazySingleton(() => ResetPassword(sl()));
+  sl.registerLazySingleton(() => ChangePassword(sl()));
+  sl.registerLazySingleton(() => ForgotPassword(sl()));
   sl.registerLazySingleton(() => GetAllBrandsUseCase(sl()));
   sl.registerLazySingleton(() => GetBrandByIdUseCase(sl()));
   sl.registerLazySingleton(() => CreateBrandUseCase(sl()));
@@ -242,6 +245,7 @@ Future<void> init() async {
 
   // Provider: register factory so each provider instance created by provider package is new if needed
   sl.registerFactory(() => SignUpProvider(sl()));
+  sl.registerFactory(() => ForgotPasswordProvider(sl()));
   sl.registerFactory(() => LoginProvider(sl()));
   sl.registerFactory(
     () => CartProvider(cartRepository: sl(), productRepository: sl()),

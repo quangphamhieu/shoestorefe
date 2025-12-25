@@ -22,6 +22,8 @@ namespace ShoeStore.Application.Interfaces
 
         Task<UserDto> SignupAsync(UserSignUpDto dto);
 
-        Task<bool> ResetPasswordAsync(UserResetPassDto dto);
+        Task<bool> ChangePasswordAsync(UserChangePasswordDto dto);
+
+        Task<bool> ForgotPasswordAsync(UserForgotPasswordDto dto);
     }
 }

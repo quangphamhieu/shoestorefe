@@ -103,17 +103,24 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<bool> resetPassword({
+  Future<bool> changePassword({
     required String phoneOrEmail,
+    required String oldPassword,
     required String newPassword,
-    String? oldPassword,
-    String? otpCode,
   }) async {
-    return await remote.resetPassword({
+    return await remote.changePassword({
       "phoneOrEmail": phoneOrEmail,
-      "newPassword": newPassword,
       "oldPassword": oldPassword,
-      "otpCode": otpCode,
+      "newPassword": newPassword,
+    });
+  }
+
+  @override
+  Future<bool> forgotPassword({
+    required String phoneOrEmail,
+  }) async {
+    return await remote.forgotPassword({
+      "phoneOrEmail": phoneOrEmail,
     });
   }
 }

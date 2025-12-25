@@ -141,7 +141,7 @@ class ProfileProvider extends ChangeNotifier {
 
     try {
       // Call API to change password
-      final success = await userRepository.resetPassword(
+      final success = await userRepository.changePassword(
         phoneOrEmail: _user!.phone ?? _user!.email ?? '',
         newPassword: newPasswordController.text,
         oldPassword: currentPasswordController.text,
