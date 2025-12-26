@@ -13,64 +13,90 @@ class MobileOrderDetailScreen extends StatefulWidget {
 }
 
 class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
+  // Safe currency formatter that falls back to default if locale data is missing
+  NumberFormat get _currencyFormat {
+    try {
+      return NumberFormat.currency(locale: 'vi_VN', symbol: '₫', decimalDigits: 0);
+    } catch (e) {
+      // Fallback if locale data is not available
+      return NumberFormat.currency(symbol: '₫', decimalDigits: 0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    OrderHistoryProvider? provider;
+    // Ultimate safety: Wrap the entire build in try-catch to prevent "Gray Screen of Death"
     try {
-      provider = context.watch<OrderHistoryProvider>();
-    } catch (_) {
-      // If provider not found, we'll try to show basic data from widget.order
-    }
+      OrderHistoryProvider? provider;
+      try {
+        provider = context.watch<OrderHistoryProvider>();
+      } catch (_) {
+        // Provider not found, acceptable to be null
+      }
 
-    final currencyFormat = NumberFormat.currency(
-      locale: 'vi_VN',
-      symbol: '₫',
-      decimalDigits: 0,
-    );
-    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+      final currencyFormat = _currencyFormat;
+      final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
-    // Use live order if possible, otherwise use passed order
-    final liveOrder = provider?.orders.firstWhere(
-      (o) => o.id == widget.order.id,
-      orElse: () => widget.order,
-    ) ?? widget.order;
+      // Use live order if possible, otherwise use passed order
+      // Add extra null check for provider.orders
+      final liveOrder = (provider != null && provider.orders.isNotEmpty) 
+          ? provider.orders.firstWhere(
+              (o) => o.id == widget.order.id,
+              orElse: () => widget.order,
+            ) 
+          : widget.order;
 
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          'Chi tiết đơn hàng',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+      return Scaffold(
+        backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          title: const Text(
+            'Chi tiết đơn hàng',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(liveOrder, provider, dateFormat),
-                  const SizedBox(height: 16),
-                  _buildInfoSection(context, liveOrder, provider),
-                  const SizedBox(height: 16),
-                  _buildProductList(liveOrder, currencyFormat),
-                  const SizedBox(height: 16),
-                  _buildTotalSection(liveOrder, currencyFormat),
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(liveOrder, provider, dateFormat),
+                    const SizedBox(height: 16),
+                    _buildInfoSection(context, liveOrder, provider),
+                    const SizedBox(height: 16),
+                    _buildProductList(liveOrder, currencyFormat),
+                    const SizedBox(height: 16),
+                    _buildTotalSection(liveOrder, currencyFormat),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e, stackTrace) {
+      // If ANY error occurs, show it on screen instead of gray screen
+      return Scaffold(
+        appBar: AppBar(title: const Text("Error")),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              "Lỗi hiển thị: $e\n\n$stackTrace",
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildHeader(Order liveOrder, OrderHistoryProvider? provider, DateFormat dateFormat) {
