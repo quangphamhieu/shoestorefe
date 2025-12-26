@@ -349,11 +349,11 @@ namespace ShoeStore.Infrastructure.Services
                  _logger.LogInformation("No stock deduction for this transition (already deducted or not applicable).");
             }
 
-            // Restore: 3 -> 6, 5 -> 6
-            // Note: 4 -> 6 does NOT restore (User said "from 4 to 6 then no need")
-            if ((current == StatusPaymentSuccess || current == StatusCompleted) && next == StatusCancelled)
+            // Restore: 3 -> 6, 4 -> 6, 5 -> 6
+            // All statuses (3/4/5) have inventory deducted at creation, so all must restore when cancelled
+            if ((current == StatusPaymentSuccess || current == StatusPendingConfirmation || current == StatusCompleted) && next == StatusCancelled)
             {
-                _logger.LogInformation("Restoring stock (Paid/Completed -> Cancelled).");
+                _logger.LogInformation("Restoring stock (Paid/Pending/Completed -> Cancelled).");
                 foreach (var detail in order.OrderDetails)
                 {
                     if (storeProducts.TryGetValue(detail.ProductId, out var sp))

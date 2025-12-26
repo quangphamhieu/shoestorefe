@@ -232,6 +232,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
   Widget _buildInfoSection(BuildContext context, Order liveOrder, OrderHistoryProvider? provider) {
     final isEditable = liveOrder.statusId == 3 || liveOrder.statusId == 4 || liveOrder.statusId == 5; // Paid, Pending, Confirmed
     final isCancellable = isEditable; // Same condition for now
+    final isCancelled = liveOrder.statusId == 6; // Cancelled
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -281,6 +282,23 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                 label: const Text('Hủy đơn hàng'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE53935),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ),
+          ],
+          if (isCancelled && provider != null) ...[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _restoreOrder(context, provider, liveOrder),
+                icon: const Icon(Icons.refresh, size: 18),
+                label: const Text('Đặt lại (Khôi phục)'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -551,6 +569,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Xác nhận hủy đơn'),
         content: const Text('Bạn có chắc chắn muốn hủy đơn hàng này không?'),
@@ -592,6 +611,60 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Không thể hủy đơn hàng'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _restoreOrder(BuildContext context, OrderHistoryProvider provider, Order order) async {
+    final orderProvider = context.read<OrderProvider>();
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Xác nhận đặt lại'),
+        content: const Text('Bạn có muốn khôi phục đơn hàng này về trạng thái chờ xác nhận?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Không', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Đồng ý'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      // Status 4 = Pending
+      final success = await orderProvider.updateStatusUseCase.call(
+        orderId: order.id,
+        statusId: 4,
+      );
+
+      if (success && mounted) {
+        _manualUpdateLocalState(order, statusId: 4);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đã khôi phục đơn hàng'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không thể khôi phục đơn hàng'),
             backgroundColor: Colors.red,
           ),
         );
