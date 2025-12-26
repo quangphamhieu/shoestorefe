@@ -119,7 +119,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-               builder: (_) => MobileOrderDetailScreen(order: order),
+              builder: (_) => ChangeNotifierProvider.value(
+                value: provider,
+                child: MobileOrderDetailScreen(order: order),
+              ),
             ),
           );
         },

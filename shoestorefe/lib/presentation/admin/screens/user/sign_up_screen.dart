@@ -332,7 +332,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               const Duration(milliseconds: 500),
                                             );
                                             if (mounted) {
-                                              context.go('/');
+                                              context.go('/login');
                                             }
                                           }
                                         },
