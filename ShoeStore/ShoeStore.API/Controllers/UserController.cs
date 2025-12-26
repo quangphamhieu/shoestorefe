@@ -72,6 +72,19 @@ namespace ShoeStore.WebApi.Controllers
             return Ok("Đã xóa người dùng thành công.");
         }
 
+        // -------------------- UPDATE MY PROFILE --------------------
+        [HttpPut("my-profile")]
+        [Authorize] // Only requires authentication, no specific policy
+        public async Task<IActionResult> UpdateMyProfile([FromBody] UserUpdateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // User can only update their own profile
+            var result = await _userService.UpdateAsync(dto);
+            return Ok(result);
+        }
+
         // -------------------- SIGNUP --------------------
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] UserSignUpDto dto)
