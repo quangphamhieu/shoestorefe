@@ -327,10 +327,15 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
   Widget _buildProductCard(BuildContext context, dynamic product) {
     final imageUrl = product.imageUrl ?? '';
     final name = product.name ?? 'Không có tên';
-    final price =
-        product.stores?.isNotEmpty == true
-            ? product.stores[0].salePrice ?? product.originalPrice ?? 0
-            : product.originalPrice ?? 0;
+    
+    final double originalPrice = product.originalPrice ?? 0;
+    final double salePrice = product.stores?.isNotEmpty == true
+        ? product.stores[0].salePrice ?? originalPrice
+        : originalPrice;
+
+    final int discountPercent = (originalPrice > salePrice)
+        ? ((originalPrice - salePrice) / originalPrice * 100).round()
+        : 0;
 
     return GestureDetector(
       onTap: () {
@@ -353,30 +358,52 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
           children: [
             // Product Image
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
-                  image:
-                      imageUrl.isNotEmpty
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(12),
+                      ),
+                      image: imageUrl.isNotEmpty
                           ? DecorationImage(
-                            image: NetworkImage(imageUrl),
-                            fit: BoxFit.cover,
-                          )
+                              image: NetworkImage(imageUrl),
+                              fit: BoxFit.cover,
+                            )
                           : null,
-                ),
-                child:
-                    imageUrl.isEmpty
+                    ),
+                    child: imageUrl.isEmpty
                         ? const Center(
-                          child: Icon(
-                            Icons.image,
-                            size: 48,
-                            color: Colors.grey,
-                          ),
-                        )
+                            child: Icon(
+                              Icons.image,
+                              size: 48,
+                              color: Colors.grey,
+                            ),
+                          )
                         : null,
+                  ),
+                  if (discountPercent > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '-$discountPercent%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
             // Product Info
@@ -395,12 +422,21 @@ class _MobileHomeScreenState extends State<MobileHomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
+                  if (discountPercent > 0)
+                    Text(
+                      '${originalPrice.toStringAsFixed(0)}đ',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
                   Text(
-                    '${price.toStringAsFixed(0)}đ',
+                    '${salePrice.toStringAsFixed(0)}đ',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Color(0xFFE53935), // Updated to red for emphasis
                     ),
                   ),
                 ],

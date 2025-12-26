@@ -115,13 +115,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       ),
 
       child: InkWell(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => MobileOrderDetailScreen(order: order),
             ),
           );
+          if (context.mounted) {
+             context.read<OrderHistoryProvider>().loadOrders();
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

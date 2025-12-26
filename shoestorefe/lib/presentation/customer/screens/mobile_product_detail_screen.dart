@@ -168,14 +168,49 @@ class _MobileProductDetailScreenState extends State<MobileProductDetailScreen> {
                       ),
                       const SizedBox(height: 8),
 
-                      // Price
-                      Text(
-                        '${_formatCurrency(price)}đ',
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFE53935),
-                        ),
+                      // Price Display
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${_formatCurrency(price)}đ',
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFE53935),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          if (displayVariant.originalPrice != null && displayVariant.originalPrice! > price)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 6),
+                              child: Text(
+                                '${_formatCurrency(displayVariant.originalPrice!)}đ',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ),
+                          if (displayVariant.originalPrice != null && displayVariant.originalPrice! > price)
+                            Container(
+                              margin: const EdgeInsets.only(left: 8, bottom: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '-${(((displayVariant.originalPrice! - price) / displayVariant.originalPrice!) * 100).round()}%',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       const SizedBox(height: 4),
 
