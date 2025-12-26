@@ -37,14 +37,19 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
       final currencyFormat = _currencyFormat;
       final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
+
+
       // Use live order if possible, otherwise use passed order
-      // Add extra null check for provider.orders
-      final liveOrder = (provider != null && provider.orders.isNotEmpty) 
-          ? provider.orders.firstWhere(
-              (o) => o.id == widget.order.id,
-              orElse: () => widget.order,
-            ) 
-          : widget.order;
+      // Avoid using orElse with different subtypes to prevent crashes
+      Order liveOrder = widget.order;
+      if (provider != null && provider.orders.isNotEmpty) {
+        try {
+          // Runtime list might be List<OrderModel>, so we cannot use orElse returning Order
+          liveOrder = provider.orders.firstWhere((o) => o.id == widget.order.id);
+        } catch (_) {
+          // Not found in provider list, stick with widget.order
+        }
+      }
 
       return Scaffold(
         backgroundColor: Colors.grey[50],
