@@ -13,6 +13,14 @@ class MobileOrderDetailScreen extends StatefulWidget {
 }
 
 class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
+  Order? _currentOrder;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentOrder = widget.order;
+  }
+
   // Safe currency formatter that falls back to default if locale data is missing
   NumberFormat get _currencyFormat {
     try {
@@ -21,6 +29,31 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
       // Fallback if locale data is not available
       return NumberFormat.currency(symbol: '₫', decimalDigits: 0);
     }
+  }
+
+  void _manualUpdateLocalState({String? address, String? note}) {
+    if (_currentOrder == null) return;
+    setState(() {
+      _currentOrder = Order(
+        id: _currentOrder!.id,
+        orderNumber: _currentOrder!.orderNumber,
+        customerId: _currentOrder!.customerId,
+        customerName: _currentOrder!.customerName,
+        createdBy: _currentOrder!.createdBy,
+        creatorName: _currentOrder!.creatorName,
+        storeId: _currentOrder!.storeId,
+        storeName: _currentOrder!.storeName,
+        statusId: _currentOrder!.statusId,
+        totalAmount: _currentOrder!.totalAmount,
+        orderType: _currentOrder!.orderType,
+        paymentMethod: _currentOrder!.paymentMethod,
+        createdAt: _currentOrder!.createdAt,
+        updatedAt: DateTime.now(),
+        address: address ?? _currentOrder!.address,
+        note: note ?? _currentOrder!.note,
+        details: _currentOrder!.details,
+      );
+    });
   }
 
   @override
@@ -37,17 +70,23 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
       final currencyFormat = _currencyFormat;
       final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
+      // 1. Start with widget.order (cleanest)
+      // 2. Override with local optimistic state (_currentOrder) if exists
+      // 3. Override with Live Provider data if found (Best source of truth)
+      
+      Order displayOrder = _currentOrder ?? widget.order;
 
-
-      // Use live order if possible, otherwise use passed order
-      // Avoid using orElse with different subtypes to prevent crashes
-      Order liveOrder = widget.order;
       if (provider != null && provider.orders.isNotEmpty) {
         try {
-          // Runtime list might be List<OrderModel>, so we cannot use orElse returning Order
-          liveOrder = provider.orders.firstWhere((o) => o.id == widget.order.id);
+          // Try to find updated data from provider
+          final foundLive = provider.orders.firstWhere((o) => o.id == widget.order.id);
+          displayOrder = foundLive;
+          // Sync local state to live state to keep them consistent
+          if (_currentOrder != foundLive) {
+             _currentOrder = foundLive;
+          }
         } catch (_) {
-          // Not found in provider list, stick with widget.order
+          // Not found in provider (maybe loading?), keep using current optimistic state
         }
       }
 
@@ -73,13 +112,13 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(liveOrder, provider, dateFormat),
+                    _buildHeader(displayOrder, provider, dateFormat),
                     const SizedBox(height: 16),
-                    _buildInfoSection(context, liveOrder, provider),
+                    _buildInfoSection(context, displayOrder, provider),
                     const SizedBox(height: 16),
-                    _buildProductList(liveOrder, currencyFormat),
+                    _buildProductList(displayOrder, currencyFormat),
                     const SizedBox(height: 16),
-                    _buildTotalSection(liveOrder, currencyFormat),
+                    _buildTotalSection(displayOrder, currencyFormat),
                   ],
                 ),
               ),
@@ -103,6 +142,16 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
       );
     }
   }
+
+  // ... (Methods _buildHeader, _buildStatusWidget, _buildSimpleStatus, _buildInfoSection, _buildInfoRow, _buildProductList, _buildTotalSection remain technically unchanged but need to be careful with replace range)
+  // Since I am replacing the TOP part of the file including build method, I assume the rest are below.
+  
+  // Wait, I need to verify where _showEditDialog is to update it.
+  // It is likely further down. I'll split this into two edits if needed, or replace a larger chunk.
+  // The replace tool works best with contiguous blocks.
+  // I will replace from "class _MobileOrderDetailScreenState" down to the end of "build" method.
+
+
 
   Widget _buildHeader(Order liveOrder, OrderHistoryProvider? provider, DateFormat dateFormat) {
     return Container(
@@ -416,13 +465,28 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
+                           final newAddress = addressController.text.trim();
+                           final newNote = noteController.text.trim();
+                           
                            Navigator.pop(ctx);
+                           
                            // Use OrderHistoryProvider's updateOrderInfo
-                           await provider.updateOrderInfo(
+                           final success = await provider.updateOrderInfo(
                              orderId: order.id,
-                             address: addressController.text.trim(),
-                             note: noteController.text.trim()
+                             address: newAddress,
+                             note: newNote
                            );
+
+                           if (success && mounted) {
+                              _manualUpdateLocalState(address: newAddress, note: newNote);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Cập nhật thành công'), backgroundColor: Colors.green)
+                              );
+                           } else if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Cập nhật thất bại'), backgroundColor: Colors.red)
+                              );
+                           }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
