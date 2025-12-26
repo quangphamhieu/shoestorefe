@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shoestorefe/presentation/customer/provider/order_history_provider.dart';
+import 'package:shoestorefe/presentation/admin/provider/order_provider.dart';
 import 'package:shoestorefe/domain/entities/order.dart';
 
 class MobileOrderDetailScreen extends StatefulWidget {
@@ -31,27 +32,26 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
     }
   }
 
-  void _manualUpdateLocalState({String? address, String? note}) {
-    if (_currentOrder == null) return;
+  void _manualUpdateLocalState(Order baseOrder, {String? address, String? note, int? statusId}) {
     setState(() {
       _currentOrder = Order(
-        id: _currentOrder!.id,
-        orderNumber: _currentOrder!.orderNumber,
-        customerId: _currentOrder!.customerId,
-        customerName: _currentOrder!.customerName,
-        createdBy: _currentOrder!.createdBy,
-        creatorName: _currentOrder!.creatorName,
-        storeId: _currentOrder!.storeId,
-        storeName: _currentOrder!.storeName,
-        statusId: _currentOrder!.statusId,
-        totalAmount: _currentOrder!.totalAmount,
-        orderType: _currentOrder!.orderType,
-        paymentMethod: _currentOrder!.paymentMethod,
-        createdAt: _currentOrder!.createdAt,
+        id: baseOrder.id,
+        orderNumber: baseOrder.orderNumber,
+        customerId: baseOrder.customerId,
+        customerName: baseOrder.customerName,
+        createdBy: baseOrder.createdBy,
+        creatorName: baseOrder.creatorName,
+        storeId: baseOrder.storeId,
+        storeName: baseOrder.storeName,
+        statusId: statusId ?? baseOrder.statusId,
+        totalAmount: baseOrder.totalAmount,
+        orderType: baseOrder.orderType,
+        paymentMethod: baseOrder.paymentMethod,
+        createdAt: baseOrder.createdAt,
         updatedAt: DateTime.now(),
-        address: address ?? _currentOrder!.address,
-        note: note ?? _currentOrder!.note,
-        details: _currentOrder!.details,
+        address: address ?? baseOrder.address,
+        note: note ?? baseOrder.note,
+        details: baseOrder.details,
       );
     });
   }
@@ -230,7 +230,8 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
   }
 
   Widget _buildInfoSection(BuildContext context, Order liveOrder, OrderHistoryProvider? provider) {
-    final isEditable = liveOrder.statusId == 4;
+    final isEditable = liveOrder.statusId == 3 || liveOrder.statusId == 4 || liveOrder.statusId == 5; // Paid, Pending, Confirmed
+    final isCancellable = isEditable; // Same condition for now
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -270,6 +271,23 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
           _buildInfoRow(Icons.location_on_outlined, liveOrder.address ?? 'Chưa có địa chỉ'),
           const SizedBox(height: 12),
           _buildInfoRow(Icons.note_outlined, (liveOrder.note != null && liveOrder.note!.isNotEmpty) ? liveOrder.note! : 'Không có ghi chú'),
+          if (isCancellable && provider != null) ..[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _cancelOrder(context, provider, liveOrder),
+                icon: const Icon(Icons.cancel_outlined, size: 18),
+                label: const Text('Hủy đơn hàng'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE53935),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -525,6 +543,60 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
         ),
       ),
     );
+  }
+
+  void _cancelOrder(BuildContext context, OrderHistoryProvider provider, Order order) async {
+    final orderProvider = context.read<OrderProvider>();
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Xác nhận hủy đơn'),
+        content: const Text('Bạn có chắc chắn muốn hủy đơn hàng này không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Không', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE53935),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Có, Hủy đơn'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      // Status 6 = Cancelled
+      final success = await orderProvider.updateStatusUseCase.call(
+        orderId: order.id,
+        statusId: 6,
+      );
+
+      if (success && mounted) {
+        // Update local state
+        _manualUpdateLocalState(order, statusId: 6);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đã hủy đơn hàng thành công'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không thể hủy đơn hàng'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
 }

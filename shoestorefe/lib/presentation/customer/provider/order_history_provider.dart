@@ -80,14 +80,7 @@ class OrderHistoryProvider extends ChangeNotifier {
               note: note ?? old.note,
               details: old.details,
             );
-        }
-        
-        // Try reload to sync heavily, but don't fail the operation if this fails
-        try {
-          await loadOrders(); 
-        } catch (_) {
-          // Ignore reload error, trust local update
-        }
+        }// Reload to be sure, or just rely on local update
       }
       return success;
     } catch (e) {

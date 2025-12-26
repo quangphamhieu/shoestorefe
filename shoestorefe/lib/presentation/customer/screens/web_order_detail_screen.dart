@@ -65,7 +65,7 @@ class _WebOrderDetailScreenState extends State<WebOrderDetailScreen> {
     // If we want real-time sync with other devices, we'd need more complex logic.
     // For now, "DB updates -> UI updates instantly" is solved by manual local update.
 
-    final isEditable = _currentOrder.statusId == 4; // Pending
+    final isEditable = _currentOrder.statusId == 3 || _currentOrder.statusId == 4 || _currentOrder.statusId == 5; // Paid, Pending, Confirmed
     final isCancelled = _currentOrder.statusId == 6; // Cancelled
 
     return Scaffold(
