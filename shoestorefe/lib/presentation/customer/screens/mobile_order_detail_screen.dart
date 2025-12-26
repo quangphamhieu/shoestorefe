@@ -405,6 +405,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                 )
               ],
             ),
+          ),
       ),
     );
   }
