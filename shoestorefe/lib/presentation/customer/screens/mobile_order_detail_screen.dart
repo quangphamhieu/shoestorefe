@@ -271,7 +271,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
           _buildInfoRow(Icons.location_on_outlined, liveOrder.address ?? 'Chưa có địa chỉ'),
           const SizedBox(height: 12),
           _buildInfoRow(Icons.note_outlined, (liveOrder.note != null && liveOrder.note!.isNotEmpty) ? liveOrder.note! : 'Không có ghi chú'),
-          if (isCancellable && provider != null) ..[
+          if (isCancellable && provider != null) ...[
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
@@ -496,7 +496,7 @@ class _MobileOrderDetailScreenState extends State<MobileOrderDetailScreen> {
                            );
 
                            if (success && mounted) {
-                              _manualUpdateLocalState(address: newAddress, note: newNote);
+                              _manualUpdateLocalState(order, address: newAddress, note: newNote);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Cập nhật thành công'), backgroundColor: Colors.green)
                               );
