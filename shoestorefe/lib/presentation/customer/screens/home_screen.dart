@@ -53,8 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      // Responsive banner height
                       Container(
-                        height: 400,
+                        height: width < 600 ? 200 : (width < 900 ? 300 : 400),
                         width: double.infinity,
                         decoration: BoxDecoration(
                           image: DecorationImage(

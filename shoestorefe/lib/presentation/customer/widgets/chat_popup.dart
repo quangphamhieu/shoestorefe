@@ -73,15 +73,19 @@ class _ChatPopupState extends State<ChatPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    
     return Positioned(
       bottom: 80,
-      right: 20,
+      right: isMobile ? 10 : 20,
+      left: isMobile ? 10 : null,
       child: Material(
         elevation: 8,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          width: 350,
-          height: 450,
+          width: isMobile ? null : 350,
+          height: isMobile ? 350 : 450,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),

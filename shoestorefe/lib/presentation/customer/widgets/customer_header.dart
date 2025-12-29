@@ -52,14 +52,24 @@ class _CustomerHeaderState extends State<CustomerHeader> {
       context.read<OrderHistoryProvider>().loadOrders();
     }
 
+    // Get screen width for responsive positioning
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     // Alignment logic
     Offset offset;
     if (name == 'profile') {
       // Profile is typically right-aligned or below the name
       offset = const Offset(0, 30);
     } else {
-       // Icon size is 36. Alignment: right aligned.
-       offset = Offset(36.0 - width, 45.0);
+      // Cart and History overlays
+      if (isMobile) {
+        // On mobile, align to right edge with margin
+        offset = Offset(-(width - 40), 45.0);
+      } else {
+        // Desktop: Icon size is 36. Alignment: right aligned.
+        offset = Offset(36.0 - width, 45.0);
+      }
     }
 
     _overlayEntry = OverlayEntry(

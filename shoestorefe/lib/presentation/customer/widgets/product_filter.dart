@@ -8,134 +8,141 @@ class ProductFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CustomerProvider>();
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 600;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 40,
+        vertical: 16,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
       ),
-      child: Row(
-        children: [
-          // Filter Icon
-          const Icon(Icons.tune, size: 20),
-          const SizedBox(width: 24),
-          // Color Filter
-          _buildDropdown(
-            context,
-            label: 'Màu sắc',
-            value: provider.selectedColor,
-            items: [
-              'All', // Add option for All
-              'Black',
-              'White',
-              'Red',
-              'Blue',
-              'Yellow',
-              'Gray',
-              'Green',
-              'Orange',
-              'Pink',
-              'Purple',
-            ],
-            displayMap: {
-              'All': 'Tất cả',
-              'Black': 'Đen',
-              'White': 'Trắng',
-              'Red': 'Đỏ',
-              'Blue': 'Xanh dương',
-              'Yellow': 'Vàng',
-              'Gray': 'Xám',
-              'Green': 'Xanh lá',
-              'Orange': 'Cam',
-              'Pink': 'Hồng',
-              'Purple': 'Tím',
-            },
-            onChanged: (value) {
-              if (value == 'All') {
-                provider.setColor(null);
-              } else {
-                provider.setColor(value);
-              }
-            },
-          ),
-          const SizedBox(width: 16),
-          // Size Filter
-          _buildDropdown(
-            context,
-            label: 'Kích thước',
-            value: provider.selectedSize,
-            items: [
-              'All',
-              '35',
-              '36',
-              '37',
-              '38',
-              '39',
-              '40',
-              '41',
-              '42',
-              '43',
-              '44',
-              '45',
-            ],
-            displayMap: {'All': 'Tất cả'},
-             onChanged: (value) {
-              if (value == 'All') {
-                provider.setSize(null);
-              } else {
-                provider.setSize(value);
-              }
-            },
-          ),
-          const SizedBox(width: 16),
-          // Price Filter
-          _buildDropdown(
-            context,
-            label: 'Giá',
-            value: null, // This assumes price doesn't hold state in dropdown value visually, logic in provider
-            // Ideally we should track selected price text to show it.
-            // But preserving original behavior where value: null likely means it resets or just shows label?
-            // User requested "All" filter to clear. 
-            // If current implementation doesn't highlight selected price, adding 'Tất cả' is good.
-            items: ['Tất cả', 'Dưới 500k', '500k - 1tr', '1tr - 2tr', 'Trên 2tr'],
-            onChanged: (value) {
-              switch (value) {
-                case 'Tất cả':
-                   provider.setPriceRange(null, null);
-                   break;
-                case 'Dưới 500k':
-                  provider.setPriceRange(null, 500000);
-                  break;
-                case '500k - 1tr':
-                  provider.setPriceRange(500000, 1000000);
-                  break;
-                case '1tr - 2tr':
-                  provider.setPriceRange(1000000, 2000000);
-                  break;
-                case 'Trên 2tr':
-                  provider.setPriceRange(2000000, null);
-                  break;
-              }
-            },
-          ),
-          const Spacer(),
-          // Sort Dropdown
-          _buildDropdown(
-            context,
-            label: 'Sắp xếp theo',
-            value: provider.sortBy,
-            items: ['newest', 'price-asc', 'price-desc', 'name'],
-            displayMap: {
-              'newest': 'Mới nhất',
-              'price-asc': 'Giá tăng dần',
-              'price-desc': 'Giá giảm dần',
-              'name': 'Tên A-Z',
-            },
-            onChanged: (value) => provider.setSortBy(value!),
-            width: 180,
-          ),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            // Filter Icon
+            const Icon(Icons.tune, size: 20),
+            const SizedBox(width: 24),
+            // Color Filter
+            _buildDropdown(
+              context,
+              label: 'Màu sắc',
+              value: provider.selectedColor,
+              items: [
+                'All', // Add option for All
+                'Black',
+                'White',
+                'Red',
+                'Blue',
+                'Yellow',
+                'Gray',
+                'Green',
+                'Orange',
+                'Pink',
+                'Purple',
+              ],
+              displayMap: {
+                'All': 'Tất cả',
+                'Black': 'Đen',
+                'White': 'Trắng',
+                'Red': 'Đỏ',
+                'Blue': 'Xanh dương',
+                'Yellow': 'Vàng',
+                'Gray': 'Xám',
+                'Green': 'Xanh lá',
+                'Orange': 'Cam',
+                'Pink': 'Hồng',
+                'Purple': 'Tím',
+              },
+              onChanged: (value) {
+                if (value == 'All') {
+                  provider.setColor(null);
+                } else {
+                  provider.setColor(value);
+                }
+              },
+              width: isMobile ? 120 : 150,
+            ),
+            const SizedBox(width: 16),
+            // Size Filter
+            _buildDropdown(
+              context,
+              label: 'Kích thước',
+              value: provider.selectedSize,
+              items: [
+                'All',
+                '35',
+                '36',
+                '37',
+                '38',
+                '39',
+                '40',
+                '41',
+                '42',
+                '43',
+                '44',
+                '45',
+              ],
+              displayMap: {'All': 'Tất cả'},
+               onChanged: (value) {
+                if (value == 'All') {
+                  provider.setSize(null);
+                } else {
+                  provider.setSize(value);
+                }
+              },
+              width: isMobile ? 120 : 150,
+            ),
+            const SizedBox(width: 16),
+            // Price Filter
+            _buildDropdown(
+              context,
+              label: 'Giá',
+              value: null,
+              items: ['Tất cả', 'Dưới 500k', '500k - 1tr', '1tr - 2tr', 'Trên 2tr'],
+              onChanged: (value) {
+                switch (value) {
+                  case 'Tất cả':
+                     provider.setPriceRange(null, null);
+                     break;
+                  case 'Dưới 500k':
+                    provider.setPriceRange(null, 500000);
+                    break;
+                  case '500k - 1tr':
+                    provider.setPriceRange(500000, 1000000);
+                    break;
+                  case '1tr - 2tr':
+                    provider.setPriceRange(1000000, 2000000);
+                    break;
+                  case 'Trên 2tr':
+                    provider.setPriceRange(2000000, null);
+                    break;
+                }
+              },
+              width: isMobile ? 120 : 150,
+            ),
+            SizedBox(width: isMobile ? 16 : 24),
+            // Sort Dropdown
+            _buildDropdown(
+              context,
+              label: 'Sắp xếp theo',
+              value: provider.sortBy,
+              items: ['newest', 'price-asc', 'price-desc', 'name'],
+              displayMap: {
+                'newest': 'Mới nhất',
+                'price-asc': 'Giá tăng dần',
+                'price-desc': 'Giá giảm dần',
+                'name': 'Tên A-Z',
+              },
+              onChanged: (value) => provider.setSortBy(value!),
+              width: isMobile ? 150 : 180,
+            ),
+          ],
+        ),
       ),
     );
   }
