@@ -27,47 +27,70 @@ class ForgotPasswordDialog extends StatelessWidget {
           }
 
           return AlertDialog(
-            title: const Text('Quên mật khẩu'),
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              'Quên mật khẩu',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Nhập email hoặc số điện thoại của bạn. Chúng tôi sẽ gửi mật khẩu mới đến email của bạn.',
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 TextField(
                   controller: provider.emailController,
                   decoration: InputDecoration(
                     labelText: 'Email hoặc số điện thoại',
                     hintText: 'example@gmail.com',
+                    labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
                     ),
-                    prefixIcon: const Icon(Icons.email_outlined),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF9C27B0), width: 2),
+                    ),
+                    prefixIcon: Icon(Icons.email_outlined, color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: Colors.grey[50],
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 if (provider.error != null) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.red[50],
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.red[300]!),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.red[200]!),
                     ),
                     child: Row(
                       children: [
                         Icon(Icons.error_outline,
-                            color: Colors.red[700], size: 16),
+                            color: Colors.red[700], size: 18),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             provider.error!,
                             style: TextStyle(
-                                color: Colors.red[700], fontSize: 12),
+                                color: Colors.red[700], fontSize: 13),
                           ),
                         ),
                       ],
@@ -76,6 +99,7 @@ class ForgotPasswordDialog extends StatelessWidget {
                 ],
               ],
             ),
+            actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             actions: [
               TextButton(
                 onPressed: provider.isLoading
@@ -84,25 +108,44 @@ class ForgotPasswordDialog extends StatelessWidget {
                         provider.clear();
                         Navigator.of(context).pop();
                       },
-                child: const Text('Hủy'),
+                child: Text(
+                  'Hủy',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed:
                     provider.isLoading ? null : () => provider.submitForgotPassword(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9C27B0),
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  elevation: 0,
                 ),
                 child: provider.isLoading
                     ? const SizedBox(
-                        height: 16,
-                        width: 16,
+                        height: 20,
+                        width: 20,
                         child: CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 2,
                         ),
                       )
-                    : const Text('Gửi'),
+                    : const Text(
+                        'Gửi',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
             ],
           );

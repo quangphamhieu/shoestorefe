@@ -55,6 +55,9 @@ namespace ShoeStore.Infrastructure.Services
             if (isOnline && string.IsNullOrWhiteSpace(dto.Address))
                 throw new ValidationException("Online orders require delivery address.");
 
+            if (isOffline && string.IsNullOrWhiteSpace(dto.Address))
+                throw new ValidationException("Offline orders require store address.");
+
             var customerExists = await _context.Users.AsNoTracking().AnyAsync(u => u.Id == dto.CustomerId);
             if (!customerExists)
                 throw new ArgumentException("Customer does not exist.", nameof(dto.CustomerId));

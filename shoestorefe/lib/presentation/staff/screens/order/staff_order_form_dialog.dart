@@ -8,8 +8,10 @@ import '../../../admin/provider/product_provider.dart';
 import '../../../../domain/entities/user.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/store_quantity.dart';
+import '../../../../domain/entities/store.dart';
 import '../../../../domain/usecases/user/get_user_by_id.dart';
 import '../../../../domain/usecases/user/sign_up.dart';
+import '../../../../domain/usecases/store/get_store_by_id_usecase.dart';
 import '../../../../injection_container.dart' as di;
 
 class StaffOrderFormDialog extends StatefulWidget {
@@ -26,6 +28,7 @@ class _StaffOrderFormDialogState extends State<StaffOrderFormDialog> {
   final List<Map<String, dynamic>> _orderDetails = [];
   bool _loading = false;
   int? _storeId;
+  String? _storeName;
   bool _loadingStore = false;
   String _customerSearchText = '';
 
@@ -53,11 +56,24 @@ class _StaffOrderFormDialogState extends State<StaffOrderFormDialog> {
     try {
       final getUserById = GetUserById(di.sl());
       final user = await getUserById.call(userIdInt);
-      if (user != null && mounted) {
-        setState(() {
-          _storeId = user.storeId;
-          _loadingStore = false;
-        });
+      
+      if (user != null && user.storeId != null && mounted) {
+        // Load store info to get both id and name
+        final getStoreById = GetStoreByIdUseCase(di.sl());
+        final store = await getStoreById.call(user.storeId!);
+        
+        if (store != null && mounted) {
+          setState(() {
+            _storeId = store.id;
+            _storeName = store.name;
+            _loadingStore = false;
+          });
+        } else if (mounted) {
+          setState(() {
+            _storeId = user.storeId;
+            _loadingStore = false;
+          });
+        }
       } else if (mounted) {
         setState(() {
           _loadingStore = false;
@@ -675,6 +691,7 @@ class _StaffOrderFormDialogState extends State<StaffOrderFormDialog> {
       customerId: _selectedCustomerId!,
       paymentMethod: _paymentMethod,
       storeId: _storeId,
+      address: _storeName ?? 'Cửa hàng',
       details: _orderDetails,
     );
 

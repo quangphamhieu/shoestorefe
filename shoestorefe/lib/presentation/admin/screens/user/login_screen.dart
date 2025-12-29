@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
-  bool _rememberLogin = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -162,28 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(height: 20),
                             // Remember Login & Forgot Password
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: _rememberLogin,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _rememberLogin = value ?? false;
-                                        });
-                                      },
-                                      activeColor: const Color(0xFF9C27B0),
-                                    ),
-                                    const Text(
-                                      "Lưu đăng nhập",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF9C27B0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 TextButton(
                                   onPressed: () {
                                     showDialog(

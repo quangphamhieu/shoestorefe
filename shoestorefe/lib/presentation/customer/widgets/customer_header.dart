@@ -8,6 +8,7 @@ import 'package:shoestorefe/core/network/token_handler.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
 import 'web_cart_overlay.dart';
 import 'web_order_history_overlay.dart';
+import 'web_profile_overlay.dart';
 
 class CustomerHeader extends StatefulWidget {
   const CustomerHeader({super.key});
@@ -19,8 +20,9 @@ class CustomerHeader extends StatefulWidget {
 class _CustomerHeaderState extends State<CustomerHeader> {
   final LayerLink _cartLayerLink = LayerLink();
   final LayerLink _historyLayerLink = LayerLink();
+  final LayerLink _profileLayerLink = LayerLink();
   OverlayEntry? _overlayEntry;
-  String? _activeOverlay; // 'cart' or 'history'
+  String? _activeOverlay; // 'cart', 'history', 'profile'
 
   @override
   void dispose() {
@@ -50,8 +52,15 @@ class _CustomerHeaderState extends State<CustomerHeader> {
       context.read<OrderHistoryProvider>().loadOrders();
     }
 
-    // Icon size is 36. Alignment: right aligned.
-    final offset = Offset(36.0 - width, 45.0);
+    // Alignment logic
+    Offset offset;
+    if (name == 'profile') {
+      // Profile is typically right-aligned or below the name
+      offset = const Offset(0, 30);
+    } else {
+       // Icon size is 36. Alignment: right aligned.
+       offset = Offset(36.0 - width, 45.0);
+    }
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
@@ -95,39 +104,9 @@ class _CustomerHeaderState extends State<CustomerHeader> {
         final isMobile = maxWidth < 760;
         final isTablet = maxWidth < 1100;
 
-        final navItems = [
-          _buildNavItem(
-            context,
-            'HOME',
-            onTap: () => GoRouter.of(context).go('/home'),
-          ),
-          _buildNavItem(context, 'MOBILE'),
-          _buildNavItem(context, 'TENIS'),
-          _buildNavItem(context, 'PLANA'),
-          _buildNavItem(context, 'NEW BALANCE'),
-          _buildNavItem(context, 'CONVERSE', hasDropdown: true),
-          _buildNavItem(context, 'CHỦ ĐỀ', hasDropdown: true),
-          _buildNavItem(context, 'GIẢM GIÁ'),
-        ];
-
-        final navMenu =
-            isMobile
-                ? Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 12,
-                  runSpacing: 8,
-                  children: navItems,
-                )
-                : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: navItems,
-                  ),
-                );
-
+        // Search Bar
         final searchBar = SizedBox(
-          width: isMobile ? double.infinity : 220,
+          width: isMobile ? double.infinity : 250,
           child: Container(
             height: 40,
             decoration: BoxDecoration(
@@ -155,7 +134,7 @@ class _CustomerHeaderState extends State<CustomerHeader> {
         );
 
         final actionIcons = [
-          // History Icon (Only if logged in?)
+          // History Icon
            if (isLoggedIn)
             _buildInteractiveIcon(
               _historyLayerLink,
@@ -209,24 +188,38 @@ class _CustomerHeaderState extends State<CustomerHeader> {
         final authWidgets =
             isLoggedIn && userName != null
                 ? [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.person, size: 18, color: Colors.grey[700]),
-                        const SizedBox(width: 6),
-                        Text(
-                          userName,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black87,
+                    CompositedTransformTarget(
+                      link: _profileLayerLink,
+                      child: InkWell(
+                        onTap: () => _toggleOverlay(
+                          context, 
+                          _profileLayerLink, 
+                          'profile', 
+                          const WebProfileOverlay(), 
+                          200
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.person, size: 20, color: Colors.grey[700]),
+                              const SizedBox(width: 8),
+                              Text(
+                                userName,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.arrow_drop_down, size: 20, color: Colors.black54),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () => AuthUtils.logout(context),
-                      child: _buildHeaderButton('Đăng xuất'),
+                      ),
                     ),
                   ]
                 : [
@@ -258,38 +251,50 @@ class _CustomerHeaderState extends State<CustomerHeader> {
                       if (i > 0) const SizedBox(width: 8),
                       actionIcons[i],
                     ],
-                    const SizedBox(width: 12),
-                    ...authWidgets
-                        .expand((widget) => [widget, const SizedBox(width: 8)])
-                        .toList()
-                      ..removeLast(),
+                    const SizedBox(width: 16),
+                    ...authWidgets,
                   ],
                 );
 
-        final logo = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                shape: BoxShape.circle,
+        // Logo with GestureDetector
+        final logo = GestureDetector(
+          onTap: () => context.go('/home'),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  'assets/brand_icon.jpg',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.store, color: Colors.black54),
+                    );
+                  },
+                ),
               ),
-              child: const Icon(Icons.store, color: Colors.black54),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'VỀ SHOP',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ],
+              const SizedBox(width: 12),
+              const Text(
+                'Cửa hàng giày thể thao Hello',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         );
 
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: isTablet ? 16 : 24,
-            vertical: isMobile ? 12 : 8,
+            vertical: isMobile ? 12 : 12,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -311,17 +316,14 @@ class _CustomerHeaderState extends State<CustomerHeader> {
                 searchBar,
                 const SizedBox(height: 12),
                 actions,
-                const SizedBox(height: 12),
-                navMenu,
               ] else ...[
                 Row(
                   children: [
                     logo,
-                    const SizedBox(width: 24),
-                    Expanded(child: navMenu),
-                    const SizedBox(width: 24),
+                    const Spacer(), // Push search and actions to right, or keep search center? 
+                    // Let's keep search reasonably close or centered if possible, but Spacer is safe choice for "Menu gone"
                     searchBar,
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 24),
                     actions,
                   ],
                 ),
@@ -330,39 +332,6 @@ class _CustomerHeaderState extends State<CustomerHeader> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildNavItem(
-    BuildContext context,
-    String label, {
-    bool hasDropdown = false,
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style:
-                  TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: onTap != null ? Colors.black : Colors.black.withOpacity(0.7),
-                  ),
-            ),
-            if (hasDropdown) ...[
-              const SizedBox(width: 3),
-              const Icon(Icons.keyboard_arrow_down, size: 14),
-            ],
-          ],
-        ),
-      ),
     );
   }
 

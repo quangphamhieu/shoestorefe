@@ -148,6 +148,7 @@ class StaffOrderProvider extends ChangeNotifier {
     required int customerId,
     required int paymentMethod,
     int? storeId,
+    String? address,
     required List<Map<String, dynamic>> details,
   }) async {
     _isCreating = true;
@@ -159,6 +160,7 @@ class StaffOrderProvider extends ChangeNotifier {
         orderType: 1, // Offline
         paymentMethod: paymentMethod,
         storeId: storeId,
+        address: address,
         details: details,
       );
 

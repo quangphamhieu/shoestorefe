@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shoestorefe/presentation/admin/provider/sign_up_provider.dart';
+import 'package:shoestorefe/core/network/token_handler.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -12,6 +13,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -314,9 +317,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     provider.isLoading
                                         ? null
                                         : () async {
-                                          await provider.signUp();
+                                           await provider.signUp();
                                           if (provider.user != null &&
                                               mounted) {
+                                            // Ensure no token exists before redirect
+                                            await TokenHandler().clearToken();
+                                            
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
