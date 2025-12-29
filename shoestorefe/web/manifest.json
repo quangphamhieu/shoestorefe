@@ -1,11 +1,11 @@
 {
-    "name": "shoestorefe",
-    "short_name": "shoestorefe",
+    "name": "Cửa hàng giày thể thao Hello",
+    "short_name": "Hello Store",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Cửa hàng giày thể thao Hello - Mua sắm giày thể thao chính hãng",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

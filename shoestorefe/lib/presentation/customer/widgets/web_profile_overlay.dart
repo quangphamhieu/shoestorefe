@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shoestorefe/core/utils/auth_utils.dart';
+import 'package:shoestorefe/presentation/customer/provider/profile_provider.dart';
+import 'package:shoestorefe/presentation/customer/widgets/web_profile_dialog.dart';
+import 'package:shoestorefe/presentation/customer/widgets/web_edit_profile_dialog.dart';
+import 'package:shoestorefe/presentation/customer/widgets/web_change_password_dialog.dart';
 
 class WebProfileOverlay extends StatelessWidget {
   const WebProfileOverlay({super.key});
@@ -29,19 +33,36 @@ class WebProfileOverlay extends StatelessWidget {
             context,
             icon: Icons.person_outline,
             label: 'Thông tin cá nhân',
-            onTap: () => context.go('/profile'),
+            onTap: () {
+              context.read<ProfileProvider>().loadProfile();
+              showDialog(
+                context: context,
+                builder: (context) => const WebProfileDialog(),
+              );
+            },
           ),
           _buildMenuItem(
             context,
             icon: Icons.edit_outlined,
             label: 'Chỉnh sửa thông tin',
-            onTap: () => context.go('/profile'), // Assuming profile page has edit
+            onTap: () {
+              context.read<ProfileProvider>().loadProfile();
+              showDialog(
+                context: context,
+                builder: (context) => const WebEditProfileDialog(),
+              );
+            },
           ),
           _buildMenuItem(
             context,
             icon: Icons.lock_outline,
             label: 'Đổi mật khẩu',
-            onTap: () => context.go('/profile'), // Assuming profile page has change password section
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const WebChangePasswordDialog(),
+              );
+            },
           ),
           const Divider(height: 1),
           _buildMenuItem(
