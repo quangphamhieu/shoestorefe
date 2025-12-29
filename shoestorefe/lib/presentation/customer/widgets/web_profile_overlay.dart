@@ -34,6 +34,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.person_outline,
             label: 'Thông tin cá nhân',
             onTap: () {
+              Navigator.pop(context); // Close overlay first
               context.read<ProfileProvider>().loadProfile();
               showDialog(
                 context: context,
@@ -46,6 +47,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.edit_outlined,
             label: 'Chỉnh sửa thông tin',
             onTap: () {
+              Navigator.pop(context); // Close overlay first
               context.read<ProfileProvider>().loadProfile();
               showDialog(
                 context: context,
@@ -58,6 +60,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.lock_outline,
             label: 'Đổi mật khẩu',
             onTap: () {
+              Navigator.pop(context); // Close overlay first
               showDialog(
                 context: context,
                 builder: (context) => const WebChangePasswordDialog(),

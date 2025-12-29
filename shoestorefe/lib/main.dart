@@ -70,7 +70,7 @@ class ShoeStoreApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.sl<RolePermissionProvider>()),
       ],
       child: MaterialApp.router(
-        title: 'ShoeStore',
+        title: 'Cửa hàng giày thể thao Hello',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9C27B0)),
