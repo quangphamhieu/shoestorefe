@@ -65,25 +65,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
+                      // Shipping promotion banner
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: width < 600 ? 16 : 0,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back_ios),
-                              onPressed: () {},
+                            if (width >= 600)
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back_ios),
+                                onPressed: () {},
+                              ),
+                            if (width >= 600) const SizedBox(width: 16),
+                            Flexible(
+                              child: Text(
+                                'Miễn phí vận chuyển với đơn hàng trên 500,000đ',
+                                style: TextStyle(fontSize: width < 600 ? 12 : 14),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
                             ),
-                            const SizedBox(width: 16),
-                            const Text(
-                              'Miễn phí vận chuyển với đơn hàng trên 500,000đ',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(width: 16),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_forward_ios),
-                              onPressed: () {},
-                            ),
+                            if (width >= 600) const SizedBox(width: 16),
+                            if (width >= 600)
+                              IconButton(
+                                icon: const Icon(Icons.arrow_forward_ios),
+                                onPressed: () {},
+                              ),
                           ],
                         ),
                       ),

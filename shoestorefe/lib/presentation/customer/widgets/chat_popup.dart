@@ -82,13 +82,13 @@ class _ChatPopupState extends State<ChatPopup> {
       left: isMobile ? 10 : null,
       child: Material(
         elevation: 8,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         child: Container(
-          width: isMobile ? null : 350,
-          height: isMobile ? 350 : 450,
+          width: isMobile ? null : 320,
+          height: isMobile ? 500 : 550,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             children: [

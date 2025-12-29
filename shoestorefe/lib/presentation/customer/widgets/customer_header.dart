@@ -64,8 +64,11 @@ class _CustomerHeaderState extends State<CustomerHeader> {
     } else {
       // Cart and History overlays
       if (isMobile) {
-        // On mobile, align to right edge with margin
-        offset = Offset(-(width - 40), 45.0);
+        // On mobile, calculate to keep overlay within screen
+        // Position from right edge: ensure overlay doesn't exceed screen width
+        final rightMargin = 20.0;
+        final maxOffset = screenWidth - width - rightMargin;
+        offset = Offset(-maxOffset.abs(), 45.0);
       } else {
         // Desktop: Icon size is 36. Alignment: right aligned.
         offset = Offset(36.0 - width, 45.0);
