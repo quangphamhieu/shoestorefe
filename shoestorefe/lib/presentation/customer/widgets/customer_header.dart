@@ -195,7 +195,7 @@ class _CustomerHeaderState extends State<CustomerHeader> {
                           context, 
                           _profileLayerLink, 
                           'profile', 
-                          const WebProfileOverlay(), 
+                          WebProfileOverlay(onClose: _closeOverlay), 
                           200
                         ),
                         borderRadius: BorderRadius.circular(20),

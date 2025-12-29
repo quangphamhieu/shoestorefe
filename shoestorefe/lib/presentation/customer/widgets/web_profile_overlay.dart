@@ -7,7 +7,9 @@ import 'package:shoestorefe/presentation/customer/widgets/web_edit_profile_dialo
 import 'package:shoestorefe/presentation/customer/widgets/web_change_password_dialog.dart';
 
 class WebProfileOverlay extends StatelessWidget {
-  const WebProfileOverlay({super.key});
+  final VoidCallback onClose;
+  
+  const WebProfileOverlay({super.key, required this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.person_outline,
             label: 'Thông tin cá nhân',
             onTap: () {
-              Navigator.pop(context); // Close overlay first
+              onClose(); // Close overlay first
               context.read<ProfileProvider>().loadProfile();
               showDialog(
                 context: context,
@@ -47,7 +49,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.edit_outlined,
             label: 'Chỉnh sửa thông tin',
             onTap: () {
-              Navigator.pop(context); // Close overlay first
+              onClose(); // Close overlay first
               context.read<ProfileProvider>().loadProfile();
               showDialog(
                 context: context,
@@ -60,7 +62,7 @@ class WebProfileOverlay extends StatelessWidget {
             icon: Icons.lock_outline,
             label: 'Đổi mật khẩu',
             onTap: () {
-              Navigator.pop(context); // Close overlay first
+              onClose(); // Close overlay first
               showDialog(
                 context: context,
                 builder: (context) => const WebChangePasswordDialog(),
