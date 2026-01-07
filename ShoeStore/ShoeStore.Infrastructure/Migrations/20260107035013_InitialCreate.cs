@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ShoeStore.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -827,7 +827,7 @@ namespace ShoeStore.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "FullName", "Gender", "PasswordHash", "Phone", "RoleId", "StatusId", "StoreId" },
-                values: new object[] { 1L, new DateTime(2025, 12, 15, 11, 43, 46, 129, DateTimeKind.Local).AddTicks(2572), "admin@gmail.com", "Admin", 0, "AQAAAAIAAYagAAAAEA1X2C2hvXLfv83+Ojj/re1t79RfnrXz/zrA5eDMGabH/xsIum7qlk9s81jmfe6E/Q==", "0345602265", (byte)1, 1, null });
+                values: new object[] { 1L, new DateTime(2026, 1, 7, 10, 50, 12, 158, DateTimeKind.Local).AddTicks(3787), "admin@gmail.com", "Admin", 0, "AQAAAAIAAYagAAAAEDpUOGGTO0zok92JvrRCNGsGgQ4HYY4zt6e0erJGkDMOk/HBz0G99/GHOqAoMaJf5A==", "0345602265", (byte)1, 1, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_UserId",
