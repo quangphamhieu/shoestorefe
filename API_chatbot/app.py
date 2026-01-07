@@ -102,7 +102,7 @@ def _fetch_dashboard(headers):
             # Top Brands
             top_brands = data.get("topBrands", [])
             dashboard_data["top_brands"] = [
-                f"{b['brandName']} (Đã bán: {b['quantitySold']})" for p in top_brands
+                f"{b['brandName']} (Đã bán: {b['quantitySold']})" for b in top_brands
             ]
     except Exception as e:
         app.logger.error(f"Error fetching dashboard stats: {e}")
