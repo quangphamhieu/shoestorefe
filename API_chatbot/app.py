@@ -48,189 +48,214 @@ STORE_CONTEXT = {
 BASE_API_URL = "https://helloshoestore.runasp.net/api"
 
 # --- DATA FETCHING FUNCTIONS ---
-def fetch_all_data():
-    """Fetch Products, Stores, Promotions, Brands, and Stats from Backend"""
+# --- DATA FETCHING HELPER FUNCTIONS ---
+def _fetch_brands(headers):
+    brand_map = {}
     try:
-        app.logger.info("Starting data fetch...")
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        }
-
-        # 1. Fetch Brands FIRST (to map BrandId -> Name)
-        brand_map = {}
-        try:
-            r_brand = requests.get(f"{BASE_API_URL}/brands", headers=headers, timeout=10, verify=False)
-            if r_brand.status_code == 200:
-                raw_brands = r_brand.json()
-                for b in raw_brands:
-                    brand_map[b.get('id')] = b.get('name')
-                
-                STORE_CONTEXT["brands"] = list(brand_map.values())
-        except Exception as e:
-             app.logger.error(f"Error fetching brands: {e}")
-
-        # 2. Fetch Stores
-        stores = []
-        try:
-            r_store = requests.get(f"{BASE_API_URL}/store", headers=headers, timeout=10, verify=False)
-            if r_store.status_code == 200:
-                raw_stores = r_store.json()
-                for s in raw_stores:
-                    s_id = s.get('id')
-                    s_name = s.get('name')
-                    s_address = s.get('address')
-                    
-                    display_name = "Mua Online (Website/App)" if s_id == 1 else f"Cửa hàng {s_name}"
-                    
-                    stores.append({
-                        "id": s_id,
-                        "name": display_name,
-                        "address": s_address,
-                        "is_online": s_id == 1
-                    })
-                STORE_CONTEXT["stores"] = stores
-        except Exception as e:
-            app.logger.error(f"Error fetching stores: {e}")
-
-        # 3. Fetch Promotions
-        promotions = []
-        try:
-            r_promo = requests.get(f"{BASE_API_URL}/promotion", headers=headers, timeout=10, verify=False)
-            if r_promo.status_code == 200:
-                raw_promos = r_promo.json()
-                
-                for p in raw_promos:
-                    p_name = p.get('name')
-                    p_desc = p.get('description', '') or 'Ưu đãi đặc biệt'
-                    p_stores = p.get('stores', [])
-                    
-                    applied_scopes = []
-                    if not p_stores:
-                        applied_scopes.append("toàn hệ thống")
-                    else:
-                        for ps in p_stores:
-                            sid = ps.get('storeId')
-                            if sid == 1:
-                                applied_scopes.append("khi Mua Online")
-                            else:
-                                s_name = next((s['name'] for s in stores if s['id'] == sid), f"Store {sid}")
-                                applied_scopes.append(f"tại {s_name}")
-                    
-                    scope_str = ", ".join(applied_scopes)
-
-                    p_products = p.get('products', [])
-                    applied_products = []
-                    if p_products:
-                        for pp in p_products:
-                            prod_name = pp.get('productName', f"Sản phẩm {pp.get('productId')}")
-                            applied_products.append(prod_name)
-                    
-                    product_str = ", ".join(applied_products) if applied_products else "tất cả sản phẩm"
-
-                    promotions.append(f"- Chương trình: {p_name}\n  + Ưu đãi: {p_desc}\n  + Áp dụng: {scope_str}\n  + Sản phẩm: {product_str}")
-                    
-                STORE_CONTEXT["promotions"] = promotions
-        except Exception as e:
-            app.logger.error(f"Error fetching promotions: {e}")
-
-        # 4. Fetch Products
-        try:
-            r_prod = requests.get(f"{BASE_API_URL}/products", headers=headers, timeout=10, verify=False)
-            if r_prod.status_code == 200:
-                raw_prods = r_prod.json()
-                products_summary = []
-                for p in raw_prods:
-                    name = p.get('name', 'Unknown')
-                    original_price = p.get('originalPrice', 0)
-                    brand_id = p.get('brandId')
-                    brand_name = brand_map.get(brand_id, 'Unknown')
-                    
-                    p_stores = p.get('stores', [])
-                    
-                    # --- 1. Stock Availability & Discount Logic ---
-                    available_locs = []
-                    
-                    # Find lowest valid price across in-stock stores
-                    min_price = original_price
-                    discount_info = [] # List of locations offering the discounted price
-
-                    for s in p_stores:
-                        s_id = s.get('storeId')
-                        s_qty = s.get('quantity', 0)
-                        # Ensure salePrice is valid; if 0 or None, fallback to original_price could be risky if API returns 0.
-                        # Assuming API returns correct SalePrice or equals OriginalPrice if no sale.
-                        # Some APIs return 0 if no sale price defined. Let's handle safe fallback.
-                        s_price = s.get('salePrice')
-                        if s_price is None: s_price = original_price
-                        
-                        s_name = "Online" if s_id == 1 else s.get('storeName', f"CH {s_id}")
-
-                        if s_qty > 0:
-                            available_locs.append(s_name)
-                            
-                            # Check for better price
-                            if s_price < min_price:
-                                min_price = s_price
-                                discount_info = [s_name]
-                            elif s_price == min_price and s_price < original_price:
-                                discount_info.append(s_name)
-                    
-                    stock_str = ", ".join(available_locs) if available_locs else "Hết hàng"
-                    
-                    # --- 2. Format Price String ---
-                    if min_price < original_price:
-                        # Discount detected
-                        places = ", ".join(discount_info)
-                        price_str = f"GIÁ GỐC: {original_price:,.0f}đ -> GIẢM CÒN: {min_price:,.0f}đ (Áp dụng tại: {places})"
-                    else:
-                        price_str = f"{original_price:,.0f}đ"
-                    
-                    import urllib.parse
-                    encoded_name = urllib.parse.quote(name)
-                    link = f"https://helloshoestore.web.app/#/product-detail/{encoded_name}"
-                    
-                    products_summary.append(f"- {name} ({brand_name}) | Giá: {price_str} | Kho: {stock_str} | Link: [Xem]({link})")
-                
-                STORE_CONTEXT["products"] = products_summary
-        except Exception as e:
-            app.logger.error(f"Error fetching products: {e}")
-
-        # 5. Fetch Dashboard Stats (Top Selling & Trends)
-        try:
-            # Use monthCount=1 to get "Current/Recent" trends (last 30 days)
-            r_dash = requests.get(f"{BASE_API_URL}/dashboard?months=1", headers=headers, timeout=10, verify=False)
-            if r_dash.status_code == 200:
-                data = r_dash.json()
-                
-                # Top Products
-                top_prods = data.get("topProducts", [])
-                STORE_CONTEXT["top_selling_products"] = [
-                    f"{p['productName']} (Đã bán: {p['quantitySold']})" for p in top_prods
-                ]
-
-                # Top Brands
-                top_brands = data.get("topBrands", [])
-                STORE_CONTEXT["top_brands"] = [
-                    f"{b['brandName']} (Đã bán: {b['quantitySold']})" for p in top_brands
-                ]
-        except Exception as e:
-            app.logger.error(f"Error fetching dashboard stats: {e}")
-
-        app.logger.info("Data refresh complete.")
-        
+        r_brand = requests.get(f"{BASE_API_URL}/brands", headers=headers, timeout=10, verify=False)
+        if r_brand.status_code == 200:
+            raw_brands = r_brand.json()
+            for b in raw_brands:
+                brand_map[b.get('id')] = b.get('name')
+            return list(brand_map.values()), brand_map
     except Exception as e:
-        app.logger.error(f"General error fetching data: {e}")
+        app.logger.error(f"Error fetching brands: {e}")
+    return [], {}
+
+def _fetch_stores(headers):
+    stores = []
+    try:
+        r_store = requests.get(f"{BASE_API_URL}/store", headers=headers, timeout=10, verify=False)
+        if r_store.status_code == 200:
+            raw_stores = r_store.json()
+            for s in raw_stores:
+                s_id = s.get('id')
+                s_name = s.get('name')
+                s_address = s.get('address')
+                
+                display_name = "Mua Online (Website/App)" if s_id == 1 else f"Cửa hàng {s_name}"
+                
+                stores.append({
+                    "id": s_id,
+                    "name": display_name,
+                    "address": s_address,
+                    "is_online": s_id == 1
+                })
+    except Exception as e:
+        app.logger.error(f"Error fetching stores: {e}")
+    return stores
+
+def _fetch_dashboard(headers):
+    dashboard_data = {"top_selling": [], "top_brands": []}
+    try:
+        # Use monthCount=1 to get "Current/Recent" trends (last 30 days)
+        r_dash = requests.get(f"{BASE_API_URL}/dashboard?months=1", headers=headers, timeout=10, verify=False)
+        if r_dash.status_code == 200:
+            data = r_dash.json()
+            
+            # Top Products
+            top_prods = data.get("topProducts", [])
+            dashboard_data["top_selling"] = [
+                f"{p['productName']} (Đã bán: {p['quantitySold']})" for p in top_prods
+            ]
+
+            # Top Brands
+            top_brands = data.get("topBrands", [])
+            dashboard_data["top_brands"] = [
+                f"{b['brandName']} (Đã bán: {b['quantitySold']})" for p in top_brands
+            ]
+    except Exception as e:
+        app.logger.error(f"Error fetching dashboard stats: {e}")
+    return dashboard_data
+
+def _fetch_promotions(headers, stores):
+    promotions = []
+    try:
+        r_promo = requests.get(f"{BASE_API_URL}/promotion", headers=headers, timeout=10, verify=False)
+        if r_promo.status_code == 200:
+            raw_promos = r_promo.json()
+            
+            for p in raw_promos:
+                p_name = p.get('name')
+                p_desc = p.get('description', '') or 'Ưu đãi đặc biệt'
+                p_stores = p.get('stores', [])
+                
+                applied_scopes = []
+                if not p_stores:
+                    applied_scopes.append("toàn hệ thống")
+                else:
+                    for ps in p_stores:
+                        sid = ps.get('storeId')
+                        if sid == 1:
+                            applied_scopes.append("khi Mua Online")
+                        else:
+                            s_name = next((s['name'] for s in stores if s['id'] == sid), f"Store {sid}")
+                            applied_scopes.append(f"tại {s_name}")
+                
+                scope_str = ", ".join(applied_scopes)
+
+                p_products = p.get('products', [])
+                applied_products = []
+                if p_products:
+                    for pp in p_products:
+                        prod_name = pp.get('productName', f"Sản phẩm {pp.get('productId')}")
+                        applied_products.append(prod_name)
+                
+                product_str = ", ".join(applied_products) if applied_products else "tất cả sản phẩm"
+
+                promotions.append(f"- Chương trình: {p_name}\n  + Ưu đãi: {p_desc}\n  + Áp dụng: {scope_str}\n  + Sản phẩm: {product_str}")
+    except Exception as e:
+        app.logger.error(f"Error fetching promotions: {e}")
+    return promotions
+
+def _fetch_products(headers, brand_map):
+    products_summary = []
+    try:
+        r_prod = requests.get(f"{BASE_API_URL}/products", headers=headers, timeout=10, verify=False)
+        if r_prod.status_code == 200:
+            raw_prods = r_prod.json()
+            for p in raw_prods:
+                name = p.get('name', 'Unknown')
+                original_price = p.get('originalPrice', 0)
+                brand_id = p.get('brandId')
+                brand_name = brand_map.get(brand_id, 'Unknown')
+                
+                p_stores = p.get('stores', [])
+                
+                # --- 1. Stock Availability & Discount Logic ---
+                available_locs = []
+                
+                # Find lowest valid price across in-stock stores
+                min_price = original_price
+                discount_info = [] # List of locations offering the discounted price
+
+                for s in p_stores:
+                    s_id = s.get('storeId')
+                    s_qty = s.get('quantity', 0)
+                    s_price = s.get('salePrice')
+                    if s_price is None: s_price = original_price
+                    
+                    s_name = "Online" if s_id == 1 else s.get('storeName', f"CH {s_id}")
+
+                    if s_qty > 0:
+                        available_locs.append(s_name)
+                        
+                        # Check for better price
+                        if s_price < min_price:
+                            min_price = s_price
+                            discount_info = [s_name]
+                        elif s_price == min_price and s_price < original_price:
+                            discount_info.append(s_name)
+                
+                stock_str = ", ".join(available_locs) if available_locs else "Hết hàng"
+                
+                # --- 2. Format Price String ---
+                if min_price < original_price:
+                    # Discount detected
+                    places = ", ".join(discount_info)
+                    price_str = f"GIÁ GỐC: {original_price:,.0f}đ -> GIẢM CÒN: {min_price:,.0f}đ (Áp dụng tại: {places})"
+                else:
+                    price_str = f"{original_price:,.0f}đ"
+                
+                import urllib.parse
+                encoded_name = urllib.parse.quote(name)
+                link = f"https://helloshoestore.web.app/#/product-detail/{encoded_name}"
+                
+                products_summary.append(f"- {name} ({brand_name}) | Giá: {price_str} | Kho: {stock_str} | Link: [Xem]({link})")
+    except Exception as e:
+        app.logger.error(f"Error fetching products: {e}")
+    return products_summary
+
+from concurrent.futures import ThreadPoolExecutor
+
+def fetch_all_data():
+    """Fetch all data using parallel processing to minimize cold start time"""
+    app.logger.info("Starting PARALLEL data fetch...")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+
+    brand_map = {}
+    stores_list = []
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        # Phase 1: Independent requests
+        future_brands = executor.submit(_fetch_brands, headers)
+        future_stores = executor.submit(_fetch_stores, headers)
+        future_dashboard = executor.submit(_fetch_dashboard, headers)
+
+        # Wait for Phase 1 results needed for Phase 2
+        brands_list, brand_map = future_brands.result()
+        stores_list = future_stores.result()
+        dashboard_data = future_dashboard.result()
+        
+        # Save independent results
+        STORE_CONTEXT["brands"] = brands_list
+        STORE_CONTEXT["stores"] = stores_list
+        STORE_CONTEXT["top_selling_products"] = dashboard_data["top_selling"]
+        STORE_CONTEXT["top_brands"] = dashboard_data["top_brands"]
+        
+        # Phase 2: Dependent requests (Promotions need Stores, Products need BrandMap)
+        future_promos = executor.submit(_fetch_promotions, headers, stores_list)
+        future_products = executor.submit(_fetch_products, headers, brand_map)
+        
+        # Wait for Phase 2
+        STORE_CONTEXT["promotions"] = future_promos.result()
+        STORE_CONTEXT["products"] = future_products.result()
+
+    app.logger.info("Data refresh complete.")
 
 # Function to auto-refresh product data every day (24h)
 def start_background_fetch():
     def run():
-        # Wait a bit for server to be fully ready if needed, or run immediately
-        app.logger.info("Starting background data fetch loop...")
+        # Wait a bit for server to be fully ready ensuring initial load happens in main thread or handled properly
+        app.logger.info("Background fetch scheduler started.")
         while True:
+            time.sleep(86400) # Wait 24 hours first, as initial load is active
             app.logger.info("Executing periodic data fetch...")
             fetch_all_data()
             app.logger.info("Data fetch complete. Waiting 24 hours...")
-            time.sleep(86400) 
+            
     thread = threading.Thread(target=run, daemon=True)
     thread.start()
 
