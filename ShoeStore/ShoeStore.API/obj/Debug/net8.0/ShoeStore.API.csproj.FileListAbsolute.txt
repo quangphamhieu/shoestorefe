@@ -626,3 +626,4 @@ D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\refs\System.Xml.XmlSeria
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\refs\System.Xml.XPath.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\refs\System.Xml.XPath.XDocument.dll
 D:\shoestorefe\ShoeStore\ShoeStore.API\bin\Debug\net8.0\refs\WindowsBase.dll
+D:\shoestorefe\ShoeStore\ShoeStore.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
