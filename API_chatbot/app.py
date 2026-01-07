@@ -141,30 +141,55 @@ def fetch_all_data():
                 products_summary = []
                 for p in raw_prods:
                     name = p.get('name', 'Unknown')
-                    price = p.get('originalPrice', 0)
+                    original_price = p.get('originalPrice', 0)
                     brand_id = p.get('brandId')
-                    # Resolving Brand Name locally
-                    brand_name = brand_map.get(brand_id, 'Unknown') 
+                    brand_name = brand_map.get(brand_id, 'Unknown')
                     
                     p_stores = p.get('stores', [])
+                    
+                    # --- 1. Stock Availability & Discount Logic ---
                     available_locs = []
                     
-                    online_stock = next((s for s in p_stores if s['storeId'] == 1), None)
-                    if online_stock and online_stock['quantity'] > 0:
-                        available_locs.append("Online")
+                    # Find lowest valid price across in-stock stores
+                    min_price = original_price
+                    discount_info = [] # List of locations offering the discounted price
+
+                    for s in p_stores:
+                        s_id = s.get('storeId')
+                        s_qty = s.get('quantity', 0)
+                        # Ensure salePrice is valid; if 0 or None, fallback to original_price could be risky if API returns 0.
+                        # Assuming API returns correct SalePrice or equals OriginalPrice if no sale.
+                        # Some APIs return 0 if no sale price defined. Let's handle safe fallback.
+                        s_price = s.get('salePrice')
+                        if s_price is None: s_price = original_price
                         
-                    physical_stock = [s for s in p_stores if s['storeId'] != 1 and s['quantity'] > 0]
-                    for s in physical_stock:
-                        s_name = s.get('storeName')
-                        available_locs.append(s_name if s_name else f"Cửa hàng {s['storeId']}")
+                        s_name = "Online" if s_id == 1 else s.get('storeName', f"CH {s_id}")
+
+                        if s_qty > 0:
+                            available_locs.append(s_name)
+                            
+                            # Check for better price
+                            if s_price < min_price:
+                                min_price = s_price
+                                discount_info = [s_name]
+                            elif s_price == min_price and s_price < original_price:
+                                discount_info.append(s_name)
                     
                     stock_str = ", ".join(available_locs) if available_locs else "Hết hàng"
+                    
+                    # --- 2. Format Price String ---
+                    if min_price < original_price:
+                        # Discount detected
+                        places = ", ".join(discount_info)
+                        price_str = f"GIÁ GỐC: {original_price:,.0f}đ -> GIẢM CÒN: {min_price:,.0f}đ (Áp dụng tại: {places})"
+                    else:
+                        price_str = f"{original_price:,.0f}đ"
                     
                     import urllib.parse
                     encoded_name = urllib.parse.quote(name)
                     link = f"https://helloshoestore.web.app/#/product-detail/{encoded_name}"
                     
-                    products_summary.append(f"- {name} ({brand_name}) | Giá: {price:,.0f}đ | Kho: {stock_str} | Link: [Xem]({link})")
+                    products_summary.append(f"- {name} ({brand_name}) | Giá: {price_str} | Kho: {stock_str} | Link: [Xem]({link})")
                 
                 STORE_CONTEXT["products"] = products_summary
         except Exception as e:
@@ -186,7 +211,7 @@ def fetch_all_data():
                 # Top Brands
                 top_brands = data.get("topBrands", [])
                 STORE_CONTEXT["top_brands"] = [
-                    f"{b['brandName']} (Đã bán: {b['quantitySold']})" for b in top_brands
+                    f"{b['brandName']} (Đã bán: {b['quantitySold']})" for p in top_brands
                 ]
         except Exception as e:
             app.logger.error(f"Error fetching dashboard stats: {e}")
@@ -245,23 +270,22 @@ def get_system_instruction():
     5. CHƯƠNG TRÌNH KHUYẾN MÃI HIỆN CÓ:
     {promo_text}
     
-    6. DANH SÁCH SẢN PHẨM & TÌNH TRẠNG KHO:
+    6. DANH SÁCH SẢN PHẨM, GIÁ & TÌNH TRẠNG KHO:
     {product_text}
     
     7. CHÍNH SÁCH CHUNG:
     {policy_text}
     
     NHIỆM VỤ CỦA BẠN:
-    - Trả lời các câu hỏi về sản phẩm, giá cả, tình trạng còn hàng (ở Online hay Cửa hàng nào).
-    - Gợi ý sản phẩm dựa trên "Top Bán Chạy" hoặc "Thương Hiệu Ưa Chuộng" khi khách hỏi "có gì hot?" hoặc "nên mua gì?".
-    - Cung cấp thông tin khuyến mãi chi tiết.
-    - Hướng dẫn địa chỉ cửa hàng gần nhất.
-    
-    YÊU CẦU TRẢ LỜI:
-    - Luôn dùng tiếng Việt, giọng điệu chuyên nghiệp, thân thiện, nhiệt tình.
+    - Trả lời các câu hỏi về sản phẩm, giá cả, tình trạng còn hàng.
+    - ĐẶC BIỆT CHÚ Ý VỀ GIÁ: Dữ liệu số 6 có ghi rõ "GIÁ GỐC -> GIẢM CÒN". Nếu thấy dòng này, bạn BẮT BUỘC phải thông báo cho khách: "Sản phẩm này đang được giảm giá từ X xuống còn Y, áp dụng tại [Cửa hàng/Online]". KHÔNG ĐƯỢC chỉ đưa giá gốc.
     - Nếu khách hỏi sản phẩm cụ thể, hãy kiểm tra danh sách số 6. Nếu có, cung cấp link mua hàng.
     - Nếu khách hỏi chung chung, hãy dùng dữ liệu số 3 và 4 để gợi ý.
-    - Định dạng câu trả lời rõ ràng, dùng in đậm (**text**) cho tên sản phẩm, giá và khuyến mãi.
+    
+    YÊU CẦU TRẢ LỜI:
+    - Luôn dùng tiếng Việt, giọng điệu chuyên nghiệp, thân thiện.
+    - Định dạng câu trả lời rõ ràng, dùng in đậm (**text**) cho tên sản phẩm và GIÁ GIẢM (nếu có).
+    - Chỉ tư vấn sản phẩm có trong danh sách.
     """
 
 @app.route("/chat", methods=["POST"])
